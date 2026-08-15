@@ -117,6 +117,13 @@ Script (`apps-script/Code.gs`, déploiement décrit dans
 calcul et envoie un email à contact.borsci@gmail.com. Le tout vit dans
 le compte Google de l'artisan, pas ailleurs.
 
+**Branché le 15/08/2026** — mais jamais exercé de bout en bout depuis
+ici : l'environnement de développement bloque tous les domaines Google,
+la requête réelle n'a donc pas pu être émise. Les tests couvrent tout
+le reste avec `fetch` remplacé. Le seul point resté à vérifier depuis un
+vrai navigateur est le CORS d'Apps Script. En cas d'échec, le secours
+WhatsApp prend le relais et aucune demande n'est perdue.
+
 - **Ajouter une question ne demande de modification nulle part
   ailleurs** : le payload est construit en parcourant le formulaire, et
   le script crée la colonne manquante au premier envoi.

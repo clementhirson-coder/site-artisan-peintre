@@ -91,17 +91,20 @@
   </script>
 
   <!-- ================================================================
-       ENDPOINT DU FORMULAIRE — À REMPLACER
-       Suivre apps-script/DEPLOIEMENT.md : déployer le script Google
-       fourni dans apps-script/Code.gs, puis coller ici l'URL de
-       l'application web (elle se termine par /exec).
-       Chaque demande ajoutera alors une ligne dans la feuille de calcul
-       et enverra un email.
-       Tant que XXXXXXXX est présent, le formulaire refuse d'envoyer et
-       renvoie vers le téléphone : aucune demande n'est perdue.
+       ENDPOINT DU FORMULAIRE
+       Application web Google Apps Script déployée depuis
+       apps-script/Code.gs (marche à suivre : apps-script/DEPLOIEMENT.md).
+       Chaque demande ajoute une ligne dans la feuille « Demandes —
+       Borsci Rénovation » et envoie un email à contact.borsci@gmail.com.
+
+       Pour changer de service : cette constante est le seul point de
+       contact, le corps envoyé est un FormData standard.
+
+       Le garde-fou reste en place : si l'URL contient XXXXXXXX, le
+       formulaire refuse d'envoyer et renvoie vers le téléphone.
        ================================================================ -->
   <script>
-    const FORM_ENDPOINT = "https://formspree.io/f/XXXXXXXX"; /* À FOURNIR */
+    const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbzPNCC0fsJ_hdrcjtzFg_fN34Nt9-fegKUjdHhfBcZwoY1g3KVGaWEDV4HJba_BRZLF/exec";
     document.documentElement.className = "js";
   </script>
 
