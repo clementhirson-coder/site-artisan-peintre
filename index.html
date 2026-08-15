@@ -265,6 +265,19 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 
 .entete .metier { color: var(--doux); max-width: 26rem; }
 
+/* Accroche : dit le métier en une phrase, sous l'identité. */
+.entete .accroche {
+  margin-top: 2rem;
+  max-width: 34rem;
+  font-size: clamp(19px, 1.5vw, 24px);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -.012em;
+  color: var(--encre);
+}
+
+.entete .accroche em { font-style: normal; color: var(--accent); }
+
 /* --- Bouton téléphone ---------------------------------------------------- */
 
 .bouton-tel {
@@ -660,6 +673,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     <p class="metier">
       Formé aux interventions après sinistre
       au sein d'une entreprise spécialisée.
+    </p>
+
+    <p class="accroche">
+      Murs, plafonds, sols et cloisons — <em>remis en état après dégât des eaux</em>,
+      ou refaits parce qu'il était temps.
     </p>
 
     <!-- Téléphone : trois occurrences à remplacer dans la page (en-tête, noscript,
