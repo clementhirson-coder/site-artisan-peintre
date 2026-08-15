@@ -183,7 +183,14 @@ function feuilleCible() {
   var classeur = null;
 
   if (FEUILLE_ID) {
-    classeur = SpreadsheetApp.openById(FEUILLE_ID);
+    try {
+      classeur = SpreadsheetApp.openById(FEUILLE_ID);
+    } catch (err) {
+      throw new Error(
+        "FEUILLE_ID ne correspond à aucune feuille accessible : « " + FEUILLE_ID + " ». "
+      + "Il se lit dans l'adresse de la feuille, entre /d/ et /edit — sans les barres "
+      + "obliques, sans /edit, et sans ce qui suit le #. (" + err + ")");
+    }
   } else {
     classeur = SpreadsheetApp.getActiveSpreadsheet();
   }
