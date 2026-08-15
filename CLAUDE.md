@@ -141,8 +141,18 @@ WhatsApp prend le relais et aucune demande n'est perdue.
   silence toute demande qui l'a rempli. Il remplace le filtrage que
   faisait le service de formulaire précédent.
 - La requête doit rester « simple » au sens CORS : **aucun en-tête
-  personnalisé**, corps en `FormData`. Sinon le navigateur déclenche un
-  pré-vol qu'Apps Script ne sait pas traiter.
+  personnalisé**. Sinon le navigateur déclenche un pré-vol qu'Apps
+  Script ne sait pas traiter.
+- **Le corps doit être en `URLSearchParams`, jamais en `FormData`.**
+  Apps Script ne remplit `e.parameters` que pour de l'urlencodé ; un
+  corps multipart arrive mais laisse `e.parameters` vide — le script
+  croit recevoir une demande vide, ne l'enregistre pas, et répond quand
+  même 200. C'est le défaut qui a fait passer le premier essai réel du
+  15/08/2026 pour un succès sans qu'aucune ligne n'apparaisse.
+- **Un 200 ne vaut pas succès.** Le script répond
+  `{"ok":true}` ou `{"ok":false,"raison":…}` ; c'est ce verdict que le
+  site doit lire. Si le corps est illisible, se rabattre sur le statut
+  plutôt que de faire échouer un envoi peut-être abouti.
 
 ## Vérifications attendues avant tout push
 

@@ -1992,7 +1992,13 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
        bloc conditionnel masque n'est pas envoye. */
     var masque = function (champ) { return !!champ.closest('[data-si][hidden]'); };
 
-    var donnees = new FormData();
+    /* URLSearchParams et non FormData : un corps multipart arrive bien
+       chez Apps Script, mais il ne remplit PAS e.parameters — le script
+       recevait une demande vide. En urlencode, e.parameters est
+       correctement peuple. La requete reste « simple » au sens CORS :
+       application/x-www-form-urlencoded fait partie des trois types
+       autorises sans pre-vol. */
+    var donnees = new URLSearchParams();
     form.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked')
       .forEach(function (c) {
         if (c.id === 'consentement' || masque(c)) return;
@@ -2017,6 +2023,18 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
       body: donnees
     }).then(function (reponse) {
       if (!reponse.ok) throw new Error(reponse.status);
+      return reponse.text();
+    }).then(function (corps) {
+      /* Un 200 ne suffit pas : Apps Script repond 200 meme quand il
+         refuse la demande. Le script renvoie {"ok":true} ou
+         {"ok":false,"raison":...} — c'est ce verdict qui fait foi.
+         Si le corps est illisible (redirection, reponse opaque), on
+         s'en tient au statut plutot que de faire echouer un envoi qui a
+         peut-etre abouti. */
+      var verdict = null;
+      try { verdict = JSON.parse(corps); } catch (e) { /* corps opaque */ }
+      if (verdict && verdict.ok === false) throw new Error(verdict.raison || 'refus');
+
       lienPhotos.href = WHATSAPP + '?text=' + encodeURIComponent(messagePhotos());
       form.hidden = true;
       confirmation.hidden = false;

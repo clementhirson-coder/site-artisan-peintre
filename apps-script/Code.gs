@@ -55,8 +55,11 @@ function doPost(e) {
     var champs = lireChamps(e);
 
     /* Requête vide : quelqu'un a ouvert l'URL, ou un robot tâtonne. */
-    if (!champs || !champs.telephone) {
-      return reponse({ ok: false, raison: 'demande vide' });
+    if (!champs || !Object.keys(champs).length) {
+      return reponse({ ok: false, raison: 'aucun champ reçu — corps mal encodé ?' });
+    }
+    if (!champs.telephone) {
+      return reponse({ ok: false, raison: 'téléphone manquant' });
     }
 
     /* Champ piège rempli : on répond ok pour que le robot n'insiste
@@ -108,14 +111,50 @@ function doGet() {
  * Aplatit les paramètres reçus. Les cases à cocher arrivent en plusieurs
  * exemplaires sous le même nom (prestation, surfaces…) : on les réunit
  * en une seule cellule.
+ *
+ * PIEGE A CONNAITRE — Apps Script ne remplit e.parameters que pour un
+ * corps `application/x-www-form-urlencoded`. Un corps `multipart/
+ * form-data`, celui qu'envoie un FormData, arrive bien mais laisse
+ * e.parameters VIDE : le script croit recevoir une demande vide et ne
+ * l'enregistre pas, tout en répondant 200. Le site envoie donc de
+ * l'urlencodé. Le repli ci-dessous rattrape le cas où quelqu'un
+ * changerait ça, et accepte aussi un corps JSON.
  */
 function lireChamps(e) {
-  if (!e || !e.parameters) return null;
+  if (!e) return null;
   var champs = {};
-  Object.keys(e.parameters).forEach(function (cle) {
-    var valeurs = e.parameters[cle].filter(function (v) { return String(v).trim(); });
-    if (valeurs.length) champs[cle] = valeurs.join(' · ');
-  });
+
+  if (e.parameters) {
+    Object.keys(e.parameters).forEach(function (cle) {
+      var valeurs = e.parameters[cle].filter(function (v) { return String(v).trim(); });
+      if (valeurs.length) champs[cle] = valeurs.join(' · ');
+    });
+  }
+  if (Object.keys(champs).length) return champs;
+
+  /* Repli : corps brut. */
+  var brut = e.postData && e.postData.contents;
+  if (!brut) return champs;
+
+  var type = (e.postData.type || '').toLowerCase();
+
+  if (type.indexOf('json') !== -1) {
+    try {
+      var objet = JSON.parse(brut);
+      Object.keys(objet).forEach(function (cle) {
+        var v = objet[cle];
+        champs[cle] = Array.isArray(v) ? v.join(' · ') : String(v);
+      });
+    } catch (err) {
+      console.error('Corps JSON illisible : ' + err);
+    }
+    return champs;
+  }
+
+  if (type.indexOf('multipart') !== -1) {
+    console.error('Corps multipart reçu : Apps Script ne sait pas le découper. '
+                + 'Le site doit envoyer de l\'urlencodé (URLSearchParams).');
+  }
   return champs;
 }
 
