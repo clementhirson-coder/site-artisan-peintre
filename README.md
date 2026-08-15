@@ -1,4 +1,4 @@
-# Site vitrine — [NOM DE L'ENTREPRISE À FOURNIR]
+# Site vitrine — Borsci Rénovation
 
 Tout le site tient dans un fichier : `index.html`. Les photos sont dans `assets/`.
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Une seule page. Remplacer le domaine par l'URL definitive du site,
+     et mettre a jour lastmod a chaque modification notable (AAAA-MM-JJ). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://borsci-renovation.fr/</loc>
+    <lastmod>2026-08-15</lastmod>
+  </url>
+</urlset>

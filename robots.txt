@@ -1,0 +1,5 @@
+# Tout autoriser. Remplacer le domaine par l'URL definitive du site.
+User-agent: *
+Allow: /
+
+Sitemap: https://borsci-renovation.fr/sitemap.xml
