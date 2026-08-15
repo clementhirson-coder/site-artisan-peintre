@@ -25,6 +25,7 @@ Contrainte de conception : **tenir trois ans sans maintenance.**
 | `sources-photos/` | Photos d'origine, non publiées — pour recadrer plus tard |
 | `fiche-photos-vitalii.md` | Ce que l'artisan doit photographier, et comment |
 | `FAQ.md` | **En cas de problème** — classé par symptôme |
+| `FORMATION.md` | Support d'auto-formation sur le montage serverless |
 | `CLAUDE.md` | **Les décisions actées et les pièges connus** |
 
 ## Comment ça marche
