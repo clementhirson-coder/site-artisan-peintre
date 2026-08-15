@@ -1,9 +1,27 @@
 <!DOCTYPE html>
+<!--
+  ============================================================================
+  VISUELS TEMPORAIRES — NE PAS METTRE EN LIGNE PUBLIQUEMENT EN L'ETAT.
+
+  Les images de assets/chantiers/ et assets/artisan/ ne sont PAS des photos
+  de chantiers de Borsci Renovation : ce sont des visuels de substitution,
+  destines uniquement a presenter la maquette au client.
+
+  Elles doivent etre remplacees par de vraies photos avant toute publication.
+  Publier ces images legendees comme des chantiers realises constituerait
+  une pratique commerciale trompeuse (art. L121-2 code de la consommation).
+
+  La page porte volontairement un <meta name="robots" content="noindex">
+  tant que ces visuels sont en place. Le retirer en meme temps qu'elles.
+  ============================================================================
+-->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f6f1">
+  <!-- A RETIRER en meme temps que les visuels temporaires. -->
+  <meta name="robots" content="noindex, nofollow">
 
   <title>Borsci Rénovation — Rénovation et finitions intérieures — Paris et petite couronne</title>
   <meta name="description" content="Artisan indépendant en rénovation et finitions intérieures, à Paris et en petite couronne. Remise en état après dégât des eaux. Devis détaillé sur demande.">
@@ -38,7 +56,10 @@
       "postalCode": "[À FOURNIR : code postal]",
       "addressCountry": "FR"
     },
-    "areaServed": ["Paris", "Hauts-de-Seine", "Seine-Saint-Denis", "Val-de-Marne"],
+    "areaServed": [
+      "Paris", "Hauts-de-Seine", "Seine-Saint-Denis", "Val-de-Marne",
+      "Seine-et-Marne", "Val-d'Oise", "Essonne", "Yvelines"
+    ],
     "openingHoursSpecification": {
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
@@ -271,7 +292,7 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 .grille-chantiers figure { position: relative; overflow: hidden; background: var(--fond-2); }
 
 .grille-chantiers img {
-  width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+  width: 100%; aspect-ratio: 3 / 4; object-fit: cover;
   filter: contrast(1.02) saturate(.94);
   transition: transform 1.2s cubic-bezier(.22,.61,.36,1), filter .6s;
 }
@@ -312,6 +333,9 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 .bloc-texte p { color: var(--doux); font-size: .9375em; margin-bottom: 1.1rem; }
 
 .bloc .photo-vide { aspect-ratio: 16 / 9; }
+.bloc img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.bloc-large img { aspect-ratio: auto; }
+.entete-photo picture { display: block; height: 100%; }
 
 /* Blocs 1 et 5 : pleine largeur, texte + photos côte à côte. */
 .bloc-large {
@@ -356,7 +380,7 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
    (clip-path piloté par le curseur natif) reste identique. */
 .ba { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--filet); user-select: none; }
 .ba .couche { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.ba .couche.photo-vide { aspect-ratio: auto; height: 100%; border: 0; }
+.ba .couche { width: 100%; height: 100%; object-fit: cover; }
 .ba .c-avant { clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0); background-color: #e9e1d3; }
 .ba .poignee { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 1px; background: var(--encre); }
 .ba .poignee i { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background: var(--encre); color: var(--fond); display: flex; align-items: center; justify-content: center; font-style: normal; }
@@ -614,13 +638,12 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
 <header class="entete">
   <div class="entete-photo">
-    <!-- Photo de l'artisan au travail. Remplacer le bloc .photo-vide par :
-         <picture>
-           <source srcset="assets/artisan/portrait.webp" type="image/webp">
-           <img src="assets/artisan/portrait.jpg" width="1200" height="900" loading="eager"
-                alt="Reprise d'enduit sur un plafond de séjour après dégât des eaux">
-         </picture> -->
-    <div class="photo-vide">Photo à fournir — l'artisan au travail, en situation de chantier</div>
+    <!-- VISUEL TEMPORAIRE — a remplacer par une vraie photo de Vitalii Borsci. -->
+    <picture>
+      <source srcset="assets/artisan/portrait.webp" type="image/webp">
+      <img src="assets/artisan/portrait.jpg" width="1600" height="1073" loading="eager"
+           alt="Application de peinture au rouleau sur un mur de séjour">
+    </picture>
   </div>
 
   <div class="entete-corps">
@@ -655,7 +678,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   <div class="fait"><strong>Sinistres</strong><span>formé en entreprise spécialisée</span></div>
   <div class="fait"><strong>Décennale</strong><span>chantiers assurés</span></div>
   <div class="fait"><strong>1 seul</strong><span>interlocuteur, devis compris</span></div>
-  <div class="fait"><strong>75 · 92 · 93 · 94</strong><span>Paris &amp; petite couronne</span></div>
+  <div class="fait"><strong>Île-de-France</strong><span>8 départements couverts</span></div>
 </div>
 
 <main>
@@ -687,7 +710,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
            L'attribut alt décrit : matériau + type de pièce + commune. -->
       <li class="rv">
         <figure>
-          <div class="photo-vide">Photo chantier 1</div>
+          <picture>
+            <source srcset="assets/chantiers/chantier-1-depose.webp" type="image/webp">
+            <img src="assets/chantiers/chantier-1-depose.jpg" width="608" height="811" loading="lazy" decoding="async"
+                 alt="Dépose d'un enduit dégradé par un dégât des eaux, plafond ouvert">
+          </picture>
           <figcaption class="mono">
             <span class="lieu a-fournir">[Type de bien — commune]</span>
             <span class="quoi a-fournir">[Nature des travaux]</span>
@@ -697,7 +724,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
       <li class="rv">
         <figure>
-          <div class="photo-vide">Photo chantier 2</div>
+          <picture>
+            <source srcset="assets/chantiers/chantier-2-vinyle.webp" type="image/webp">
+            <img src="assets/chantiers/chantier-2-vinyle.jpg" width="608" height="811" loading="lazy" decoding="async"
+                 alt="Pose d'un sol vinyle en lés dans une cuisine">
+          </picture>
           <figcaption class="mono">
             <span class="lieu a-fournir">[Type de bien — commune]</span>
             <span class="quoi a-fournir">[Nature des travaux]</span>
@@ -707,7 +738,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
       <li class="rv">
         <figure>
-          <div class="photo-vide">Photo chantier 3</div>
+          <picture>
+            <source srcset="assets/chantiers/chantier-3-cloison.webp" type="image/webp">
+            <img src="assets/chantiers/chantier-3-cloison.jpg" width="608" height="811" loading="lazy" decoding="async"
+                 alt="Vissage d'une plaque de plâtre sur ossature, isolant en place">
+          </picture>
           <figcaption class="mono">
             <span class="lieu a-fournir">[Type de bien — commune]</span>
             <span class="quoi a-fournir">[Nature des travaux]</span>
@@ -718,10 +753,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       <!-- CHANTIER 4 — présentation avant/après : deux photos, une seule légende. -->
       <li class="rv">
         <figure>
-          <div class="paire">
-            <div class="photo-vide">Avant</div>
-            <div class="photo-vide">Après</div>
-          </div>
+<picture>
+            <source srcset="assets/chantiers/chantier-4-peinture.webp" type="image/webp">
+            <img src="assets/chantiers/chantier-4-peinture.jpg" width="608" height="811" loading="lazy" decoding="async"
+                 alt="Application de peinture au rouleau, sol protégé">
+          </picture>
           <figcaption class="mono">
             <span class="lieu a-fournir">[Type de bien — commune]</span>
             <span class="quoi a-fournir">[Nature des travaux]</span>
@@ -772,8 +808,12 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
         <!-- Comparateur : remplacer les deux .photo-vide par des <img>
              (même position) une fois les photos avant/après fournies. -->
         <div class="ba" data-ba>
-          <div class="couche photo-vide c-apres">Photo après — à fournir</div>
-          <div class="couche photo-vide c-avant">Photo avant — à fournir</div>
+          <img class="couche c-apres" src="assets/chantiers/degat-eaux-apres.jpg"
+               width="1200" height="860" loading="lazy" decoding="async"
+               alt="Séjour remis en état et repeint après intervention">
+          <img class="couche c-avant" src="assets/chantiers/degat-eaux-avant.jpg"
+               width="1200" height="860" loading="lazy" decoding="async"
+               alt="Plafond marqué par un dégât des eaux, mesure du taux d'humidité">
           <input type="range" min="0" max="100" value="50" aria-label="Curseur de comparaison avant après">
           <div class="poignee" aria-hidden="true"><i>⇔</i></div>
           <span class="tag tag-avant" aria-hidden="true">Avant</span>
@@ -787,7 +827,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
           <h3 id="t-peinture">Peinture et enduits</h3>
           <p>Murs et plafonds : préparation des supports, enduits, finitions.</p>
         </div>
-        <div class="photo-vide">Photo à fournir</div>
+        <picture>
+            <source srcset="assets/chantiers/peinture-enduits.webp" type="image/webp">
+            <img src="assets/chantiers/peinture-enduits.jpg" width="1000" height="716" loading="lazy" decoding="async"
+                 alt="Finitions de peinture dans un séjour, sols protégés">
+          </picture>
       </article>
 
       <!-- Texte reformulé : la version fournie contenait « je vous
@@ -799,7 +843,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
           <h3 id="t-sols">Revêtement de sol</h3>
           <p>Parquet, vinyle, carrelage ou moquette : pose et remplacement des sols.</p>
         </div>
-        <div class="photo-vide">Photo à fournir</div>
+        <picture>
+            <source srcset="assets/chantiers/revetement-sol.webp" type="image/webp">
+            <img src="assets/chantiers/revetement-sol.jpg" width="1000" height="671" loading="lazy" decoding="async"
+                 alt="Pose de parquet massif en point de Hongrie">
+          </picture>
       </article>
 
       <article class="bloc rv" id="cloisons" aria-labelledby="t-cloisons">
@@ -808,7 +856,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
           <h3 id="t-cloisons">Cloisons et placo</h3>
           <p>Création ou reprise de cloisons, doublages, plafonds.</p>
         </div>
-        <div class="photo-vide">Photo à fournir</div>
+        <picture>
+            <source srcset="assets/chantiers/cloisons-placo.webp" type="image/webp">
+            <img src="assets/chantiers/cloisons-placo.jpg" width="1000" height="671" loading="lazy" decoding="async"
+                 alt="Vissage d'une plaque de plâtre sur ossature métallique">
+          </picture>
       </article>
 
       <!-- BLOC 5 — spécialité la moins concurrencée :
@@ -819,10 +871,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
           <h3 id="t-terrasses">Terrasses bois sur pilotis</h3>
           <p>Structure et platelage bois, terrain plat ou en pente.</p>
         </div>
-        <div class="paire">
-          <div class="photo-vide">Avant — à fournir</div>
-          <div class="photo-vide">Après — à fournir</div>
-        </div>
+        <picture>
+          <source srcset="assets/chantiers/terrasse-bois.webp" type="image/webp">
+          <img src="assets/chantiers/terrasse-bois.jpg" width="1000" height="671" loading="lazy" decoding="async"
+               alt="Vissage du platelage d'une terrasse bois sur ossature">
+        </picture>
       </article>
 
       <!-- CONSEIL — hors prestations (correction 5) : accompagnement,
@@ -1070,14 +1123,17 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
     <div class="bloc-pied">
       <p class="mono">Zone d'intervention</p>
-      <p>Paris et petite couronne.</p>
-      <!-- Pour affiner par commune, remplacer les pastilles ci-dessous
-           et tenir areaServed (JSON-LD, en haut du fichier) synchronisé. -->
+      <p>Paris et petite couronne, déplacements sur toute l'Île-de-France.</p>
+      <!-- Tenir cette liste et areaServed (JSON-LD, en haut du fichier) synchronisés. -->
       <ul class="puces">
         <li>Paris</li>
         <li>Hauts-de-Seine</li>
         <li>Seine-Saint-Denis</li>
         <li>Val-de-Marne</li>
+        <li>Seine-et-Marne</li>
+        <li>Val-d'Oise</li>
+        <li>Essonne</li>
+        <li>Yvelines</li>
       </ul>
     </div>
 

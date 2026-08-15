@@ -4,12 +4,30 @@ Site une page, statique, sans build ni dépendance. Tout est dans
 `index.html` ; déploiement par glisser-déposer (Cloudflare Pages),
 prévisualisation sur GitHub Pages. Doit tourner 3 ans sans maintenance.
 
+## ⚠ Visuels temporaires en place (15/08/2026)
+
+Les images de `assets/chantiers/` et `assets/artisan/` **ne sont pas des
+photos de chantiers de Borsci Rénovation**. Ce sont des visuels de
+substitution, destinés uniquement à présenter la maquette au client.
+
+- la page porte un `<meta name="robots" content="noindex, nofollow">`
+  tant qu'elles sont en place ; le retirer en même temps qu'elles
+- un avertissement figure en commentaire au sommet d'`index.html`
+- les remplacer par de vraies photos avant toute publication : les
+  légender comme des chantiers réalisés serait une pratique commerciale
+  trompeuse (art. L121-2 code de la consommation)
+- fiche de prise de vue rédigée pour l'artisan : 4 photos suffisent
+
 ## Décisions actées — ne pas revenir dessus sans accord explicite
 
 - **Direction de design actée le 15/08/2026** : variante B (titres Jost
   gras en casse normale, filets, angles vifs, header collant, bande de
   faits) + option 3 pour les prestations (cartes plates à filets
   partagés). Pas de coins arrondis, pas d'ombres, pas d'icônes.
+- **Zone d'intervention** : les 8 départements d'Île-de-France
+  (75, 92, 93, 94, 77, 95, 91, 78). Le positionnement de titre reste
+  « Paris et petite couronne » — c'est le cœur d'activité ; la zone
+  élargie est indiquée dans la section dédiée et dans areaServed.
 - **Positionnement élargi** : ne jamais présenter l'activité comme
   limitée à la remise en état après sinistre. Six domaines : remise en
   état après dégât des eaux, peinture et enduits, revêtement de sol
