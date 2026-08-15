@@ -61,7 +61,8 @@ substitution, destinés uniquement à présenter la maquette au client.
   RGE / rénovation énergétique.
 - Jamais de faux contenu : ni avis inventés (section commentée en
   attente des vrais avis Google), ni photos de chantiers d'autrui.
-- Grille chantiers : 4 vignettes (2×2), nombre pair.
+- Grille chantiers : 4 vignettes (2×2), nombre pair, format carré —
+  le portrait 3/4 donnait des tuiles de 928 px de haut sur grand écran.
 - Fontes hébergées en local (`assets/fonts/`), aucune requête tierce.
 
 ## Vérifications attendues avant tout push

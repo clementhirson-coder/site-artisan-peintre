@@ -198,9 +198,9 @@ p { max-width: var(--texte); }
 
 /* --- Trame des sections -------------------------------------------------- */
 
-section { padding: clamp(44px, 5vw, 76px) var(--pad); border-top: 1px solid var(--filet); }
+section { padding: clamp(34px, 3.6vw, 56px) var(--pad); border-top: 1px solid var(--filet); }
 
-.tete-section { margin-bottom: clamp(28px, 3.2vw, 44px); }
+.tete-section { margin-bottom: clamp(22px, 2.4vw, 34px); }
 .tete-section h2 { margin-top: .5rem; }
 
 .intro {
@@ -314,7 +314,7 @@ section { padding: clamp(44px, 5vw, 76px) var(--pad); border-top: 1px solid var(
 .grille-chantiers figure { position: relative; overflow: hidden; background: var(--fond-2); }
 
 .grille-chantiers img {
-  width: 100%; aspect-ratio: 3 / 4; object-fit: cover;
+  width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
   filter: contrast(1.02) saturate(.94);
   transition: transform 1.2s cubic-bezier(.22,.61,.36,1), filter .6s;
 }
@@ -329,9 +329,9 @@ section { padding: clamp(44px, 5vw, 76px) var(--pad); border-top: 1px solid var(
 .paire { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
 /* Dans la grille des chantiers, la paire avant/après occupe exactement
-   le gabarit 4/3 d'une vignette simple : ses deux moitiés deviennent
+   le gabarit carré d'une vignette simple : ses deux moitiés deviennent
    des portraits pleine hauteur, et les rangées restent alignées. */
-.grille-chantiers .paire { aspect-ratio: 4 / 3; }
+.grille-chantiers .paire { aspect-ratio: 1 / 1; }
 .grille-chantiers .paire .photo-vide,
 .grille-chantiers .paire picture,
 .grille-chantiers .paire img { aspect-ratio: auto; height: 100%; }
@@ -366,6 +366,10 @@ section { padding: clamp(44px, 5vw, 76px) var(--pad); border-top: 1px solid var(
   gap: clamp(20px, 3vw, 44px); align-items: center;
 }
 .bloc-large .paire .photo-vide { aspect-ratio: 4 / 3; }
+/* Le comparateur est recadre plus large que les autres visuels : en 4/3
+   il depassait la colonne de texte de plus de 200 px, et le centrage
+   vertical reversait ce surplus en vide au-dessus et au-dessous. */
+.bloc-large .ba { aspect-ratio: 16 / 10; }
 
 @media (max-width: 46em) {
   .prestations { grid-template-columns: 1fr; }
@@ -400,10 +404,12 @@ section { padding: clamp(44px, 5vw, 76px) var(--pad); border-top: 1px solid var(
 @media (min-width: 60em) {
   .bloc-conseil {
     display: grid; grid-template-columns: 1fr 1fr;
-    gap: clamp(32px, 4vw, 64px); align-items: center;
+    /* Colonnes seulement : un `gap` complet ecartait aussi le sur-titre
+       du h3, qui appartiennent a deux rangees de la meme colonne. */
+    gap: 0 clamp(32px, 4vw, 64px); align-items: center;
   }
   .bloc-conseil .mono { grid-column: 1; }
-  .bloc-conseil h3 { grid-column: 1; margin-bottom: 0; }
+  .bloc-conseil h3 { grid-column: 1; margin: .45rem 0 0; }
   .bloc-conseil p:not(.mono) { grid-column: 2; grid-row: 1 / 3; align-self: center; font-size: 1.0625em; }
 }
 
