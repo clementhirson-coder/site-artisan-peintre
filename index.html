@@ -18,25 +18,393 @@
     const FORM_ENDPOINT = "https://formspree.io/f/XXXXXXXX"; /* À FOURNIR */
   </script>
 
-  <!-- Styles temporaires : rendent les placeholders visibles pendant la relecture.
-       La feuille de style complète arrive à l'étape 2. -->
-  <style>
-    .a-fournir {
-      background: #fff3cd;
-      color: #8a4b00;
-      border: 1px dashed #c77700;
-      padding: 0 .25em;
-      font-weight: 700;
-    }
-    .photo-vide {
-      background: #fff3cd;
-      border: 2px dashed #c77700;
-      color: #8a4b00;
-      padding: 2rem 1rem;
-      text-align: center;
-      font-weight: 700;
-    }
-  </style>
+<style>
+/* ==========================================================================
+   Feuille de style unique. Mobile-first.
+   Aucune police distante, aucune image de décor : tout est local.
+   Pour changer une couleur, modifier uniquement les variables ci-dessous.
+   ========================================================================== */
+
+:root {
+  --encre:      #1c1c1c;   /* texte principal        */
+  --gris:       #5a5a5a;   /* texte secondaire       */
+  --trait:      #e0ddd8;   /* filets et bordures     */
+  --fond:       #ffffff;
+  --fond-doux:  #f6f4f1;   /* sections alternées     */
+  --accent:     #8c3d1e;   /* appels, liens, focus   */
+  --accent-fonce: #6d2f16;
+  --erreur:     #a4231b;
+  --succes:     #1f5c3d;
+
+  --large:      64rem;     /* largeur max du contenu */
+  --texte:      38rem;     /* largeur max de lecture */
+  --touche:     2.75rem;   /* 44px : cible tactile minimale */
+}
+
+/* --- Base ---------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: 0 0 5.5rem;           /* place pour la barre d'appel fixe */
+  background: var(--fond);
+  color: var(--encre);
+  font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+[hidden] { display: none !important; }
+
+a { color: var(--accent-fonce); }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --- Titres -------------------------------------------------------------- */
+
+h1, h2, h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 .5em;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.375rem; margin-top: 0; }
+h3 { font-size: 1.0625rem; font-family: inherit; }
+
+p { margin: 0 0 1rem; max-width: var(--texte); }
+
+/* --- Rythme des sections ------------------------------------------------- */
+
+.entete, main > section, footer {
+  padding: 2.5rem 1.25rem;
+}
+
+.entete > *, main > section > *, footer > * {
+  max-width: var(--large);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+main > section:nth-of-type(even) { background: var(--fond-doux); }
+
+main > section { border-top: 1px solid var(--trait); }
+
+/* --- En-tête ------------------------------------------------------------- */
+
+.entete { padding-top: 1.5rem; }
+
+.entete .photo-vide,
+.entete picture { margin-bottom: 1.5rem; }
+
+.entete .metier { color: var(--gris); font-size: 1.0625rem; }
+
+/* --- Bouton téléphone ---------------------------------------------------- */
+
+.bouton-tel {
+  display: block;
+  min-height: var(--touche);
+  padding: .75rem 1.25rem;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.bouton-tel:hover, .bouton-tel:focus { background: var(--accent-fonce); }
+
+/* --- Chantiers ----------------------------------------------------------- */
+
+.grille-chantiers {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grille-chantiers figure { margin: 0; }
+
+.grille-chantiers figcaption {
+  margin-top: .625rem;
+  font-size: .9375rem;
+  line-height: 1.45;
+  color: var(--gris);
+}
+
+/* Deux photos avant/après dans une même figure */
+.grille-chantiers .photo-vide + .photo-vide,
+.grille-chantiers picture + picture { margin-top: .5rem; }
+
+/* --- Prestations --------------------------------------------------------- */
+
+.liste-prestations {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  max-width: var(--texte);
+}
+
+.liste-prestations li {
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--trait);
+}
+
+/* --- Déroulement --------------------------------------------------------- */
+
+.etapes {
+  list-style: none;
+  counter-reset: etape;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.75rem;
+}
+
+.etapes li { counter-increment: etape; }
+
+.etapes h3::before {
+  content: counter(etape);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-right: .625rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  font-size: .875rem;
+  vertical-align: middle;
+}
+
+.etapes p { margin-bottom: 0; }
+
+/* --- Avis (section activée plus tard) ------------------------------------ */
+
+blockquote {
+  margin: 0 0 1.5rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--accent);
+  max-width: var(--texte);
+}
+
+blockquote footer {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--gris);
+  font-size: .9375rem;
+}
+
+/* --- Formulaire ---------------------------------------------------------- */
+
+form { max-width: var(--texte); margin-top: 1.5rem; }
+
+fieldset {
+  margin: 0 0 1.5rem;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+legend {
+  padding: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+/* Sous-groupes : occupation, délai, budget */
+fieldset fieldset {
+  margin: 1.5rem 0;
+  padding-top: .5rem;
+  border-top: 1px solid var(--trait);
+}
+
+fieldset fieldset legend { font-family: inherit; font-size: 1rem; }
+
+.progression {
+  color: var(--gris);
+  font-size: .9375rem;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+label { display: block; margin-top: 1rem; }
+
+/* Rangées cochables : toute la ligne est cliquable, hauteur ≥ 44px */
+.choix {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-height: var(--touche);
+  margin-top: .25rem;
+  padding: .5rem .75rem;
+  border: 1px solid var(--trait);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.choix:hover { border-color: var(--accent); }
+
+.choix input {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+input[type="text"], input[type="tel"], input[type="email"],
+input[type="number"], input[type="file"], textarea {
+  display: block;
+  width: 100%;
+  min-height: var(--touche);
+  margin-top: .375rem;
+  padding: .625rem .75rem;
+  border: 1px solid var(--gris);
+  border-radius: 4px;
+  background: var(--fond);
+  color: var(--encre);
+  font: inherit;
+}
+
+textarea { resize: vertical; }
+
+.erreur {
+  margin: .375rem 0 0;
+  color: var(--erreur);
+  font-size: .9375rem;
+  font-weight: 700;
+}
+
+.erreur:empty { display: none; }
+
+.navigation {
+  display: flex;
+  gap: .75rem;
+  margin-top: 2rem;
+  max-width: none;
+}
+
+.navigation button {
+  flex: 1;
+  min-height: var(--touche);
+  padding: .75rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.navigation button.secondaire { background: transparent; color: var(--accent-fonce); }
+
+#confirmation {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 2px solid var(--succes);
+  border-radius: 4px;
+}
+
+#confirmation h3 { color: var(--succes); }
+#confirmation p { margin-bottom: 0; }
+
+/* --- Pied de page -------------------------------------------------------- */
+
+footer {
+  background: var(--fond-doux);
+  border-top: 1px solid var(--trait);
+  color: var(--gris);
+  font-size: .9375rem;
+}
+
+footer h2 { font-size: 1.0625rem; color: var(--encre); }
+footer h3 { margin-top: 1.5rem; color: var(--encre); }
+
+/* --- Barre d'appel fixe (mobile) ----------------------------------------- */
+
+/* Le brief demande position:sticky ; un élément qui doit rester collé au bas
+   de la fenêtre pendant tout le défilement demande position:fixed. */
+#appel-fixe {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 10;
+  padding: .625rem 1rem calc(.625rem + env(safe-area-inset-bottom));
+  background: var(--fond);
+  border-top: 1px solid var(--trait);
+}
+
+/* --- Placeholders : à retirer une fois tout le contenu fourni ------------- */
+
+.a-fournir {
+  background: #fff3cd;
+  color: #8a4b00;
+  border: 1px dashed #c77700;
+  padding: 0 .25em;
+  font-weight: 700;
+}
+
+.bouton-tel.a-fournir {
+  background: var(--accent);
+  color: #fff;
+  border: 2px dashed #fff3cd;
+}
+
+.photo-vide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 11rem;
+  padding: 1.5rem 1rem;
+  background: #fff3cd;
+  border: 2px dashed #c77700;
+  color: #8a4b00;
+  font-weight: 700;
+  text-align: center;
+}
+
+.entete .photo-vide { min-height: 14rem; }
+
+/* --- Tablette ------------------------------------------------------------ */
+
+@media (min-width: 40em) {
+  body { font-size: 18px; }
+  .entete, main > section, footer { padding: 3.5rem 2rem; }
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.625rem; }
+  .grille-chantiers { grid-template-columns: repeat(2, 1fr); }
+  .etapes { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .bouton-tel { display: inline-block; }
+}
+
+/* --- Desktop : le numéro de l'en-tête reste accessible, la barre disparaît - */
+
+@media (min-width: 48em) {
+  body { padding-bottom: 0; }
+  #appel-fixe { display: none; }
+  .entete, main > section, footer { padding: 4rem 2rem; }
+  h1 { font-size: 2.75rem; }
+  .grille-chantiers { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
 </head>
 
 <body>
@@ -44,7 +412,7 @@
 <!-- ============================================================
      1. EN-TÊTE
      ============================================================ -->
-<header>
+<header class="entete">
   <!-- Photo de l'artisan au travail.
        Remplacer le bloc .photo-vide par :
        <picture>
@@ -59,12 +427,12 @@
     — peinture, parquet, placo, terrasse bois
   </h1>
 
-  <p>Artisan indépendant. Interventions à Paris et en petite couronne.</p>
+  <p class="metier">Artisan indépendant. Interventions à Paris et en petite couronne.</p>
 
-  <!-- Téléphone : remplacer les deux occurrences (href et texte affiché).
-       Le href ne doit contenir ni espace ni point : tel:+33612345678 -->
+  <!-- Téléphone : trois occurrences à remplacer dans la page (en-tête, noscript,
+       barre fixe). Le href ne doit contenir ni espace ni point : tel:+33612345678 -->
   <p>
-    <a href="tel:+33000000000" class="a-fournir">[NUMÉRO DE TÉLÉPHONE À FOURNIR]</a>
+    <a href="tel:+33000000000" class="bouton-tel a-fournir">[NUMÉRO DE TÉLÉPHONE À FOURNIR]</a>
   </p>
 </header>
 
@@ -84,7 +452,7 @@
       Photos avant/après quand elles existent.
     </p>
 
-    <ul>
+    <ul class="grille-chantiers">
       <!-- CHANTIER 1 — modèle à dupliquer.
            Markup image à utiliser une fois la photo déposée dans assets/chantiers/ :
            <picture>
@@ -164,7 +532,7 @@
        ============================================================ -->
   <section id="prestations" aria-labelledby="titre-prestations">
     <h2 id="titre-prestations">Prestations</h2>
-    <ul>
+    <ul class="liste-prestations">
       <li>Peinture intérieure</li>
       <li>Parquet flottant</li>
       <li>Parquet massif</li>
@@ -177,11 +545,13 @@
   <!-- ============================================================
        4. COMMENT ÇA SE PASSE
        Les 4 étapes ci-dessous décrivent un déroulé courant.
-       À relire et corriger par l'artisan pour coller à sa pratique réelle.
+       À relire et corriger par l'artisan pour coller à sa pratique réelle,
+       en particulier l'étape 2 (visite systématique ou non) et l'étape 4
+       (protection et nettoyage).
        ============================================================ -->
   <section id="deroulement" aria-labelledby="titre-deroulement">
     <h2 id="titre-deroulement">Comment ça se passe</h2>
-    <ol>
+    <ol class="etapes">
       <li>
         <h3>Premier échange</h3>
         <p>Par téléphone ou via le formulaire. Description du projet, des contraintes et du calendrier.</p>
@@ -246,19 +616,19 @@
     <form id="formulaire-projet" method="post" novalidate>
 
       <!-- Indicateur de progression : mis à jour par le script à l'étape 3 -->
-      <p id="progression" aria-live="polite">Étape 1 sur 4</p>
+      <p class="progression" id="progression" aria-live="polite">Étape 1 sur 4</p>
 
       <!-- ÉTAPE 1 — PRESTATION -->
       <fieldset data-etape="1">
         <legend>Type de travaux</legend>
         <p>Plusieurs choix possibles.</p>
 
-        <label><input type="checkbox" name="prestation" value="Peinture intérieure"> Peinture intérieure</label>
-        <label><input type="checkbox" name="prestation" value="Parquet flottant"> Parquet flottant</label>
-        <label><input type="checkbox" name="prestation" value="Parquet massif"> Parquet massif</label>
-        <label><input type="checkbox" name="prestation" value="Placo et cloisons"> Placo et cloisons</label>
-        <label><input type="checkbox" name="prestation" value="Terrasse bois sur pilotis"> Terrasse bois sur pilotis</label>
-        <label><input type="checkbox" name="prestation" value="Conseil et accompagnement de projet"> Conseil et accompagnement de projet</label>
+        <label class="choix"><input type="checkbox" name="prestation" value="Peinture intérieure"> Peinture intérieure</label>
+        <label class="choix"><input type="checkbox" name="prestation" value="Parquet flottant"> Parquet flottant</label>
+        <label class="choix"><input type="checkbox" name="prestation" value="Parquet massif"> Parquet massif</label>
+        <label class="choix"><input type="checkbox" name="prestation" value="Placo et cloisons"> Placo et cloisons</label>
+        <label class="choix"><input type="checkbox" name="prestation" value="Terrasse bois sur pilotis"> Terrasse bois sur pilotis</label>
+        <label class="choix"><input type="checkbox" name="prestation" value="Conseil et accompagnement de projet"> Conseil et accompagnement de projet</label>
 
         <p class="erreur" data-erreur-pour="prestation" role="alert"></p>
       </fieldset>
@@ -276,26 +646,26 @@
 
         <fieldset>
           <legend>Le logement est</legend>
-          <label><input type="radio" name="occupation" value="occupé"> Occupé</label>
-          <label><input type="radio" name="occupation" value="vide"> Vide</label>
+          <label class="choix"><input type="radio" name="occupation" value="occupé"> Occupé</label>
+          <label class="choix"><input type="radio" name="occupation" value="vide"> Vide</label>
         </fieldset>
 
         <fieldset>
           <legend>Délai</legend>
-          <label><input type="radio" name="delai" value="urgent"> Urgent</label>
-          <label><input type="radio" name="delai" value="1 à 3 mois"> 1 à 3 mois</label>
-          <label><input type="radio" name="delai" value="plus tard"> Plus tard</label>
-          <label><input type="radio" name="delai" value="je me renseigne"> Je me renseigne</label>
+          <label class="choix"><input type="radio" name="delai" value="urgent"> Urgent</label>
+          <label class="choix"><input type="radio" name="delai" value="1 à 3 mois"> 1 à 3 mois</label>
+          <label class="choix"><input type="radio" name="delai" value="plus tard"> Plus tard</label>
+          <label class="choix"><input type="radio" name="delai" value="je me renseigne"> Je me renseigne</label>
         </fieldset>
 
         <fieldset>
           <legend>Budget envisagé</legend>
-          <label><input type="radio" name="budget" value="moins de 2 000 €"> Moins de 2 000 €</label>
-          <label><input type="radio" name="budget" value="2 000 à 5 000 €"> 2 000 à 5 000 €</label>
-          <label><input type="radio" name="budget" value="5 000 à 10 000 €"> 5 000 à 10 000 €</label>
-          <label><input type="radio" name="budget" value="10 000 à 20 000 €"> 10 000 à 20 000 €</label>
-          <label><input type="radio" name="budget" value="plus de 20 000 €"> Plus de 20 000 €</label>
-          <label><input type="radio" name="budget" value="je ne sais pas"> Je ne sais pas</label>
+          <label class="choix"><input type="radio" name="budget" value="moins de 2 000 €"> Moins de 2 000 €</label>
+          <label class="choix"><input type="radio" name="budget" value="2 000 à 5 000 €"> 2 000 à 5 000 €</label>
+          <label class="choix"><input type="radio" name="budget" value="5 000 à 10 000 €"> 5 000 à 10 000 €</label>
+          <label class="choix"><input type="radio" name="budget" value="10 000 à 20 000 €"> 10 000 à 20 000 €</label>
+          <label class="choix"><input type="radio" name="budget" value="plus de 20 000 €"> Plus de 20 000 €</label>
+          <label class="choix"><input type="radio" name="budget" value="je ne sais pas"> Je ne sais pas</label>
         </fieldset>
 
         <label for="description">Description</label>
@@ -331,17 +701,19 @@
         <input type="email" id="email" name="email" autocomplete="email" required>
         <p class="erreur" data-erreur-pour="email" role="alert"></p>
 
-        <label>
+        <label class="choix">
           <input type="checkbox" id="consentement" name="consentement" value="oui" required>
-          J'accepte que <span class="a-fournir">[NOM EXACT DE L'ENTREPRISE À FOURNIR]</span>
-          conserve ces informations pour me recontacter au sujet de ce projet.
+          <span>
+            J'accepte que <span class="a-fournir">[NOM EXACT DE L'ENTREPRISE À FOURNIR]</span>
+            conserve ces informations pour me recontacter au sujet de ce projet.
+          </span>
         </label>
         <p class="erreur" data-erreur-pour="consentement" role="alert"></p>
       </fieldset>
 
       <!-- Navigation : activée à l'étape 3 du chantier -->
-      <p>
-        <button type="button" id="precedent" hidden>Précédent</button>
+      <p class="navigation">
+        <button type="button" id="precedent" class="secondaire" hidden>Précédent</button>
         <button type="button" id="suivant">Suivant</button>
         <button type="submit" id="envoyer" hidden>Envoyer</button>
       </p>
@@ -397,9 +769,9 @@
   </p>
 </footer>
 
-<!-- Bouton d'appel fixe, mobile uniquement. Positionnement : étape 2. -->
+<!-- Barre d'appel fixe, masquée à partir de 768px où le numéro de l'en-tête reste visible. -->
 <div id="appel-fixe">
-  <a href="tel:+33000000000" class="a-fournir">[NUMÉRO — Appeler]</a>
+  <a href="tel:+33000000000" class="bouton-tel a-fournir">[NUMÉRO — Appeler]</a>
 </div>
 
 </body>
