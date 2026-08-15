@@ -117,12 +117,24 @@ Script (`apps-script/Code.gs`, déploiement décrit dans
 calcul et envoie un email à contact.borsci@gmail.com. Le tout vit dans
 le compte Google de l'artisan, pas ailleurs.
 
-**Branché le 15/08/2026** — mais jamais exercé de bout en bout depuis
-ici : l'environnement de développement bloque tous les domaines Google,
-la requête réelle n'a donc pas pu être émise. Les tests couvrent tout
-le reste avec `fetch` remplacé. Le seul point resté à vérifier depuis un
-vrai navigateur est le CORS d'Apps Script. En cas d'échec, le secours
-WhatsApp prend le relais et aucune demande n'est perdue.
+**Branché et vérifié de bout en bout le 15/08/2026** : envoi depuis le
+site → ligne dans la feuille → email reçu. Le CORS d'Apps Script passe.
+La vérification a dû être faite par l'utilisateur : l'environnement de
+développement bloque tous les domaines Google, aucun test d'ici ne peut
+joindre l'endpoint. Les tests automatiques remplacent donc `fetch`.
+
+**Le script déployé diverge volontairement du dépôt sur une ligne.**
+Il a été créé depuis `script.google.com` et non depuis la feuille, donc
+`getActiveSpreadsheet()` n'y renvoie rien. Le déploiement porte un
+`FEUILLE_ID` renseigné ; le dépôt le laisse vide, l'identifiant de la
+feuille client n'ayant pas à figurer dans un dépôt public. Toute reprise
+du script doit reporter cet identifiant — il se lit dans l'adresse de la
+feuille, entre `/d/` et `/edit`.
+
+**Modifier le script ne suffit pas** : l'éditeur exécute la dernière
+version enregistrée, le formulaire appelle la version *déployée*. Sans
+« Gérer les déploiements › Nouvelle version », le site continue
+d'appeler l'ancien code.
 
 - **Ajouter une question ne demande de modification nulle part
   ailleurs** : le payload est construit en parcourant le formulaire, et
