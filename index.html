@@ -5,10 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f6f1">
 
-  <!-- ÉTAPE 4 : title, meta description et JSON-LD LocalBusiness seront finalisés
-       une fois le nom de l'entreprise et les communes réels fournis. -->
   <title>Rénovation et finitions intérieures — [NOM DE L'ENTREPRISE] — Paris et petite couronne</title>
   <meta name="description" content="Artisan indépendant en rénovation et finitions intérieures, à Paris et en petite couronne. Remise en état après dégât des eaux. Devis détaillé sur demande.">
+
+  <!-- Données structurées. Remplacer chaque valeur [À FOURNIR : …],
+       puis les communes d'areaServed par la liste réelle.
+       Le nom et la description ne listent pas les prestations :
+       l'étendue du métier passe par knowsAbout. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    "name": "[À FOURNIR : nom exact de l'entreprise]",
+    "description": "Artisan indépendant en rénovation et finitions intérieures, à Paris et en petite couronne.",
+    "telephone": "[À FOURNIR : +33612345678]",
+    "url": "[À FOURNIR : https://www.exemple.fr/]",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "[À FOURNIR : adresse déclarée]",
+      "addressLocality": "[À FOURNIR : commune]",
+      "postalCode": "[À FOURNIR : code postal]",
+      "addressCountry": "FR"
+    },
+    "areaServed": [
+      "[À FOURNIR : commune 1]",
+      "[À FOURNIR : commune 2]",
+      "[À FOURNIR : commune 3]"
+    ],
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "[À FOURNIR : 08:00]",
+      "closes": "[À FOURNIR : 18:00]"
+    },
+    "knowsAbout": [
+      "remise en état après dégât des eaux",
+      "réfection après fuite",
+      "reprise de plafond",
+      "traitement d'auréole",
+      "reprise d'enduits",
+      "peinture intérieure",
+      "pose de parquet flottant",
+      "pose de parquet massif",
+      "cloisons et placo",
+      "terrasse bois sur pilotis",
+      "conseil et accompagnement de travaux"
+    ]
+  }
+  </script>
 
   <!-- ================================================================
        ENDPOINT DU FORMULAIRE — À REMPLACER
@@ -467,7 +511,12 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       <span class="a-fournir">[Nom de l'entreprise à fournir]</span>
     </h1>
 
-    <p class="metier">Artisan indépendant.</p>
+    <!-- Ne pas nommer l'ancien employeur. Ne pas écrire ni suggérer une
+         collaboration actuelle avec des compagnies d'assurance. -->
+    <p class="metier">
+      Artisan indépendant. Formé aux interventions après sinistre
+      au sein d'une entreprise spécialisée.
+    </p>
 
     <!-- Téléphone : trois occurrences à remplacer dans la page (en-tête, noscript,
          barre fixe). Le href ne contient ni espace ni point : tel:+33612345678 -->
@@ -740,6 +789,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
         <legend>Type de travaux</legend>
         <p class="mono">Plusieurs choix possibles</p>
         <div style="margin-top:1.25rem">
+          <label class="choix"><input type="checkbox" name="prestation" value="Après une fuite ou un dégât des eaux"> Après une fuite ou un dégât des eaux</label>
           <label class="choix"><input type="checkbox" name="prestation" value="Peinture intérieure"> Peinture intérieure</label>
           <label class="choix"><input type="checkbox" name="prestation" value="Parquet flottant"> Parquet flottant</label>
           <label class="choix"><input type="checkbox" name="prestation" value="Parquet massif"> Parquet massif</label>
