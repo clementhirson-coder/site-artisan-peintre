@@ -113,17 +113,17 @@
    Pour changer l'apparence, ne toucher que le bloc :root ci-dessous.
    ========================================================================== */
 
+/* jost.woff2 est une fonte VARIABLE, axe wght de 100 a 900. Elle etait
+   declaree en deux poids fixes (200 et 400) : le navigateur figeait
+   l'axe sur l'un des deux et fabriquait le reste en gras synthetique.
+   Concretement, les titres a 560 et le logo a 700 etaient des 400
+   epaissis a la main par le moteur de rendu, et le texte courant a 300
+   s'affichait a 200. Declarer la plage rend les neuf poids reels, sans
+   un octet de plus. */
 @font-face {
   font-family: 'Jost';
   font-style: normal;
-  font-weight: 200;
-  font-display: swap;
-  src: url('assets/fonts/jost.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Jost';
-  font-style: normal;
-  font-weight: 400;
+  font-weight: 100 900;
   font-display: swap;
   src: url('assets/fonts/jost.woff2') format('woff2');
 }
@@ -282,18 +282,21 @@ section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid va
 }
 .nav::-webkit-scrollbar { display: none; }
 
+/* En Jost demi-gras plutot qu'en mono : DM Mono n'est charge qu'en 400,
+   un `font-weight` plus haut n'y aurait donne qu'un gras synthetique.
+   Jost est variable, le 600 est un vrai dessin. */
 .nav a {
   display: inline-flex; align-items: center;
   white-space: nowrap;
-  font-family: var(--mono); font-size: 11px; letter-spacing: .13em;
-  text-transform: uppercase; color: var(--doux);
+  font-family: var(--sans); font-size: 13px; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--encre);
   border-bottom: 2px solid transparent;
   transition: color .2s, border-color .2s;
 }
-.nav a:hover { color: var(--encre); }
+.nav a:hover { color: var(--accent); }
 .nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 /* Section en cours de lecture. */
-.nav a[aria-current] { color: var(--encre); border-bottom-color: var(--accent); }
+.nav a[aria-current] { color: var(--accent); border-bottom-color: var(--accent); }
 
 .barre .tel-barre {
   display: inline-flex; align-items: center;

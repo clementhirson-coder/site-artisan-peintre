@@ -103,6 +103,11 @@ client.
   du numéro, qui reste accessible dans la barre d'appel fixe du bas.
   Un dégradé sur le bord droit signale qu'il reste des entrées.
 - Fontes hébergées en local (`assets/fonts/`), aucune requête tierce.
+  `jost.woff2` est **variable** (axe wght 100→900) et doit rester
+  déclarée `font-weight: 100 900`. Déclarée en poids fixes, comme elle
+  l'était jusqu'au 15/08/2026, le navigateur figeait l'axe : les titres
+  demandaient 560 et s'affichaient à 400. DM Mono n'existe qu'en 400 —
+  ne rien lui demander de plus gras, ce serait du gras synthétique.
 
 ## Réception des demandes
 
