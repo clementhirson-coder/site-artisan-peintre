@@ -94,6 +94,14 @@ client.
   superposables. Nombre pair, et l'écart entre deux chantiers doit
   rester nettement plus grand que l'écart entre les deux volets d'une
   paire — sinon quatre photos se lisent comme une seule bande.
+- **Navigation de la barre, actée le 15/08/2026** : Prestations,
+  Méthode, Votre projet, Chantiers réalisés, Zone d'intervention. Le
+  formulaire s'appelle « Votre projet » dans le menu, pas « Contact » —
+  c'est ce que le visiteur vient y faire. Elle défile horizontalement
+  plutôt que de se replier dans un menu : pas de panneau à ouvrir, pas
+  de piège au clavier, rien à maintenir. Sous 60em elle prend la place
+  du numéro, qui reste accessible dans la barre d'appel fixe du bas.
+  Un dégradé sur le bord droit signale qu'il reste des entrées.
 - Fontes hébergées en local (`assets/fonts/`), aucune requête tierce.
 
 ## Réception des demandes
