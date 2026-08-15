@@ -192,22 +192,39 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 
 .paire { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
-/* --- Prestations : un index -------------------------------------------- */
+/* --- Prestations : cinq blocs ------------------------------------------- */
 
-.liste-prestations { list-style: none; border-top: 1px solid var(--filet); }
+.prestations { display: grid; gap: clamp(56px, 8vw, 112px); }
 
-.liste-prestations li {
-  display: flex;
-  align-items: baseline;
-  gap: clamp(16px, 3vw, 40px);
-  padding: clamp(18px, 2.5vw, 30px) 0;
-  border-bottom: 1px solid var(--filet);
-  font-size: clamp(20px, 2.6vw, 34px);
+.bloc { display: grid; gap: clamp(20px, 3vw, 40px); }
+
+.bloc h3 {
+  font-size: clamp(22px, 3vw, 40px);
   letter-spacing: .04em;
-  text-transform: uppercase;
+  line-height: 1.05;
+  margin: .75rem 0 1rem;
 }
 
-.liste-prestations .num { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; color: var(--accent); }
+.bloc-texte p { color: var(--doux); }
+
+.bloc .photo-vide { aspect-ratio: 4 / 3; }
+
+/* Blocs 1 et 5 : traitement plus généreux, zone photo pleine largeur
+   avec emplacement avant/après. */
+.bloc-large .photo-vide { aspect-ratio: 16 / 10; }
+.bloc-large .paire .photo-vide { aspect-ratio: 4 / 3; }
+
+.lien-formulaire {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: .25em;
+}
 
 /* --- Déroulement --------------------------------------------------------- */
 
@@ -394,6 +411,14 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
   .grille-chantiers { grid-template-columns: repeat(3, 1fr); }
   .etapes { grid-template-columns: repeat(4, 1fr); }
+
+  /* Blocs standard : texte et photo côte à côte, photo contenue.
+     Les blocs 1 et 5 gardent leur pleine largeur — c'est leur privilège. */
+  .bloc:not(.bloc-large) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: center;
+  }
+  .bloc:not(.bloc-large):nth-child(odd) .bloc-texte { order: 1; }
 }
 </style>
 </head>
@@ -537,14 +562,63 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       <h2 id="titre-prestations">Ce qui est fait</h2>
     </div>
 
-    <ul class="liste-prestations">
-      <li class="rv"><span class="num">01</span>Peinture intérieure</li>
-      <li class="rv"><span class="num">02</span>Parquet flottant</li>
-      <li class="rv"><span class="num">03</span>Parquet massif</li>
-      <li class="rv"><span class="num">04</span>Placo et cloisons</li>
-      <li class="rv"><span class="num">05</span>Terrasse bois sur pilotis</li>
-      <li class="rv"><span class="num">06</span>Conseil et accompagnement de projet</li>
-    </ul>
+    <div class="prestations">
+
+      <!-- BLOC 1 — prestation à plus forte intention de recherche :
+           zone photo large + avant/après. Texte détaillé : correction 4. -->
+      <article class="bloc bloc-large rv" id="degat-des-eaux" aria-labelledby="t-degat">
+        <div class="bloc-texte">
+          <p class="mono"><span class="num">01</span>Remise en état</p>
+          <h3 id="t-degat">Après une fuite ou un dégât des eaux</h3>
+        </div>
+        <div class="paire">
+          <div class="photo-vide">Avant — à fournir</div>
+          <div class="photo-vide">Après — à fournir</div>
+        </div>
+      </article>
+
+      <article class="bloc rv" id="peinture" aria-labelledby="t-peinture">
+        <div class="bloc-texte">
+          <p class="mono"><span class="num">02</span>Finitions</p>
+          <h3 id="t-peinture">Peinture et enduits</h3>
+          <p>Murs et plafonds : préparation des supports, enduits, finitions.</p>
+        </div>
+        <div class="photo-vide">Photo à fournir</div>
+      </article>
+
+      <article class="bloc rv" id="parquets" aria-labelledby="t-parquets">
+        <div class="bloc-texte">
+          <p class="mono"><span class="num">03</span>Sols</p>
+          <h3 id="t-parquets">Parquets — flottant et massif</h3>
+          <p>Pose flottante ou clouée, remplacement de lames abîmées.</p>
+        </div>
+        <div class="photo-vide">Photo à fournir</div>
+      </article>
+
+      <article class="bloc rv" id="cloisons" aria-labelledby="t-cloisons">
+        <div class="bloc-texte">
+          <p class="mono"><span class="num">04</span>Aménagement</p>
+          <h3 id="t-cloisons">Cloisons et placo</h3>
+          <p>Création ou reprise de cloisons, doublages, plafonds.</p>
+        </div>
+        <div class="photo-vide">Photo à fournir</div>
+      </article>
+
+      <!-- BLOC 5 — spécialité la moins concurrencée :
+           zone photo large + avant/après. -->
+      <article class="bloc bloc-large rv" id="terrasses" aria-labelledby="t-terrasses">
+        <div class="bloc-texte">
+          <p class="mono"><span class="num">05</span>Extérieur</p>
+          <h3 id="t-terrasses">Terrasses bois sur pilotis</h3>
+          <p>Structure et platelage bois, terrain plat ou en pente.</p>
+        </div>
+        <div class="paire">
+          <div class="photo-vide">Avant — à fournir</div>
+          <div class="photo-vide">Après — à fournir</div>
+        </div>
+      </article>
+
+    </div>
   </section>
 
   <!-- ============================================================
