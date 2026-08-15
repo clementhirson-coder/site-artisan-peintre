@@ -250,7 +250,7 @@ section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var
 
 /* --- En-tête ------------------------------------------------------------- */
 
-.entete { padding: 0 0 clamp(48px, 8vw, 96px); }
+.entete { padding: 0 0 clamp(32px, 5vw, 56px); }
 
 .entete-photo { position: relative; overflow: hidden; }
 
@@ -259,17 +259,23 @@ section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var
   filter: contrast(1.02) saturate(.96);
 }
 
-.entete-corps { padding: clamp(28px, 5vw, 56px) var(--pad) 0; }
+.entete-corps { padding: clamp(20px, 3.5vw, 36px) var(--pad) 0; }
 
 .entete h1 { margin: .6rem 0 .9rem; }
 
-.entete .metier { color: var(--doux); max-width: 34rem; font-size: 1.125em; line-height: 1.45; }
-.entete .metier + .metier { margin-top: .5rem; font-size: 1em; }
+/* Les trois paragraphes partagent la meme largeur : le bord droit du
+   bloc reste regulier. text-wrap:balance repartit les lignes et evite
+   les mots orphelins ; ignore par les navigateurs qui ne le gerent pas. */
+.entete .metier,
+.entete .accroche { text-wrap: balance; }
+
+.entete .metier { color: var(--doux); max-width: 33rem; font-size: 1.125em; line-height: 1.45; }
+.entete .metier + .metier { margin-top: .45rem; font-size: 1em; line-height: 1.5; }
 
 /* Accroche : dit le métier en une phrase, sous l'identité. */
 .entete .accroche {
-  margin-top: 1.6rem;
-  max-width: 36rem;
+  margin-top: 1.3rem;
+  max-width: 33rem;
   font-size: clamp(20px, 1.6vw, 26px);
   font-weight: 400;
   line-height: 1.35;
@@ -287,17 +293,25 @@ section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var
   gap: .75em;
   min-height: var(--touche);
   margin-top: 2rem;
-  padding: .875rem 1.5rem;
+  padding: .875rem 1.6rem;
   background: var(--accent);
   color: var(--fond);
   font-family: var(--mono);
   font-size: clamp(12px, .8vw + 9px, 15px);
   letter-spacing: .1em;
   text-transform: uppercase;
-  transition: opacity .25s;
+  /* Exception aux angles vifs : les deux boutons d'appel sont arrondis
+     et poses, pour se detacher du reste de la page. */
+  border-radius: 999px;
+  box-shadow: 0 8px 20px -12px rgba(41, 37, 36, .55);
+  transition: opacity .25s, transform .25s, box-shadow .25s;
 }
 
-.bouton-tel:hover { opacity: .82; }
+.bouton-tel:hover {
+  opacity: .92;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px -12px rgba(41, 37, 36, .6);
+}
 
 /* --- Chantiers ----------------------------------------------------------- */
 
@@ -439,15 +453,27 @@ section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var
 .lien-whatsapp {
   display: inline-flex;
   align-items: center;
+  gap: .6em;
   min-height: var(--touche);
-  margin-top: .5rem;
+  margin-top: .75rem;
+  padding: .8rem 1.5rem;
+  /* Vert WhatsApp officiel. Texte en encre et non en blanc : du blanc
+     sur ce vert ne donne que 2:1, l'encre donne 7,6:1. */
+  background: #25d366;
+  color: var(--encre);
+  border-radius: 999px;
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--accent);
-  border-bottom: 1px solid var(--accent);
-  padding-bottom: .2rem;
+  box-shadow: 0 8px 20px -12px rgba(37, 211, 102, .8);
+  transition: opacity .25s, transform .25s, box-shadow .25s;
+}
+
+.lien-whatsapp:hover {
+  opacity: .92;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px -12px rgba(37, 211, 102, .9);
 }
 
 /* --- Déroulement --------------------------------------------------------- */
@@ -642,10 +668,13 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   body { padding-bottom: 0; }
   #appel-fixe { display: none; }
 
-  .entete { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; min-height: 68vh; padding: 0; }
+  .entete { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; min-height: 58vh; padding: 0; }
   /* Même retrait que le nom de la barre collante : les deux doivent s'aligner. */
   .entete-corps { padding: 0 clamp(32px, 4vw, 56px) 0 var(--pad); order: -1; }
-  .entete-photo img, .entete-photo .photo-vide { aspect-ratio: auto; height: 88vh; }
+  /* La photo remplit la rangée : c'est le texte, ou min-height, qui
+     dicte la hauteur — pas l'image. */
+  .entete-photo, .entete-photo picture { height: 100%; }
+  .entete-photo img { aspect-ratio: auto; height: 100%; object-fit: cover; }
 
   .etapes { grid-template-columns: repeat(4, 1fr); }
 

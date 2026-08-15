@@ -23,7 +23,12 @@ substitution, destinés uniquement à présenter la maquette au client.
 - **Direction de design actée le 15/08/2026** : variante B (titres Jost
   gras en casse normale, filets, angles vifs, header collant, bande de
   faits) + option 3 pour les prestations (cartes plates à filets
-  partagés). Pas de coins arrondis, pas d'ombres, pas d'icônes.
+  partagés). Pas d'icônes.
+  **Exception (15/08/2026)** : les deux boutons d'appel de l'en-tête —
+  téléphone et WhatsApp — sont des pastilles arrondies avec une ombre
+  douce, pour se détacher du reste de la page. Le WhatsApp utilise le
+  vert de marque `#25d366`, avec du texte en `--encre` et non en blanc :
+  du blanc sur ce vert ne donne que 2:1, l'encre donne 7,6:1.
 - **Zone d'intervention** : les 8 départements d'Île-de-France
   (75, 92, 93, 94, 77, 95, 91, 78). Le positionnement de titre reste
   « Paris et petite couronne » — c'est le cœur d'activité ; la zone
