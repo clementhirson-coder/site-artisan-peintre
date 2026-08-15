@@ -198,9 +198,9 @@ p { max-width: var(--texte); }
 
 /* --- Trame des sections -------------------------------------------------- */
 
-section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid var(--filet); }
+section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var(--filet); }
 
-.tete-section { margin-bottom: clamp(32px, 5vw, 64px); }
+.tete-section { margin-bottom: clamp(28px, 3.2vw, 44px); }
 .tete-section h2 { margin-top: .5rem; }
 
 .intro {
@@ -261,15 +261,16 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 
 .entete-corps { padding: clamp(28px, 5vw, 56px) var(--pad) 0; }
 
-.entete h1 { margin: 1rem 0 1.5rem; }
+.entete h1 { margin: .6rem 0 .9rem; }
 
-.entete .metier { color: var(--doux); max-width: 26rem; }
+.entete .metier { color: var(--doux); max-width: 34rem; font-size: 1.125em; line-height: 1.45; }
+.entete .metier + .metier { margin-top: .5rem; font-size: 1em; }
 
 /* Accroche : dit le métier en une phrase, sous l'identité. */
 .entete .accroche {
-  margin-top: 2rem;
-  max-width: 34rem;
-  font-size: clamp(19px, 1.5vw, 24px);
+  margin-top: 1.6rem;
+  max-width: 36rem;
+  font-size: clamp(20px, 1.6vw, 26px);
   font-weight: 400;
   line-height: 1.35;
   letter-spacing: -.012em;
@@ -387,6 +388,16 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 
 .bloc-conseil h3 { margin-bottom: 1rem; }
 .bloc-conseil p { color: var(--doux); }
+
+@media (min-width: 60em) {
+  .bloc-conseil {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 4vw, 64px); align-items: center;
+  }
+  .bloc-conseil .mono { grid-column: 1; }
+  .bloc-conseil h3 { grid-column: 1; margin-bottom: 0; }
+  .bloc-conseil p:not(.mono) { grid-column: 2; grid-row: 1 / 3; align-self: center; font-size: 1.0625em; }
+}
 
 /* Comparateur avant/après. Les couches .photo-vide seront remplacées
    par de vraies <img> une fois les photos fournies — le mécanisme
@@ -536,6 +547,19 @@ textarea { resize: vertical; }
 #confirmation { border: 1px solid var(--accent); padding: clamp(24px, 4vw, 40px); }
 #confirmation p { color: var(--doux); margin-top: .75rem; }
 
+@media (min-width: 60em) {
+  /* Le formulaire monte à côté du titre : la moitié droite était vide. */
+  #contact {
+    display: grid; grid-template-columns: .8fr 1.2fr;
+    column-gap: clamp(40px, 5vw, 88px); align-items: start;
+  }
+  #contact > .tete-section { grid-column: 1; grid-row: 1; margin-bottom: 0; }
+  #contact > form,
+  #contact > #confirmation { grid-column: 2; grid-row: 1; }
+  #contact > noscript { grid-column: 2; grid-row: 2; }
+  #contact form { max-width: 40rem; margin-top: 0; }
+}
+
 /* --- Pied de page -------------------------------------------------------- */
 
 footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(--filet); }
@@ -618,8 +642,9 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   body { padding-bottom: 0; }
   #appel-fixe { display: none; }
 
-  .entete { display: grid; grid-template-columns: 1fr 1fr; align-items: center; min-height: 88vh; padding: 0; }
-  .entete-corps { padding: 0 clamp(40px, 5vw, 88px); order: -1; }
+  .entete { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; min-height: 68vh; padding: 0; }
+  /* Même retrait que le nom de la barre collante : les deux doivent s'aligner. */
+  .entete-corps { padding: 0 clamp(32px, 4vw, 56px) 0 var(--pad); order: -1; }
   .entete-photo img, .entete-photo .photo-vide { aspect-ratio: auto; height: 88vh; }
 
   .etapes { grid-template-columns: repeat(4, 1fr); }
@@ -989,6 +1014,10 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     <div class="tete-section rv">
       <p class="mono"><span class="num">04</span>Contact</p>
       <h2 id="titre-contact">Décrire un projet</h2>
+      <p class="intro">
+        Quatre étapes, deux minutes. Les photos permettent une première
+        estimation sans déplacement. Rappel sous 24 h.
+      </p>
     </div>
 
     <form id="formulaire-projet" method="post" novalidate>
