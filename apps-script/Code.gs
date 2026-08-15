@@ -22,6 +22,23 @@ var DESTINATAIRE = 'contact.borsci@gmail.com';
  */
 var FEUILLE_ID = '';
 
+/**
+ * Accusé de réception envoyé au client.
+ * Mettre à false pour ne plus l'envoyer.
+ */
+var ACCUSE_RECEPTION = true;
+
+/**
+ * Nombre maximum d'accusés de réception par jour.
+ *
+ * L'accusé part vers une adresse saisie par un inconnu, sur une URL
+ * publique : sans plafond, quelqu'un pourrait s'en servir pour expédier
+ * des messages signés Borsci Rénovation à des tiers. Au-delà de ce
+ * seuil, les demandes continuent d'être enregistrées et notifiées —
+ * seul l'accusé au client est suspendu, et le fait est journalisé.
+ */
+var ACCUSES_PAR_JOUR = 30;
+
 /* ============================================================
    Au-dessous, plus rien à modifier.
    ============================================================ */
@@ -104,12 +121,28 @@ function doPost(e) {
       verrou.releaseLock();
     }
 
-    /* L'email vient après : une panne d'envoi ne doit pas faire perdre
-       la demande, déjà enregistrée. */
+    /* Les emails viennent après : une panne d'envoi ne doit pas faire
+       perdre la demande, déjà enregistrée. Chacun dans son propre
+       try/catch — un accusé de réception qui échoue, parce que le client
+       a mal saisi son adresse, ne doit pas empêcher la notification. */
     try {
       notifier(champs);
     } catch (err) {
       console.error('Notification impossible : ' + err);
+    }
+
+    if (ACCUSE_RECEPTION && champs.email) {
+      try {
+        if (plafondAtteint()) {
+          console.warn('Plafond de ' + ACCUSES_PAR_JOUR + ' accusés par jour atteint. '
+                     + 'La demande est enregistrée et notifiée, mais le client n\'a pas '
+                     + "reçu d'accusé. Envoi anormal ou pic d'activité ?");
+        } else {
+          accuserReception(champs);
+        }
+      } catch (err) {
+        console.error('Accusé de réception impossible : ' + err);
+      }
     }
 
     return reponse({ ok: true });
@@ -358,4 +391,232 @@ function essai() {
   console.log('Réponse du script : ' + sortie.getContent());
   if (!verdict.ok) throw new Error('Le script a refusé la demande : ' + verdict.raison);
   console.log('Ligne ajoutée. Ne pas oublier de la supprimer de la feuille.');
+}
+
+/* ====================================================================
+   ACCUSÉ DE RÉCEPTION AU CLIENT
+
+   Contraintes propres à l'email, qui expliquent le style du code :
+   - les clients de messagerie suppriment les feuilles de style ; tout
+     est donc en attribut `style` sur chaque balise ;
+   - la mise en page passe par des tableaux imbriqués, seule technique
+     que Outlook et Gmail rendent de la même façon ;
+   - aucune image : le logo est reconstruit en HTML. Une image distante
+     serait bloquée par défaut chez la plupart des destinataires, et une
+     image jointe alourdirait le message pour le même résultat ;
+   - aucune police web : elles ne se chargent pas en messagerie. La pile
+     système donne une linéale proche du logo réel.
+
+   RÈGLES DE RÉDACTION — reprendre celles du site : pas de « nous », pas
+   de superlatif, aucune promesse de prix ni de date d'intervention. Le
+   rappel sous 24 h est déjà annoncé sur le site, il peut être répété.
+   ==================================================================== */
+
+var COULEURS = {
+  papier: '#f8f6f1', panneau: '#efeae1', encre: '#292524',
+  doux: '#55504b', tenu: '#6b655e', filet: '#ddd6ca', terre: '#9c4221'
+};
+
+var PILE = "Helvetica Neue, Helvetica, Arial, sans-serif";
+
+/** Échappe le texte saisi par le client avant de l'insérer dans le HTML. */
+function echapper(texte) {
+  return String(texte)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/** Numéro français en format international, pour les liens wa.me. */
+function versInternational(numero) {
+  var chiffres = String(numero || '').replace(/\D/g, '');
+  if (chiffres.length === 10 && chiffres.charAt(0) === '0') return '33' + chiffres.substring(1);
+  return chiffres;
+}
+
+/**
+ * Compte les accusés du jour et dit si le plafond est franchi.
+ * Le compteur repart de zéro à chaque changement de date.
+ */
+function plafondAtteint() {
+  var reglages = PropertiesService.getScriptProperties();
+  var aujourdhui = Utilities.formatDate(new Date(), 'Europe/Paris', 'yyyy-MM-dd');
+  var jour = reglages.getProperty('accuses_jour');
+  var nombre = jour === aujourdhui ? parseInt(reglages.getProperty('accuses_nombre'), 10) || 0 : 0;
+
+  if (nombre >= ACCUSES_PAR_JOUR) return true;
+
+  reglages.setProperties({ accuses_jour: aujourdhui, accuses_nombre: String(nombre + 1) });
+  return false;
+}
+
+function accuserReception(champs) {
+  var prenom = String(champs.nom || '').trim().split(/\s+/)[0];
+  var sujet = 'Votre demande est bien arrivée — Borsci Rénovation';
+
+  MailApp.sendEmail({
+    to: champs.email,
+    subject: sujet,
+    body: accuseTexte(champs, prenom),
+    htmlBody: accuseHtml(champs, prenom),
+    name: 'Borsci Rénovation'
+  });
+}
+
+/* --- Version texte, pour les clients qui n'affichent pas le HTML --- */
+function accuseTexte(champs, prenom) {
+  var l = [];
+  l.push('Bonjour' + (prenom ? ' ' + prenom : '') + ',');
+  l.push('');
+  l.push('Votre demande est bien arrivée. Vitalii Borsci vous rappelle sous 24 h');
+  l.push('au numéro que vous avez indiqué.');
+  l.push('');
+  l.push('CE QUE VOUS AVEZ INDIQUÉ');
+  recapitulatif(champs).forEach(function (ligne) {
+    l.push('- ' + ligne.intitule + ' : ' + ligne.valeur);
+  });
+  l.push('');
+  l.push('DES PHOTOS ?');
+  l.push('Elles permettent une première estimation sans déplacement.');
+  l.push('Les envoyer sur WhatsApp : ' + lienPhotos(champs));
+  l.push('');
+  l.push('Pour joindre directement : 06 14 49 58 37');
+  l.push('');
+  l.push('---');
+  l.push('Ce message confirme la demande envoyée depuis borsci-renovation.fr.');
+  l.push('Vos informations servent uniquement à y répondre. Pour y accéder,');
+  l.push('les corriger ou les faire supprimer : ' + DESTINATAIRE);
+  return l.join('\n');
+}
+
+/** Les réponses à réafficher, dans l'ordre, sans les coordonnées. */
+function recapitulatif(champs) {
+  var exclus = ['nom', 'telephone', 'email', 'consentement', 'date', PIEGE];
+  var vues = exclus.slice();
+  var lignes = [];
+  ORDRE.concat(Object.keys(champs)).forEach(function (cle) {
+    if (vues.indexOf(cle) !== -1) return;
+    vues.push(cle);
+    if (champs[cle]) lignes.push({ intitule: etiquette(cle), valeur: champs[cle] });
+  });
+  return lignes;
+}
+
+function lienPhotos(champs) {
+  var identite = (champs.nom || '') + (champs.commune ? ' — ' + champs.commune : '');
+  var texte = "Bonjour, je viens d'envoyer une demande depuis le site.\n"
+            + identite + '\nVoici les photos.';
+  return 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texte);
+}
+
+/* --- Version HTML --- */
+function accuseHtml(champs, prenom) {
+  var C = COULEURS;
+  var h = [];
+
+  var cellule = 'font-family:' + PILE + ';';
+
+  h.push('<!DOCTYPE html><html lang="fr"><body style="margin:0;padding:0;background:' + C.papier + ';">');
+  h.push('<div style="display:none;max-height:0;overflow:hidden;opacity:0;">'
+       + 'Rappel sous 24 h au numéro indiqué. Vos photos peuvent être envoyées sur WhatsApp.'
+       + '</div>');
+  h.push('<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:' + C.papier + ';">');
+  h.push('<tr><td align="center" style="padding:32px 16px 48px;">');
+  h.push('<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;">');
+
+  /* Logo — reconstruit en tableau, aucune image à charger. */
+  h.push('<tr><td style="padding-bottom:30px;">');
+  h.push('<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>');
+  h.push('<td bgcolor="' + C.terre + '" style="' + cellule + 'background:' + C.terre + ';padding:11px 13px;'
+       + 'font-size:18px;font-weight:bold;line-height:1;color:' + C.papier + ';letter-spacing:1px;">BR</td>');
+  h.push('<td style="' + cellule + 'padding-left:13px;">');
+  h.push('<div style="' + cellule + 'font-size:19px;font-weight:bold;line-height:1;color:' + C.encre + ';">BORSCI</div>');
+  h.push('<div style="' + cellule + 'font-size:10px;line-height:1;color:' + C.terre + ';letter-spacing:4px;padding-top:6px;">RÉNOVATION</div>');
+  h.push('</td></tr></table>');
+  h.push('</td></tr>');
+
+  /* Message principal */
+  h.push('<tr><td style="' + cellule + 'font-size:26px;line-height:1.25;font-weight:bold;color:' + C.encre + ';padding-bottom:14px;">'
+       + 'Votre demande est bien arrivée</td></tr>');
+  h.push('<tr><td style="' + cellule + 'font-size:16px;line-height:1.6;color:' + C.doux + ';padding-bottom:8px;">'
+       + 'Bonjour' + (prenom ? ' ' + echapper(prenom) : '') + ',</td></tr>');
+  h.push('<tr><td style="' + cellule + 'font-size:16px;line-height:1.6;color:' + C.doux + ';padding-bottom:30px;">'
+       + 'Vitalii Borsci vous rappelle sous 24 h au numéro que vous avez indiqué. '
+       + 'Vous pouvez aussi le joindre directement au '
+       + '<a href="tel:+33614495837" style="color:' + C.terre + ';font-weight:bold;text-decoration:none;">06 14 49 58 37</a>.'
+       + '</td></tr>');
+
+  /* Récapitulatif */
+  var lignes = recapitulatif(champs);
+  if (lignes.length) {
+    h.push('<tr><td style="padding-bottom:30px;">');
+    h.push('<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" '
+         + 'style="border:1px solid ' + C.filet + ';background:#fffdfa;">');
+    h.push('<tr><td colspan="2" style="' + cellule + 'font-size:11px;letter-spacing:2px;text-transform:uppercase;'
+         + 'color:' + C.tenu + ';padding:14px 18px 4px;">Ce que vous avez indiqué</td></tr>');
+    lignes.forEach(function (ligne, i) {
+      var bord = i === lignes.length - 1 ? '' : 'border-bottom:1px solid ' + C.filet + ';';
+      h.push('<tr>'
+        + '<td width="38%" style="' + cellule + 'font-size:14px;line-height:1.5;color:' + C.tenu + ';padding:11px 8px 11px 18px;vertical-align:top;' + bord + '">'
+        + echapper(ligne.intitule) + '</td>'
+        + '<td style="' + cellule + 'font-size:14px;line-height:1.5;color:' + C.encre + ';padding:11px 18px 11px 8px;vertical-align:top;' + bord + '">'
+        + echapper(ligne.valeur) + '</td></tr>');
+    });
+    h.push('</table></td></tr>');
+  }
+
+  /* Relance photos */
+  h.push('<tr><td style="padding-bottom:30px;">');
+  h.push('<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:' + C.panneau + ';">');
+  h.push('<tr><td style="padding:22px 18px;">');
+  h.push('<div style="' + cellule + 'font-size:17px;font-weight:bold;line-height:1.35;color:' + C.encre + ';padding-bottom:8px;">'
+       + 'Il reste une chose : les photos</div>');
+  h.push('<div style="' + cellule + 'font-size:15px;line-height:1.6;color:' + C.doux + ';padding-bottom:18px;">'
+       + 'Quelques photos permettent une première estimation sans déplacement. '
+       + 'Le message est déjà écrit : il ne reste qu\'à les joindre.</div>');
+  h.push('<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
+       + '<td bgcolor="#25d366" style="background:#25d366;">'
+       + '<a href="' + lienPhotos(champs) + '" style="' + cellule
+       + 'display:inline-block;padding:13px 22px;font-size:13px;font-weight:bold;letter-spacing:1px;'
+       + 'color:' + C.encre + ';text-decoration:none;">WhatsApp — envoyer mes photos</a>'
+       + '</td></tr></table>');
+  h.push('</td></tr></table></td></tr>');
+
+  /* Pied */
+  h.push('<tr><td style="border-top:1px solid ' + C.filet + ';padding-top:20px;">'
+       + '<div style="' + cellule + 'font-size:12px;line-height:1.65;color:' + C.tenu + ';">'
+       + 'Ce message confirme la demande envoyée depuis borsci-renovation.fr. '
+       + 'Vos informations servent uniquement à y répondre. Pour y accéder, les corriger '
+       + 'ou les faire supprimer : <a href="mailto:' + DESTINATAIRE + '" style="color:' + C.tenu + ';">'
+       + DESTINATAIRE + '</a>.'
+       + '</div></td></tr>');
+
+  h.push('</table></td></tr></table></body></html>');
+  return h.join('');
+}
+
+/**
+ * Aperçu de l'accusé de réception, sans rien envoyer à personne : le
+ * message part sur l'adresse de notification avec un jeu de réponses
+ * fictives. À lancer depuis l'éditeur pour vérifier le rendu.
+ */
+function apercuAccuse() {
+  var champs = {
+    nom: 'Marie Dupont', telephone: '06 12 34 56 78', email: DESTINATAIRE,
+    commune: 'Montreuil', 'code-postal': '93100', bien: 'appartement',
+    etage: '3', ascenseur: 'oui',
+    prestation: 'Après une fuite ou un dégât des eaux',
+    assechement: 'terminé', fuite: 'oui', surfaces: 'plafond · murs',
+    delai: '1 à 3 mois', budget: '2 000 à 5 000 €', surface: '34',
+    occupation: 'occupé',
+    description: 'Tache brune au plafond du séjour, apparue après la fuite du voisin.'
+  };
+  var prenom = champs.nom.split(/\s+/)[0];
+  MailApp.sendEmail({
+    to: DESTINATAIRE,
+    subject: '[APERÇU] Votre demande est bien arrivée — Borsci Rénovation',
+    body: accuseTexte(champs, prenom),
+    htmlBody: accuseHtml(champs, prenom),
+    name: 'Borsci Rénovation'
+  });
+  console.log('Aperçu envoyé à ' + DESTINATAIRE);
 }

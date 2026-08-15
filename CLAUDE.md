@@ -149,6 +149,18 @@ d'appeler l'ancien code.
 - Si l'envoi échoue, la demande **n'est jamais perdue en silence** :
   elle est résumée et proposée sur WhatsApp en un geste. Ne pas retirer
   ce filet.
+- **Accusé de réception au client** (`accuserReception`, ajouté le
+  15/08/2026) : HTML en tableaux avec styles en ligne, aucune image et
+  aucune police web — les feuilles de style sont supprimées par les
+  messageries, les images distantes bloquées par défaut. Le logo est
+  reconstruit en HTML. Il porte un rappel des réponses et **relance sur
+  les photos** : c'est la seconde chance pour qui a fermé l'onglet.
+  Mêmes interdits rédactionnels que le site.
+- **Plafond de 30 accusés par jour** (`ACCUSES_PAR_JOUR`) : l'accusé
+  part vers une adresse saisie par un inconnu sur une URL publique.
+  Sans plafond, l'endpoint sert de relais pour expédier du courrier
+  signé Borsci Rénovation à des tiers. Au-delà, la demande est quand
+  même enregistrée et notifiée. Ne pas retirer ce plafond.
 - Champ piège `site-web` contre les robots — le script ignore en
   silence toute demande qui l'a rempli. Il remplace le filtrage que
   faisait le service de formulaire précédent.
