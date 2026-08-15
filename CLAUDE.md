@@ -6,6 +6,20 @@ prévisualisation sur GitHub Pages. Doit tourner 3 ans sans maintenance.
 
 ## Décisions actées — ne pas revenir dessus sans accord explicite
 
+- **Direction de design actée le 15/08/2026** : variante B (titres Jost
+  gras en casse normale, filets, angles vifs, header collant, bande de
+  faits) + option 3 pour les prestations (cartes plates à filets
+  partagés). Pas de coins arrondis, pas d'ombres, pas d'icônes.
+- **Positionnement élargi** : ne jamais présenter l'activité comme
+  limitée à la remise en état après sinistre. Six domaines : remise en
+  état après dégât des eaux, peinture et enduits, revêtement de sol
+  (parquet, vinyle, carrelage, moquette), cloisons et placo, terrasses
+  bois, conseils. Le texte « je vous garantis une installation
+  impeccable » fourni pour les sols a été refusé : promesse de résultat
+  interdite par le brief.
+- La bande de faits ne contient que du vérifiable — jamais de chiffres
+  inventés (« 15 ans », « +400 chantiers », « 4,9/5 » des sites
+  concurrents sont l'exemple à ne pas suivre).
 - **Palette validée le 15/08/2026** : les sept variables du bloc `:root`
   (papier chaud `#f8f6f1`, encre espresso `#292524`, accent terre cuite
   `#9c4221`…). Les propositions de design portent sur la typo, la mise

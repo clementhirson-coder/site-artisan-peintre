@@ -52,8 +52,10 @@
       "traitement d'auréole",
       "reprise d'enduits",
       "peinture intérieure",
-      "pose de parquet flottant",
-      "pose de parquet massif",
+      "pose de parquet",
+      "pose de sol vinyle",
+      "pose de carrelage",
+      "pose de moquette",
       "cloisons et placo",
       "terrasse bois sur pilotis",
       "conseil et accompagnement de travaux"
@@ -129,7 +131,7 @@ body {
   background: var(--fond);
   color: var(--encre);
   font-family: var(--sans);
-  font-weight: 200;
+  font-weight: 300;
   font-size: clamp(16px, 1.1vw + 13px, 19px);
   line-height: 1.6;
   padding-bottom: 5.5rem;                /* place pour la barre d'appel */
@@ -164,11 +166,12 @@ a   { color: inherit; text-decoration: none; }
 
 /* --- Titres -------------------------------------------------------------- */
 
-h1, h2, h3 { font-weight: 200; line-height: .95; letter-spacing: .06em; text-transform: uppercase; }
+/* Direction actée : titres gras en casse normale (variante B). */
+h1, h2, h3 { font-weight: 560; line-height: 1.04; letter-spacing: -.018em; }
 
-h1 { font-size: clamp(38px, 9vw, 104px); }
-h2 { font-size: clamp(32px, 6vw, 76px); }
-h3 { font-size: clamp(15px, 1.4vw, 19px); letter-spacing: .1em; line-height: 1.3; }
+h1 { font-size: clamp(40px, 5.4vw, 76px); }
+h2 { font-size: clamp(30px, 4vw, 52px); }
+h3 { font-size: clamp(20px, 2.2vw, 27px); font-weight: 540; }
 
 p { max-width: var(--texte); }
 
@@ -183,6 +186,45 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
   margin-top: 1.5rem;
   max-width: var(--texte);
   color: var(--doux);
+}
+
+/* --- Barre collante ------------------------------------------------------ */
+
+.barre {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(248, 246, 241, .94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--filet);
+}
+
+.barre-int {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px; padding: 0 var(--pad);
+}
+
+.barre .marque { font-weight: 560; font-size: 18px; letter-spacing: -.01em; }
+
+.barre .tel-barre {
+  display: inline-flex; align-items: center;
+  min-height: var(--touche); padding: .55rem 1.2rem;
+  background: var(--accent); color: #fff;
+  font-family: var(--mono); font-size: 12px; letter-spacing: .1em;
+}
+
+/* --- Bande de faits : uniquement du vérifiable --------------------------- */
+
+.faits { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--filet); }
+
+.fait { padding: 1.6rem var(--pad); border-right: 1px solid var(--filet); }
+.fait:last-child { border-right: 0; }
+.fait strong { display: block; font-size: clamp(19px, 2vw, 26px); font-weight: 560; letter-spacing: -.01em; margin-bottom: .25rem; }
+.fait span { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--tenu); }
+
+@media (max-width: 46em) {
+  .faits { grid-template-columns: 1fr 1fr; }
+  .fait:nth-child(2n) { border-right: 0; }
+  .fait:nth-child(-n+2) { border-bottom: 1px solid var(--filet); }
 }
 
 /* --- En-tête ------------------------------------------------------------- */
@@ -253,25 +295,36 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 
 /* --- Prestations : cinq blocs ------------------------------------------- */
 
-.prestations { display: grid; gap: clamp(56px, 8vw, 112px); }
-
-.bloc { display: grid; gap: clamp(20px, 3vw, 40px); }
-
-.bloc h3 {
-  font-size: clamp(22px, 3vw, 40px);
-  letter-spacing: .04em;
-  line-height: 1.05;
-  margin: .75rem 0 1rem;
+/* Option 3 actée : cartes plates à filets partagés, angles vifs.
+   La grille porte le filet (gap 1px sur fond --filet) : un seul trait
+   entre deux cartes. */
+.prestations {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--filet);
+  border: 1px solid var(--filet);
 }
 
-.bloc-texte p { color: var(--doux); }
+.bloc { background: var(--fond); padding: clamp(22px, 3.2vw, 40px); transition: background .25s; }
+.bloc:hover { background: #fffdf9; }
 
-.bloc .photo-vide { aspect-ratio: 4 / 3; }
+.bloc h3 { margin: .6rem 0 .6rem; }
 
-/* Blocs 1 et 5 : traitement plus généreux, zone photo pleine largeur
-   avec emplacement avant/après. */
-.bloc-large .photo-vide { aspect-ratio: 16 / 10; }
+.bloc-texte p { color: var(--doux); font-size: .9375em; margin-bottom: 1.1rem; }
+
+.bloc .photo-vide { aspect-ratio: 16 / 9; }
+
+/* Blocs 1 et 5 : pleine largeur, texte + photos côte à côte. */
+.bloc-large {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 1.1fr;
+  gap: clamp(20px, 3vw, 44px); align-items: center;
+}
 .bloc-large .paire .photo-vide { aspect-ratio: 4 / 3; }
+
+@media (max-width: 46em) {
+  .prestations { grid-template-columns: 1fr; }
+  .bloc-large { grid-template-columns: 1fr; }
+}
 
 .lien-formulaire {
   display: inline-flex;
@@ -290,14 +343,28 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 /* Bloc conseil : distinct des cinq prestations, sans photo.
    Un panneau calme sur fond doux, redige du point de vue du client. */
 .bloc-conseil {
+  grid-column: 1 / -1;
   background: var(--fond-2);
-  border: 1px solid var(--filet);
-  padding: clamp(28px, 5vw, 56px);
-  max-width: 44rem;
+  padding: clamp(28px, 4vw, 52px);
 }
 
 .bloc-conseil h3 { margin-bottom: 1rem; }
 .bloc-conseil p { color: var(--doux); }
+
+/* Comparateur avant/après. Les couches .photo-vide seront remplacées
+   par de vraies <img> une fois les photos fournies — le mécanisme
+   (clip-path piloté par le curseur natif) reste identique. */
+.ba { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--filet); user-select: none; }
+.ba .couche { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.ba .couche.photo-vide { aspect-ratio: auto; height: 100%; border: 0; }
+.ba .c-avant { clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0); background-color: #e9e1d3; }
+.ba .poignee { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 1px; background: var(--encre); }
+.ba .poignee i { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background: var(--encre); color: var(--fond); display: flex; align-items: center; justify-content: center; font-style: normal; }
+.ba input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+.ba input:focus-visible + .poignee { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ba .tag { position: absolute; top: 0; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; padding: .4rem .75rem; color: var(--fond); background: var(--encre); }
+.ba .tag-avant { left: 0; }
+.ba .tag-apres { right: 0; background: var(--accent); }
 
 /* Pastilles de zone d'intervention */
 .puces {
@@ -357,7 +424,7 @@ form { max-width: var(--texte); }
 
 fieldset { border: 0; min-width: 0; }
 
-legend { font-size: clamp(20px, 2.4vw, 30px); font-weight: 200; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 1.25rem; }
+legend { font-size: clamp(20px, 2.4vw, 30px); font-weight: 560; letter-spacing: -.015em; margin-bottom: 1.25rem; }
 
 fieldset fieldset { margin: 2rem 0; }
 fieldset fieldset legend { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--tenu); margin-bottom: .75rem; }
@@ -538,6 +605,13 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 <!-- ============================================================
      1. EN-TÊTE
      ============================================================ -->
+<div class="barre">
+  <div class="barre-int">
+    <span class="marque">Borsci Rénovation</span>
+    <a class="tel-barre" href="tel:+33614495837">06 14 49 58 37</a>
+  </div>
+</div>
+
 <header class="entete">
   <div class="entete-photo">
     <!-- Photo de l'artisan au travail. Remplacer le bloc .photo-vide par :
@@ -574,6 +648,15 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     </a>
   </div>
 </header>
+
+<!-- Bande de faits : uniquement du vérifiable. Ni chiffres inventés,
+     ni promesses — voir CLAUDE.md. -->
+<div class="faits" aria-label="Repères">
+  <div class="fait"><strong>Sinistres</strong><span>formé en entreprise spécialisée</span></div>
+  <div class="fait"><strong>Décennale</strong><span>chantiers assurés</span></div>
+  <div class="fait"><strong>1 seul</strong><span>interlocuteur, devis compris</span></div>
+  <div class="fait"><strong>75 · 92 · 93 · 94</strong><span>Paris &amp; petite couronne</span></div>
+</div>
 
 <main>
 
@@ -686,9 +769,15 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
             Décrire le sinistre — première estimation possible à partir de photos
           </a>
         </div>
-        <div class="paire">
-          <div class="photo-vide">Avant — à fournir</div>
-          <div class="photo-vide">Après — à fournir</div>
+        <!-- Comparateur : remplacer les deux .photo-vide par des <img>
+             (même position) une fois les photos avant/après fournies. -->
+        <div class="ba" data-ba>
+          <div class="couche photo-vide c-apres">Photo après — à fournir</div>
+          <div class="couche photo-vide c-avant">Photo avant — à fournir</div>
+          <input type="range" min="0" max="100" value="50" aria-label="Curseur de comparaison avant après">
+          <div class="poignee" aria-hidden="true"><i>⇔</i></div>
+          <span class="tag tag-avant" aria-hidden="true">Avant</span>
+          <span class="tag tag-apres" aria-hidden="true">Après</span>
         </div>
       </article>
 
@@ -701,11 +790,14 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
         <div class="photo-vide">Photo à fournir</div>
       </article>
 
-      <article class="bloc rv" id="parquets" aria-labelledby="t-parquets">
+      <!-- Texte reformulé : la version fournie contenait « je vous
+           garantis une installation impeccable et durable » — promesse
+           de résultat, interdite par le brief. -->
+      <article class="bloc rv" id="sols" aria-labelledby="t-sols">
         <div class="bloc-texte">
           <p class="mono"><span class="num">03</span>Sols</p>
-          <h3 id="t-parquets">Parquets — flottant et massif</h3>
-          <p>Pose flottante ou clouée, remplacement de lames abîmées.</p>
+          <h3 id="t-sols">Revêtement de sol</h3>
+          <p>Parquet, vinyle, carrelage ou moquette : pose et remplacement des sols.</p>
         </div>
         <div class="photo-vide">Photo à fournir</div>
       </article>
@@ -736,7 +828,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       <!-- CONSEIL — hors prestations (correction 5) : accompagnement,
            pas un chantier. Redige du point de vue du client. -->
       <aside class="bloc-conseil rv" id="conseil" aria-labelledby="t-conseil">
-        <p class="mono">Conseil</p>
+        <p class="mono"><span class="num">06</span>Conseils</p>
         <h3 id="t-conseil">Vous ne savez pas par où commencer ?</h3>
         <p>
           Accompagnement sur le choix des matériaux, la lecture des devis
@@ -840,9 +932,8 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
         <div style="margin-top:1.25rem">
           <label class="choix"><input type="checkbox" name="prestation" value="Après une fuite ou un dégât des eaux"> Après une fuite ou un dégât des eaux</label>
           <label class="choix"><input type="checkbox" name="prestation" value="Peinture intérieure"> Peinture intérieure</label>
-          <label class="choix"><input type="checkbox" name="prestation" value="Parquet flottant"> Parquet flottant</label>
-          <label class="choix"><input type="checkbox" name="prestation" value="Parquet massif"> Parquet massif</label>
-          <label class="choix"><input type="checkbox" name="prestation" value="Placo et cloisons"> Placo et cloisons</label>
+          <label class="choix"><input type="checkbox" name="prestation" value="Revêtement de sol"> Revêtement de sol — parquet, vinyle, carrelage, moquette</label>
+          <label class="choix"><input type="checkbox" name="prestation" value="Cloisons et placo"> Cloisons et placo</label>
           <label class="choix"><input type="checkbox" name="prestation" value="Terrasse bois sur pilotis"> Terrasse bois sur pilotis</label>
           <label class="choix"><input type="checkbox" name="prestation" value="Conseil et accompagnement de projet"> Conseil et accompagnement</label>
         </div>
@@ -1020,6 +1111,17 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
   document.querySelectorAll('.rv').forEach(function (el) { vue.observe(el); });
 })();
+</script>
+
+<script>
+/* Comparateur avant/après : le curseur natif pilote le clip-path.
+   Sans JavaScript, les deux couches restent visibles côte à côte à 50 %. */
+document.querySelectorAll('[data-ba]').forEach(function (ba) {
+  var curseur = ba.querySelector('input');
+  var maj = function () { ba.style.setProperty('--pos', curseur.value + '%'); };
+  curseur.addEventListener('input', maj);
+  maj();
+});
 </script>
 
 <script>
