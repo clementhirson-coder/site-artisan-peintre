@@ -417,7 +417,6 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   .entete-corps { padding: 0 clamp(40px, 5vw, 88px); order: -1; }
   .entete-photo img, .entete-photo .photo-vide { aspect-ratio: auto; height: 88vh; }
 
-  .grille-chantiers { grid-template-columns: repeat(3, 1fr); }
   .etapes { grid-template-columns: repeat(4, 1fr); }
 
   /* Blocs standard : texte et photo côte à côte, photo contenue.
@@ -470,15 +469,15 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
   <!-- ============================================================
        2. CHANTIERS RÉALISÉS
-       6 à 10 photos. Dupliquer ou supprimer les <li> selon le nombre
-       de chantiers documentés. Légende : 2 lignes maximum.
+       4 chantiers : trois photos simples et une paire avant/après.
+       Grille en 2 x 2 sur grand écran — rester sur un nombre pair. Légende : 2 lignes maximum.
        ============================================================ -->
   <section id="chantiers" aria-labelledby="titre-chantiers">
     <div class="tete-section rv">
       <p class="mono"><span class="num">01</span>Chantiers réalisés</p>
       <h2 id="titre-chantiers">Travaux livrés</h2>
       <p class="intro a-fournir">
-        À fournir : photos et descriptions de 5 à 10 chantiers récents.
+        À fournir : photos et descriptions de 4 chantiers récents.
         Pour chacun : type de bien, commune, nature des travaux.
         Photos avant/après quand elles existent.
       </p>
@@ -530,26 +529,6 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
             <div class="photo-vide">Avant</div>
             <div class="photo-vide">Après</div>
           </div>
-          <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
-          </figcaption>
-        </figure>
-      </li>
-
-      <li class="rv">
-        <figure>
-          <div class="photo-vide">Photo chantier 5</div>
-          <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
-          </figcaption>
-        </figure>
-      </li>
-
-      <li class="rv">
-        <figure>
-          <div class="photo-vide">Photo chantier 6</div>
           <figcaption class="mono">
             <span class="lieu a-fournir">[Type de bien — commune]</span>
             <span class="quoi a-fournir">[Nature des travaux]</span>
