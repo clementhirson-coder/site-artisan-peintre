@@ -40,7 +40,6 @@ substitution, destinés uniquement à présenter la maquette au client.
   bloc). Un bloc masqué garde ses réponses mais ne les envoie pas. Pour
   ajouter une question, il suffit d'écrire le HTML : la construction du
   payload est générique, il n'y a pas de liste de champs à maintenir.
-
 - **Direction de design actée le 15/08/2026** : variante B (titres Jost
   gras en casse normale, filets, angles vifs, header collant, bande de
   faits) + option 3 pour les prestations (cartes plates à filets
@@ -85,6 +84,34 @@ substitution, destinés uniquement à présenter la maquette au client.
 - Grille chantiers : 4 vignettes (2×2), nombre pair, format carré —
   le portrait 3/4 donnait des tuiles de 928 px de haut sur grand écran.
 - Fontes hébergées en local (`assets/fonts/`), aucune requête tierce.
+
+## Réception des demandes
+
+Le formulaire poste un `FormData` vers une application web Google Apps
+Script (`apps-script/Code.gs`, déploiement décrit dans
+`apps-script/DEPLOIEMENT.md`). Elle ajoute une ligne dans une feuille de
+calcul et envoie un email à contact.borsci@gmail.com. Le tout vit dans
+le compte Google de l'artisan, pas ailleurs.
+
+- **Ajouter une question ne demande de modification nulle part
+  ailleurs** : le payload est construit en parcourant le formulaire, et
+  le script crée la colonne manquante au premier envoi.
+- Les **photos ne passent pas par le formulaire** — décision du
+  15/08/2026. Elles partent sur WhatsApp depuis l'écran de
+  confirmation, avec un message pré-rempli portant le nom et la commune
+  pour qu'elles arrivent identifiées. Motifs : l'hébergement de
+  fichiers est payant chez tous les services de formulaire, WhatsApp
+  atteint un artisan en chantier là où un email ne l'atteint pas, et
+  c'est un geste que tout le monde sait faire au téléphone.
+- Si l'envoi échoue, la demande **n'est jamais perdue en silence** :
+  elle est résumée et proposée sur WhatsApp en un geste. Ne pas retirer
+  ce filet.
+- Champ piège `site-web` contre les robots — le script ignore en
+  silence toute demande qui l'a rempli. Il remplace le filtrage que
+  faisait le service de formulaire précédent.
+- La requête doit rester « simple » au sens CORS : **aucun en-tête
+  personnalisé**, corps en `FormData`. Sinon le navigateur déclenche un
+  pré-vol qu'Apps Script ne sait pas traiter.
 
 ## Vérifications attendues avant tout push
 

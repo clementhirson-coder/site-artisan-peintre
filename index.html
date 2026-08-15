@@ -86,8 +86,13 @@
 
   <!-- ================================================================
        ENDPOINT DU FORMULAIRE — À REMPLACER
-       Créer un compte sur https://formspree.io (ou Web3Forms, FormSubmit),
-       créer un formulaire, copier l'URL fournie et la coller ci-dessous.
+       Suivre apps-script/DEPLOIEMENT.md : déployer le script Google
+       fourni dans apps-script/Code.gs, puis coller ici l'URL de
+       l'application web (elle se termine par /exec).
+       Chaque demande ajoutera alors une ligne dans la feuille de calcul
+       et enverra un email.
+       Tant que XXXXXXXX est présent, le formulaire refuse d'envoyer et
+       renvoie vers le téléphone : aucune demande n'est perdue.
        ================================================================ -->
   <script>
     const FORM_ENDPOINT = "https://formspree.io/f/XXXXXXXX"; /* À FOURNIR */
@@ -547,9 +552,6 @@ textarea { resize: vertical; }
 .erreur { margin-top: .5rem; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #a4231b; }
 .erreur:empty { display: none; }
 
-#apercu-photos { list-style: none; margin-top: 1rem; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--tenu); }
-#apercu-photos li { padding: .5rem 0; border-bottom: 1px solid var(--filet); }
-
 .navigation { display: flex; gap: 1px; margin-top: 2.5rem; }
 
 .navigation button {
@@ -571,8 +573,21 @@ textarea { resize: vertical; }
 .navigation button.secondaire { background: transparent; color: var(--doux); border-color: var(--filet); }
 .navigation button[disabled] { opacity: .5; cursor: default; }
 
+/* Champ piege. Masque par decoupe plutot que par un decalage negatif :
+   un `left: -9999px` sortait du cadre de la page et faisait sonner les
+   controles de debordement horizontal pour rien. */
+.piege {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
 #confirmation { border: 1px solid var(--accent); padding: clamp(24px, 4vw, 40px); }
+#confirmation h3 { margin-top: 1rem; }
 #confirmation p { color: var(--doux); margin-top: .75rem; }
+#confirmation .lien-whatsapp { margin-top: 1.75rem; }
+#confirmation .apres { font-size: .9375em; color: var(--tenu); }
+
+#secours { margin-top: 1.25rem; }
 
 /* --- Étape 1 : tuiles larges -------------------------------------------- */
 /* Une tuile porte le nom court et, en dessous, ce que la prestation
@@ -1027,7 +1042,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       <li class="rv">
         <p class="mono"><span class="num">02</span></p>
         <h3>Visite sur place</h3>
-        <p>Relevé des surfaces et de l'état de l'existant. Les photos envoyées en amont permettent une première estimation sans déplacement.</p>
+        <p>Relevé des surfaces et de l'état de l'existant. Les photos envoyées par WhatsApp en amont permettent une première estimation sans déplacement.</p>
       </li>
       <li class="rv">
         <p class="mono"><span class="num">03</span></p>
@@ -1044,8 +1059,9 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
   <!-- ============================================================
        4. FORMULAIRE
-       Structure des 4 étapes. La navigation entre étapes, la validation
-       inline et la compression des photos arrivent à l'étape 3.
+       Structure des 3 étapes. Navigation et validation inline en bas de
+       fichier. Les photos ne passent pas par ici : elles partent sur
+       WhatsApp depuis l'écran de confirmation.
        ============================================================ -->
   <section id="contact" aria-labelledby="titre-contact">
 
@@ -1062,9 +1078,9 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
         <p class="mono"><span class="num">03</span>Contact</p>
         <h2 id="titre-contact">Décrire un projet</h2>
         <p class="intro">
-          Quatre étapes, deux minutes. Plus la description est précise,
-          plus le devis l'est. Les photos permettent une première
-          estimation sans déplacement.
+          Trois étapes, deux minutes. Plus la description est précise,
+          plus le devis l'est. Les photos, à envoyer ensuite par WhatsApp,
+          permettent une première estimation sans déplacement.
         </p>
       </div>
 
@@ -1093,7 +1109,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
       <form id="formulaire-projet" method="post" novalidate>
 
-        <p class="mono" id="progression" aria-live="polite">Étape 1 sur 4</p>
+        <p class="mono" id="progression" aria-live="polite">Étape 1 sur 3</p>
         <div class="barre-progression" aria-hidden="true"><span id="jauge"></span></div>
 
         <!-- ÉTAPE 1 — PRESTATION
@@ -1347,24 +1363,9 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
           <textarea id="description" name="description" rows="5"></textarea>
         </fieldset>
 
-        <!-- ÉTAPE 3 — PHOTOS -->
+
+        <!-- ÉTAPE 3 — COORDONNÉES -->
         <fieldset data-etape="3" hidden>
-          <legend>Photos</legend>
-          <p class="intro">
-            Les photos permettent une première estimation sans déplacement.
-            Elles peuvent aussi être envoyées directement par
-            <a href="https://wa.me/33614495837" rel="noopener">WhatsApp</a>.
-          </p>
-
-          <label for="photos"><span class="etiquette">Ajouter 3 à 8 photos</span></label>
-          <input type="file" id="photos" name="photos" accept="image/*" multiple>
-          <p class="erreur" data-erreur-pour="photos" role="alert"></p>
-
-          <ul id="apercu-photos"></ul>
-        </fieldset>
-
-        <!-- ÉTAPE 4 — CONTACT -->
-        <fieldset data-etape="4" hidden>
           <legend>Coordonnées</legend>
 
           <label for="nom"><span class="etiquette">Nom *</span></label>
@@ -1391,6 +1392,15 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
           <p class="erreur" data-erreur-pour="consentement" role="alert"></p>
         </fieldset>
 
+        <!-- Champ piege. Invisible et hors tabulation : un humain ne peut
+             pas le remplir. Le script de reception ignore en silence toute
+             demande qui l'a rempli. Remplace le filtrage anti-robot que
+             faisait le service de formulaire precedent. -->
+        <p class="piege">
+          <label for="site-web">Ne pas remplir ce champ</label>
+          <input type="text" id="site-web" name="site-web" tabindex="-1" autocomplete="off">
+        </p>
+
         <div class="navigation">
           <button type="button" id="precedent" class="secondaire" hidden>Précédent</button>
           <button type="button" id="suivant">Suivant</button>
@@ -1398,11 +1408,31 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
         </div>
 
         <p class="erreur" data-erreur-pour="formulaire" role="alert"></p>
+
+        <!-- Secours. Si l'envoi echoue, la demande n'est pas perdue : elle
+             part sur WhatsApp, deja resumee, en un geste. Le lien est
+             construit par le script au moment de l'echec. -->
+        <a id="secours" class="lien-whatsapp" href="https://wa.me/33614495837" rel="noopener" hidden>
+          Envoyer ma demande sur WhatsApp
+        </a>
       </form>
 
+      <!-- Les photos ne transitent plus par le formulaire : elles
+           partent sur WhatsApp, ou elles arrivent directement dans la
+           poche de l'artisan. Cet ecran porte donc un seul appel a
+           l'action, et le message est pre-rempli avec le nom et la
+           commune pour que les photos arrivent deja identifiees. -->
       <div id="confirmation" hidden role="status">
         <p class="mono">Demande envoyée</p>
-        <p>Rappel sous 24 h au numéro indiqué.</p>
+        <h3>Il reste une chose</h3>
+        <p>
+          Les photos permettent une première estimation sans déplacement.
+          Le message est déjà écrit : il ne reste qu'à les joindre.
+        </p>
+        <a id="lien-photos" class="lien-whatsapp" href="https://wa.me/33614495837" rel="noopener">
+          WhatsApp — envoyer mes photos
+        </a>
+        <p class="apres">Sans photos, rappel sous 24 h au numéro indiqué.</p>
       </div>
 
       <noscript>
@@ -1597,10 +1627,13 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     </div>
 
     <div class="bloc-pied">
-      <p class="mono">Hébergement</p>
+      <p class="mono">Hébergement et données</p>
       <p>
-        Cloudflare Pages. Les informations transmises via le formulaire
-        servent uniquement à répondre à la demande.
+        Site hébergé par Cloudflare Pages. Les informations transmises
+        via le formulaire sont enregistrées dans une feuille de calcul
+        Google Workspace et servent uniquement à répondre à la demande.
+        Pour y accéder, les corriger ou les faire supprimer, écrire à
+        <a href="mailto:contact.borsci@gmail.com">contact.borsci@gmail.com</a>.
       </p>
     </div>
   </div>
@@ -1645,10 +1678,14 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
    - navigation sans rechargement, progression visible
    - erreurs inline sous le champ concerné, jamais d'alerte navigateur
    - les champs facultatifs ne bloquent jamais la progression
-   - photos compressées côté client avant envoi
-   - envoi multipart vers FORM_ENDPOINT (défini en haut du fichier) :
-     compatible Formspree, Web3Forms, FormSubmit — changer de service
-     revient à changer cette seule constante
+   - envoi multipart vers FORM_ENDPOINT (défini en haut du fichier).
+     Cible actuelle : une application web Google Apps Script qui ajoute
+     une ligne dans une feuille de calcul et envoie l'email. Changer de
+     service revient à changer cette seule constante — le corps envoyé
+     est un FormData standard.
+   - les photos ne passent PAS par le formulaire : elles partent sur
+     WhatsApp depuis l'écran de confirmation, avec un message pré-rempli
+     qui porte le nom et la commune pour qu'elles arrivent identifiées
    ========================================================================== */
 (function () {
   var form = document.getElementById('formulaire-projet');
@@ -1660,17 +1697,13 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
   var btnPrec = document.getElementById('precedent');
   var btnSuiv = document.getElementById('suivant');
   var btnEnvoi = document.getElementById('envoyer');
-  var champPhotos = document.getElementById('photos');
-  var apercu = document.getElementById('apercu-photos');
   var confirmation = document.getElementById('confirmation');
+  var lienPhotos = document.getElementById('lien-photos');
+  var secours = document.getElementById('secours');
   var TOTAL = etapes.length;
   var courante = 1;
 
-  /* Photos retenues après compression : { blob, nom } */
-  var photos = [];
-  var MAX_PHOTOS = 8;
-  var COTE_MAX = 1600;      /* px, plus grand côté après réduction   */
-  var QUALITE = 0.78;       /* JPEG                                   */
+  var WHATSAPP = 'https://wa.me/33614495837';
 
   function zoneErreur(cle) {
     return form.querySelector('[data-erreur-pour="' + cle + '"]');
@@ -1712,9 +1745,8 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
 
   /* --- Validation par étape.
      Seuls les champs obligatoires bloquent : prestation (étape 1),
-     commune (étape 2), coordonnées et consentement (étape 4).
-     L'étape photos ne bloque jamais — la limite haute est appliquée
-     à la sélection. --- */
+     commune (étape 2), coordonnées et consentement (dernière étape).
+     Tout le reste est facultatif et ne retient jamais personne. --- */
   function valider(n) {
     var ok = true;
 
@@ -1728,7 +1760,7 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
       if (!commune.value.trim()) { poser('commune', 'Indiquer la commune du chantier.'); ok = false; }
     }
 
-    if (n === 4) {
+    if (n === TOTAL) {
       var nom = document.getElementById('nom');
       var tel = document.getElementById('telephone');
       var email = document.getElementById('email');
@@ -1765,74 +1797,6 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
     if (champ.hasAttribute && champ.hasAttribute('data-cle')) majConditionnels();
   });
 
-  /* --- Compression d'une image : réduction au plus grand côté COTE_MAX,
-     réencodage JPEG. En cas d'échec (format exotique), le fichier
-     d'origine est conservé tel quel. --- */
-  function comprimer(fichier) {
-    return new Promise(function (resoudre) {
-      var url = URL.createObjectURL(fichier);
-      var img = new Image();
-      img.onload = function () {
-        var ratio = Math.min(1, COTE_MAX / Math.max(img.width, img.height));
-        var c = document.createElement('canvas');
-        c.width = Math.round(img.width * ratio);
-        c.height = Math.round(img.height * ratio);
-        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-        URL.revokeObjectURL(url);
-        c.toBlob(function (blob) {
-          if (blob && blob.size < fichier.size) {
-            resoudre({ blob: blob, nom: fichier.name.replace(/\.[^.]+$/, '') + '.jpg' });
-          } else {
-            resoudre({ blob: fichier, nom: fichier.name });
-          }
-        }, 'image/jpeg', QUALITE);
-      };
-      img.onerror = function () {
-        URL.revokeObjectURL(url);
-        resoudre({ blob: fichier, nom: fichier.name });
-      };
-      img.src = url;
-    });
-  }
-
-  function poids(octets) {
-    return octets > 1048576
-      ? (octets / 1048576).toFixed(1) + ' Mo'
-      : Math.max(1, Math.round(octets / 1024)) + ' Ko';
-  }
-
-  champPhotos.addEventListener('change', function () {
-    effacer('photos');
-    var choisis = Array.prototype.slice.call(champPhotos.files)
-      .filter(function (f) { return /^image\//.test(f.type); });
-
-    if (choisis.length < champPhotos.files.length) {
-      poser('photos', 'Seules les images sont acceptées.');
-    }
-    if (choisis.length > MAX_PHOTOS) {
-      poser('photos', MAX_PHOTOS + ' photos maximum — les premières ont été retenues.');
-      choisis = choisis.slice(0, MAX_PHOTOS);
-    }
-
-    apercu.innerHTML = '';
-    photos = [];
-    if (!choisis.length) return;
-
-    var li = document.createElement('li');
-    li.textContent = 'Préparation des photos…';
-    apercu.appendChild(li);
-
-    Promise.all(choisis.map(comprimer)).then(function (resultats) {
-      photos = resultats;
-      apercu.innerHTML = '';
-      resultats.forEach(function (p) {
-        var ligne = document.createElement('li');
-        ligne.textContent = p.nom + ' — ' + poids(p.blob.size);
-        apercu.appendChild(ligne);
-      });
-    });
-  });
-
   /* --- Envoi --- */
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -1861,19 +1825,20 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
         donnees.append(champ.name || champ.id, champ.value.trim());
       });
     donnees.append('consentement', 'oui');
-    photos.forEach(function (p, i) {
-      donnees.append('photo-' + (i + 1), p.blob, p.nom);
-    });
 
     btnEnvoi.disabled = true;
     btnEnvoi.textContent = 'Envoi…';
 
+    /* Aucun en-tete personnalise, et un FormData en corps : la requete
+       reste « simple » au sens CORS, donc pas de pre-vol. C'est ce qui
+       permet a une page statique de parler a une application Apps
+       Script sans configuration particuliere. */
     fetch(FORM_ENDPOINT, {
       method: 'POST',
-      body: donnees,
-      headers: { 'Accept': 'application/json' }
+      body: donnees
     }).then(function (reponse) {
       if (!reponse.ok) throw new Error(reponse.status);
+      lienPhotos.href = WHATSAPP + '?text=' + encodeURIComponent(messagePhotos());
       form.hidden = true;
       confirmation.hidden = false;
       confirmation.scrollIntoView({ block: 'center' });
@@ -1881,9 +1846,50 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
       btnEnvoi.disabled = false;
       btnEnvoi.textContent = 'Envoyer';
       poser('formulaire',
-        "L'envoi a échoué. Réessayer dans un instant, ou appeler directement.");
+        "L'envoi a échoué. Votre demande n'est pas perdue : elle peut partir "
+        + 'sur WhatsApp en un geste, ou par téléphone au 06 14 49 58 37.');
+      /* La demande est deja saisie : plutot que de la faire retaper, on
+         la resume et on ouvre WhatsApp avec le texte pret. */
+      secours.href = WHATSAPP + '?text=' + encodeURIComponent(messageSecours());
+      secours.hidden = false;
     });
   });
+
+  /* --- Messages WhatsApp pre-remplis ---------------------------------
+     Le premier accompagne les photos : il porte juste de quoi les
+     rapprocher de la demande recue par email. Le second est un filet de
+     securite : il transporte la demande entiere quand l'envoi echoue. */
+
+  function valeur(id) {
+    var champ = document.getElementById(id);
+    return champ && champ.value.trim() ? champ.value.trim() : '';
+  }
+
+  function coches(nom) {
+    return Array.prototype.map.call(
+      form.querySelectorAll('input[name="' + nom + '"]:checked'),
+      function (c) { return c.value; }).join(', ');
+  }
+
+  function identite() {
+    var commune = valeur('commune');
+    return valeur('nom') + (commune ? ' — ' + commune : '');
+  }
+
+  function messagePhotos() {
+    return 'Bonjour, je viens d\'envoyer une demande depuis le site.\n'
+      + identite() + '\n'
+      + 'Voici les photos.';
+  }
+
+  function messageSecours() {
+    var lignes = ['Bonjour, ma demande n\'a pas pu partir depuis le site.', identite()];
+    var tel = valeur('telephone'); if (tel) lignes.push('Téléphone : ' + tel);
+    var travaux = coches('prestation'); if (travaux) lignes.push('Travaux : ' + travaux);
+    var delai = coches('delai'); if (delai) lignes.push('Délai : ' + delai);
+    var texte = valeur('description'); if (texte) lignes.push(texte);
+    return lignes.join('\n');
+  }
 
   majConditionnels();
   montrer(1);

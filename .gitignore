@@ -1,2 +1,5 @@
 .DS_Store
 Thumbs.db
+
+# Copies temporaires ecrites par les tests du formulaire
+.essai-*.html
