@@ -22,6 +22,23 @@
 /** Adresse qui reçoit les notifications. */
 var DESTINATAIRE = 'contact.borsci@gmail.com';
 
+/**
+ * Identifiant de la feuille de calcul.
+ *
+ * À LAISSER VIDE si le script a été créé depuis la feuille elle-même
+ * (Extensions › Apps Script) : il la trouve tout seul.
+ *
+ * À REMPLIR si le script a été créé séparément, depuis
+ * script.google.com. Dans ce cas getActiveSpreadsheet() ne renvoie
+ * rien et l'écriture échoue sans que rien ne le montre : l'exécution
+ * s'affiche « Terminée » alors qu'aucune ligne n'a été ajoutée.
+ *
+ * L'identifiant se lit dans l'adresse de la feuille, entre /d/ et /edit :
+ *   docs.google.com/spreadsheets/d/ 1AbC…XyZ /edit
+ *                                   ^^^^^^^^^
+ */
+var FEUILLE_ID = '';
+
 /** Numéro WhatsApp de l'artisan, au format international sans le +. */
 var WHATSAPP = '33614495837';
 
@@ -158,9 +175,35 @@ function lireChamps(e) {
   return champs;
 }
 
+/**
+ * Renvoie la feuille où écrire, ou lève une erreur explicite.
+ * Un message clair vaut mieux qu'un « Terminée » trompeur.
+ */
+function feuilleCible() {
+  var classeur = null;
+
+  if (FEUILLE_ID) {
+    classeur = SpreadsheetApp.openById(FEUILLE_ID);
+  } else {
+    classeur = SpreadsheetApp.getActiveSpreadsheet();
+  }
+
+  if (!classeur) {
+    throw new Error(
+      "Aucune feuille de calcul rattachée. Ce script a probablement été créé "
+    + "depuis script.google.com plutôt que depuis la feuille (Extensions › "
+    + "Apps Script). Renseigner FEUILLE_ID en haut du fichier, puis "
+    + "redéployer en Nouvelle version.");
+  }
+
+  var feuille = classeur.getSheets()[0];
+  if (!feuille) throw new Error('Le classeur « ' + classeur.getName() + ' » ne contient aucun onglet.');
+  return feuille;
+}
+
 /** Ajoute une ligne, en créant au besoin les colonnes manquantes. */
 function enregistrer(champs) {
-  var feuille = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  var feuille = feuilleCible();
   var cles = Object.keys(champs);
 
   var entetes = feuille.getLastColumn() > 0
@@ -256,12 +299,30 @@ function reponse(objet) {
 /* ==================================================================== */
 
 /**
+ * Diagnostic. À lancer depuis l'éditeur quand rien n'apparaît dans la
+ * feuille : le journal d'exécution dira sur quel classeur le script
+ * travaille réellement, ou pourquoi il n'en trouve aucun.
+ */
+function verifierFeuille() {
+  var feuille = feuilleCible();
+  var classeur = feuille.getParent();
+  console.log('Classeur : ' + classeur.getName());
+  console.log('Adresse  : ' + classeur.getUrl());
+  console.log('Onglet   : ' + feuille.getName() + ' — ' + feuille.getLastRow() + ' ligne(s)');
+  console.log('Notifications envoyées à : ' + DESTINATAIRE);
+}
+
+/**
  * Test manuel. Dans l'éditeur Apps Script, choisir « essai » dans la
  * liste des fonctions et cliquer sur Exécuter : une ligne d'essai est
  * ajoutée et un email est envoyé. À supprimer de la feuille ensuite.
+ *
+ * Toute erreur est renvoyée telle quelle pour apparaître dans le
+ * journal : sans ça, doPost l'attrape et l'exécution passe pour
+ * « Terminée ».
  */
 function essai() {
-  doPost({
+  var sortie = doPost({
     parameters: {
       nom: ['Essai — à supprimer'],
       telephone: ['06 00 00 00 00'],
@@ -278,4 +339,8 @@ function essai() {
       consentement: ['oui']
     }
   });
+  var verdict = JSON.parse(sortie.getContent());
+  console.log('Réponse du script : ' + sortie.getContent());
+  if (!verdict.ok) throw new Error('Le script a refusé la demande : ' + verdict.raison);
+  console.log('Ligne ajoutée. Ne pas oublier de la supprimer de la feuille.');
 }
