@@ -495,7 +495,9 @@ fieldset { border: 0; min-width: 0; }
 legend { font-size: clamp(20px, 2.4vw, 30px); font-weight: 560; letter-spacing: -.015em; margin-bottom: 1.25rem; }
 
 fieldset fieldset { margin: 2rem 0; }
-fieldset fieldset legend { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--tenu); margin-bottom: .75rem; }
+/* Les intitules imbriques sont souvent des questions entieres :
+   en mono capitales chassees elles devenaient penibles a lire. */
+fieldset fieldset legend { font-size: .9375em; font-weight: 400; letter-spacing: 0; color: var(--doux); margin-bottom: .6rem; }
 
 .barre-progression { height: 1px; margin: 1rem 0 2.5rem; background: var(--filet); }
 .barre-progression span { display: block; height: 100%; width: 25%; background: var(--accent); transition: width .3s ease-out; }
@@ -567,17 +569,144 @@ textarea { resize: vertical; }
 #confirmation { border: 1px solid var(--accent); padding: clamp(24px, 4vw, 40px); }
 #confirmation p { color: var(--doux); margin-top: .75rem; }
 
+/* --- Étape 1 : tuiles larges -------------------------------------------- */
+/* Une tuile porte le nom court et, en dessous, ce que la prestation
+   recouvre : le visiteur choisit sans avoir a deviner. */
+.tuiles {
+  display: grid; grid-template-columns: 1fr; gap: 1px;
+  margin-top: 1.25rem;
+  background: var(--filet); border: 1px solid var(--filet);
+}
+.tuile {
+  display: flex; align-items: flex-start; gap: .875rem;
+  margin-top: 0; padding: 1.15rem 1.25rem;
+  background: var(--fond); cursor: pointer;
+  transition: background .2s, box-shadow .2s;
+}
+.tuile input { width: 1.125rem; height: 1.125rem; flex: none; margin-top: .3rem; accent-color: var(--accent); }
+.tuile strong { display: block; font-weight: 500; }
+.tuile em { font-style: normal; color: var(--tenu); font-size: .875em; }
+.tuile:hover { background: var(--fond-2); }
+.tuile:has(input:checked) { background: var(--fond-2); box-shadow: inset 3px 0 0 var(--accent); }
+.tuile:focus-within { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* --- Réponses courtes en pastilles -------------------------------------- */
+/* La case native est masquee sans etre retiree du flux de tabulation :
+   c'est l'etiquette entiere qui devient la cible, 44px de haut. */
+.puces { display: flex; flex-wrap: wrap; gap: 1px; margin-top: .5rem; }
+.puce {
+  display: inline-flex; align-items: center;
+  position: relative; margin-top: 0;
+  min-height: var(--touche); padding: .6rem 1.1rem;
+  border: 1px solid var(--filet); background: var(--fond);
+  cursor: pointer; font-size: .9375em;
+  transition: border-color .2s, background .2s;
+}
+.puce input { position: absolute; width: 1px; height: 1px; opacity: 0; margin: 0; }
+.puce:hover { border-color: var(--tenu); background: var(--fond-2); }
+.puce:has(input:checked) { border-color: var(--accent); background: var(--fond-2); box-shadow: inset 0 0 0 1px var(--accent); }
+.puce:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* --- Blocs conditionnels ------------------------------------------------- */
+/* Ne s'affichent que si la prestation correspondante est cochee a
+   l'etape 1 ; le filet d'accent signale qu'ils sont apparus en reponse
+   a un choix. */
+.conditionnel {
+  margin: 2rem 0 2.5rem;
+  border-left: 2px solid var(--accent);
+  padding-left: clamp(16px, 2vw, 26px);
+}
+.conditionnel .drapeau {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent);
+}
+.conditionnel > fieldset:first-of-type { margin-top: 1.25rem; }
+
+/* Deux champs de front quand la place le permet. */
+.duo { margin-top: 1.5rem; }
+.duo > div + div { margin-top: 1.5rem; }
+.duo label:first-child, .duo > div > .etiquette { margin-top: 0; }
+
+/* --- Bande de rappel de fin de page -------------------------------------- */
+#rappel { background: var(--fond-2); }
+#rappel .intro { margin-top: 1rem; }
+/* Les trois voies alignees sur la meme largeur : trois boutons de
+   longueurs differentes donnaient un bord droit en escalier. */
+.rappel-actions {
+  display: flex; flex-direction: column; align-items: stretch;
+  max-width: 22rem; margin-top: clamp(24px, 3vw, 36px);
+}
+.rappel-actions > a { justify-content: center; text-align: center; }
+.rappel-formulaire {
+  display: inline-flex; align-items: center;
+  min-height: var(--touche); padding: .875rem 1.6rem;
+  border: 1px solid var(--encre); background: var(--encre); color: var(--fond);
+  font-family: var(--mono); font-size: clamp(12px, .8vw + 9px, 15px);
+  letter-spacing: .1em; text-transform: uppercase;
+  transition: opacity .25s;
+}
+.rappel-formulaire:hover { opacity: .88; }
+#rappel .bouton-tel { margin-top: .75rem; }
+
+/* --- Section contact : panneau sombre ------------------------------------ */
+/* La page bascule ici : fond encre pleine largeur, formulaire pose sur
+   une carte claire. Toutes les couleurs viennent de la palette validee ;
+   seuls deux gris intermediaires sont ajoutes pour le texte secondaire
+   sur fond sombre, ou --doux et --tenu ne passeraient pas le contraste. */
+#contact {
+  background: var(--encre); color: var(--fond);
+  border-top: 0;
+  --gris-clair: #cdc6bf;   /* 8,4:1 sur --encre */
+  --gris-moyen: #a8a09a;   /* 5,7:1 sur --encre */
+}
+#contact h2 { color: var(--fond); }
+.contact-rail .mono { color: var(--gris-moyen); }
+.contact-rail .mono .num { color: #e8a87c; }
+.contact-rail .intro { color: var(--gris-clair); max-width: 26rem; }
+
+.argus { list-style: none; margin-top: clamp(28px, 3vw, 40px); border-top: 1px solid #4a4441; }
+.argus li { padding: 1.1rem 0; border-bottom: 1px solid #4a4441; }
+.argus strong { display: block; font-weight: 500; font-size: 1.0625em; }
+.argus span { color: var(--gris-moyen); font-size: .9375em; }
+
+.directs { display: flex; flex-direction: column; gap: 1px; margin-top: clamp(24px, 2.6vw, 34px); }
+.directs a {
+  display: flex; align-items: center; justify-content: center;
+  min-height: var(--touche); padding: .875rem 1rem;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .16em;
+  text-transform: uppercase; text-decoration: none;
+  transition: opacity .25s;
+}
+.directs a:hover { opacity: .88; }
+.direct-tel { background: var(--fond); color: var(--encre); }
+/* Vert de marque WhatsApp, texte en encre : du blanc sur ce vert ne
+   donnerait que 2:1. */
+.direct-wa { background: #25d366; color: var(--encre); }
+
+.contact-carte form { max-width: none; }
+
+.contact-carte {
+  margin-top: clamp(32px, 4vw, 48px);
+  background: var(--fond); color: var(--encre);
+  padding: clamp(24px, 3.4vw, 44px);
+}
+
 @media (min-width: 60em) {
-  /* Le formulaire monte à côté du titre : la moitié droite était vide. */
+  /* Le formulaire monte à côté du titre : la moitié droite était vide.
+     Le rail reste visible pendant tout le remplissage. */
   #contact {
-    display: grid; grid-template-columns: .8fr 1.2fr;
+    display: grid; grid-template-columns: .85fr 1.15fr;
     column-gap: clamp(40px, 5vw, 88px); align-items: start;
   }
-  #contact > .tete-section { grid-column: 1; grid-row: 1; margin-bottom: 0; }
-  #contact > form,
-  #contact > #confirmation { grid-column: 2; grid-row: 1; }
-  #contact > noscript { grid-column: 2; grid-row: 2; }
-  #contact form { max-width: 40rem; margin-top: 0; }
+  #rappel { display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(40px, 5vw, 88px); align-items: center; }
+  .rappel-actions { margin-top: 0; }
+
+  .contact-rail { position: sticky; top: 5.5rem; }
+  .contact-carte { margin-top: 0; }
+  .tuiles { grid-template-columns: 1fr 1fr; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .duo > div + div { margin-top: 0; }
+  .contact-rail .tete-section { margin-bottom: 0; }
 }
 
 /* --- Pied de page -------------------------------------------------------- */
@@ -748,95 +877,13 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 <main>
 
   <!-- ============================================================
-       2. CHANTIERS RÉALISÉS
-       4 chantiers : trois photos simples et une paire avant/après.
-       Grille en 2 x 2 sur grand écran — rester sur un nombre pair.
-       Pour chaque chantier, la légende donne : type de bien, commune,
-       nature des travaux. 2 lignes maximum. Photos avant/après quand
-       elles existent.
-       ============================================================ -->
-  <section id="chantiers" aria-labelledby="titre-chantiers">
-    <div class="tete-section rv">
-      <p class="mono"><span class="num">01</span>Chantiers réalisés</p>
-      <h2 id="titre-chantiers">Travaux livrés</h2>
-    </div>
-
-    <ul class="grille-chantiers">
-      <!-- CHANTIER 1 — modèle à dupliquer.
-           Markup image à utiliser une fois la photo déposée dans assets/chantiers/ :
-           <picture>
-             <source srcset="assets/chantiers/chantier-1.webp" type="image/webp">
-             <img src="assets/chantiers/chantier-1.jpg" width="1200" height="900" loading="lazy"
-                  alt="Parquet massif chêne posé dans un séjour d'appartement à Montreuil">
-           </picture>
-           L'attribut alt décrit : matériau + type de pièce + commune. -->
-      <li class="rv">
-        <figure>
-          <picture>
-            <source srcset="assets/chantiers/chantier-1-depose.webp" type="image/webp">
-            <img src="assets/chantiers/chantier-1-depose.jpg" width="608" height="811" loading="lazy" decoding="async"
-                 alt="Dépose d'un enduit dégradé par un dégât des eaux, plafond ouvert">
-          </picture>
-          <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
-          </figcaption>
-        </figure>
-      </li>
-
-      <li class="rv">
-        <figure>
-          <picture>
-            <source srcset="assets/chantiers/chantier-2-vinyle.webp" type="image/webp">
-            <img src="assets/chantiers/chantier-2-vinyle.jpg" width="608" height="811" loading="lazy" decoding="async"
-                 alt="Pose d'un sol vinyle en lés dans une cuisine">
-          </picture>
-          <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
-          </figcaption>
-        </figure>
-      </li>
-
-      <li class="rv">
-        <figure>
-          <picture>
-            <source srcset="assets/chantiers/chantier-3-cloison.webp" type="image/webp">
-            <img src="assets/chantiers/chantier-3-cloison.jpg" width="608" height="811" loading="lazy" decoding="async"
-                 alt="Vissage d'une plaque de plâtre sur ossature, isolant en place">
-          </picture>
-          <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
-          </figcaption>
-        </figure>
-      </li>
-
-      <!-- CHANTIER 4 — présentation avant/après : deux photos, une seule légende. -->
-      <li class="rv">
-        <figure>
-<picture>
-            <source srcset="assets/chantiers/chantier-4-peinture.webp" type="image/webp">
-            <img src="assets/chantiers/chantier-4-peinture.jpg" width="608" height="811" loading="lazy" decoding="async"
-                 alt="Application de peinture au rouleau, sol protégé">
-          </picture>
-          <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
-          </figcaption>
-        </figure>
-      </li>
-    </ul>
-  </section>
-
-  <!-- ============================================================
-       3. PRESTATIONS
+       2. PRESTATIONS
        Retirer une ligne si la prestation n'est pas proposée,
        en renumérotant les .num.
        ============================================================ -->
   <section id="prestations" aria-labelledby="titre-prestations">
     <div class="tete-section rv">
-      <p class="mono"><span class="num">02</span>Prestations</p>
+      <p class="mono"><span class="num">01</span>Prestations</p>
       <h2 id="titre-prestations">Ce qui est fait</h2>
     </div>
 
@@ -955,14 +1002,14 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   </section>
 
   <!-- ============================================================
-       4. COMMENT ÇA SE PASSE
+       3. COMMENT ÇA SE PASSE
        Déroulé courant, à relire et corriger par l'artisan pour coller
        à sa pratique réelle — en particulier l'étape 2 (visite
        systématique ou non) et l'étape 4 (protection et nettoyage).
        ============================================================ -->
   <section id="deroulement" aria-labelledby="titre-deroulement">
     <div class="tete-section rv">
-      <p class="mono"><span class="num">03</span>Méthode</p>
+      <p class="mono"><span class="num">02</span>Méthode</p>
       <h2 id="titre-deroulement">Comment ça se passe</h2>
     </div>
 
@@ -991,16 +1038,471 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   </section>
 
   <!-- ============================================================
-       5. AVIS CLIENTS — SECTION DÉSACTIVÉE
+       4. FORMULAIRE
+       Structure des 4 étapes. La navigation entre étapes, la validation
+       inline et la compression des photos arrivent à l'étape 3.
+       ============================================================ -->
+  <section id="contact" aria-labelledby="titre-contact">
+
+    <!-- Colonne de gauche. Sur grand écran elle reste visible pendant
+         tout le remplissage (position: sticky) : c'est elle qui remplit
+         la hauteur du formulaire au lieu de laisser un vide. Elle porte
+         la promesse, trois points de réassurance et les deux voies
+         directes pour ceux qui ne veulent pas d'un formulaire.
+         RÈGLE — les trois points doivent rester vérifiables : ils
+         reprennent ce qui est déjà écrit ailleurs dans la page. Ne pas
+         y ajouter de chiffre d'activité ni de garantie de résultat. -->
+    <div class="contact-rail">
+      <div class="tete-section rv">
+        <p class="mono"><span class="num">03</span>Contact</p>
+        <h2 id="titre-contact">Décrire un projet</h2>
+        <p class="intro">
+          Quatre étapes, deux minutes. Plus la description est précise,
+          plus le devis l'est. Les photos permettent une première
+          estimation sans déplacement.
+        </p>
+      </div>
+
+      <ul class="argus">
+        <li>
+          <strong>Rappel sous 24 h</strong>
+          <span>par téléphone, au numéro indiqué</span>
+        </li>
+        <li>
+          <strong>Un seul interlocuteur</strong>
+          <span>celui qui établit le devis est celui qui fait le chantier</span>
+        </li>
+        <li>
+          <strong>Devis écrit et détaillé</strong>
+          <span>postes, matériaux et durée estimée</span>
+        </li>
+      </ul>
+
+      <div class="directs">
+        <a class="direct-tel" href="tel:+33614495837">06 14 49 58 37 — appeler</a>
+        <a class="direct-wa" href="https://wa.me/33614495837" rel="noopener">WhatsApp — envoyer des photos</a>
+      </div>
+    </div>
+
+    <div class="contact-carte">
+
+      <form id="formulaire-projet" method="post" novalidate>
+
+        <p class="mono" id="progression" aria-live="polite">Étape 1 sur 4</p>
+        <div class="barre-progression" aria-hidden="true"><span id="jauge"></span></div>
+
+        <!-- ÉTAPE 1 — PRESTATION
+             Une seule question, en tuiles larges : c'est l'entrée du
+             formulaire, elle doit se répondre d'un clic. Le data-cle de
+             chaque case commande l'affichage du bloc de questions
+             correspondant à l'étape 2. -->
+        <fieldset data-etape="1">
+          <legend>Type de travaux</legend>
+          <p class="mono">Plusieurs choix possibles</p>
+          <div class="tuiles">
+            <label class="tuile">
+              <input type="checkbox" name="prestation" data-cle="degat" value="Après une fuite ou un dégât des eaux">
+              <span><strong>Dégât des eaux</strong><em>murs, plafonds et sols, après assèchement</em></span>
+            </label>
+            <label class="tuile">
+              <input type="checkbox" name="prestation" data-cle="peinture" value="Peinture intérieure">
+              <span><strong>Peinture et enduits</strong><em>murs et plafonds</em></span>
+            </label>
+            <label class="tuile">
+              <input type="checkbox" name="prestation" data-cle="sol" value="Revêtement de sol">
+              <span><strong>Revêtement de sol</strong><em>parquet, vinyle, carrelage, moquette</em></span>
+            </label>
+            <label class="tuile">
+              <input type="checkbox" name="prestation" data-cle="cloisons" value="Cloisons et placo">
+              <span><strong>Cloisons et placo</strong><em>création, isolation</em></span>
+            </label>
+            <label class="tuile">
+              <input type="checkbox" name="prestation" data-cle="terrasse" value="Terrasse bois sur pilotis">
+              <span><strong>Terrasse bois</strong><em>sur pilotis ou sur dalle</em></span>
+            </label>
+            <label class="tuile">
+              <input type="checkbox" name="prestation" data-cle="conseil" value="Conseil et accompagnement de projet">
+              <span><strong>Conseil</strong><em>matériaux, lecture de devis, suivi</em></span>
+            </label>
+          </div>
+          <p class="erreur" data-erreur-pour="prestation" role="alert"></p>
+        </fieldset>
+
+        <!-- ÉTAPE 2 — PROJET
+             Les blocs .conditionnel ne s'affichent que si la prestation
+             correspondante est cochée. Tant qu'un bloc est masqué, ses
+             réponses ne partent pas dans l'envoi : personne ne voit plus
+             de deux ou trois questions supplémentaires. -->
+        <fieldset data-etape="2" hidden>
+          <legend>Le projet</legend>
+
+          <div class="conditionnel" data-si="degat" hidden>
+            <p class="drapeau">Dégât des eaux</p>
+
+            <fieldset>
+              <legend>L'assèchement est-il terminé ?</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="assechement" value="terminé"><span>Terminé</span></label>
+                <label class="puce"><input type="radio" name="assechement" value="en cours"><span>En cours</span></label>
+                <label class="puce"><input type="radio" name="assechement" value="pas commencé"><span>Pas commencé</span></label>
+                <label class="puce"><input type="radio" name="assechement" value="je ne sais pas"><span>Je ne sais pas</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>La fuite a-t-elle été réparée ?</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="fuite" value="oui"><span>Oui</span></label>
+                <label class="puce"><input type="radio" name="fuite" value="non"><span>Non</span></label>
+                <label class="puce"><input type="radio" name="fuite" value="je ne sais pas"><span>Je ne sais pas</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Surfaces touchées</legend>
+              <div class="puces">
+                <label class="puce"><input type="checkbox" name="surfaces" value="plafond"><span>Plafond</span></label>
+                <label class="puce"><input type="checkbox" name="surfaces" value="murs"><span>Murs</span></label>
+                <label class="puce"><input type="checkbox" name="surfaces" value="sol"><span>Sol</span></label>
+                <label class="puce"><input type="checkbox" name="surfaces" value="cloison"><span>Cloison</span></label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="conditionnel" data-si="peinture" hidden>
+            <p class="drapeau">Peinture et enduits</p>
+
+            <label for="pieces"><span class="etiquette">Nombre de pièces à peindre</span></label>
+            <input type="number" id="pieces" name="pieces" min="0" inputmode="numeric">
+
+            <fieldset>
+              <legend>Les plafonds sont-ils compris ?</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="plafonds" value="oui"><span>Oui</span></label>
+                <label class="puce"><input type="radio" name="plafonds" value="non"><span>Non</span></label>
+                <label class="puce"><input type="radio" name="plafonds" value="à voir"><span>À voir</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>État des supports</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="supports" value="sains"><span>Sains</span></label>
+                <label class="puce"><input type="radio" name="supports" value="fissures"><span>Fissures</span></label>
+                <label class="puce"><input type="radio" name="supports" value="traces d'humidité"><span>Traces d'humidité</span></label>
+                <label class="puce"><input type="radio" name="supports" value="je ne sais pas"><span>Je ne sais pas</span></label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="conditionnel" data-si="sol" hidden>
+            <p class="drapeau">Revêtement de sol</p>
+
+            <fieldset>
+              <legend>Revêtement actuel</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="sol-actuel" value="parquet"><span>Parquet</span></label>
+                <label class="puce"><input type="radio" name="sol-actuel" value="carrelage"><span>Carrelage</span></label>
+                <label class="puce"><input type="radio" name="sol-actuel" value="moquette"><span>Moquette</span></label>
+                <label class="puce"><input type="radio" name="sol-actuel" value="vinyle"><span>Vinyle</span></label>
+                <label class="puce"><input type="radio" name="sol-actuel" value="béton brut"><span>Béton brut</span></label>
+                <label class="puce"><input type="radio" name="sol-actuel" value="je ne sais pas"><span>Je ne sais pas</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Faut-il déposer l'ancien sol ?</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="depose" value="oui"><span>Oui</span></label>
+                <label class="puce"><input type="radio" name="depose" value="non"><span>Non</span></label>
+                <label class="puce"><input type="radio" name="depose" value="je ne sais pas"><span>Je ne sais pas</span></label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="conditionnel" data-si="cloisons" hidden>
+            <p class="drapeau">Cloisons et placo</p>
+
+            <label for="cloisons-nb"><span class="etiquette">Nombre de cloisons</span></label>
+            <input type="number" id="cloisons-nb" name="cloisons-nb" min="0" inputmode="numeric">
+
+            <fieldset>
+              <legend>Isolation souhaitée</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="isolation" value="phonique"><span>Phonique</span></label>
+                <label class="puce"><input type="radio" name="isolation" value="thermique"><span>Thermique</span></label>
+                <label class="puce"><input type="radio" name="isolation" value="les deux"><span>Les deux</span></label>
+                <label class="puce"><input type="radio" name="isolation" value="aucune"><span>Aucune</span></label>
+                <label class="puce"><input type="radio" name="isolation" value="à voir"><span>À voir</span></label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="conditionnel" data-si="terrasse" hidden>
+            <p class="drapeau">Terrasse bois</p>
+
+            <label for="terrasse-surface"><span class="etiquette">Surface de la terrasse (m²)</span></label>
+            <input type="number" id="terrasse-surface" name="terrasse-surface" min="0" inputmode="numeric">
+
+            <fieldset>
+              <legend>La terrasse repose sur</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="terrasse-support" value="pilotis"><span>Des pilotis</span></label>
+                <label class="puce"><input type="radio" name="terrasse-support" value="dalle"><span>Une dalle</span></label>
+                <label class="puce"><input type="radio" name="terrasse-support" value="je ne sais pas"><span>Je ne sais pas</span></label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="conditionnel" data-si="conseil" hidden>
+            <p class="drapeau">Conseil</p>
+
+            <fieldset>
+              <legend>Où en est le projet ?</legend>
+              <div class="puces">
+                <label class="puce"><input type="radio" name="stade" value="simple idée"><span>Une simple idée</span></label>
+                <label class="puce"><input type="radio" name="stade" value="devis en main"><span>Des devis en main</span></label>
+                <label class="puce"><input type="radio" name="stade" value="chantier commencé"><span>Un chantier commencé</span></label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="duo">
+            <div>
+              <label for="commune"><span class="etiquette">Commune *</span></label>
+              <input type="text" id="commune" name="commune" autocomplete="address-level2" required>
+              <p class="erreur" data-erreur-pour="commune" role="alert"></p>
+            </div>
+            <div>
+              <label for="code-postal"><span class="etiquette">Code postal</span></label>
+              <input type="text" id="code-postal" name="code-postal" inputmode="numeric" autocomplete="postal-code" maxlength="5">
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>Type de bien</legend>
+            <div class="puces">
+              <label class="puce"><input type="radio" name="bien" data-cle="appartement" value="appartement"><span>Appartement</span></label>
+              <label class="puce"><input type="radio" name="bien" value="maison"><span>Maison</span></label>
+              <label class="puce"><input type="radio" name="bien" value="local"><span>Local</span></label>
+            </div>
+          </fieldset>
+
+          <div class="conditionnel" data-si="appartement" hidden>
+            <p class="drapeau">Appartement</p>
+            <div class="duo">
+              <div>
+                <label for="etage"><span class="etiquette">Étage</span></label>
+                <input type="number" id="etage" name="etage" min="0" inputmode="numeric">
+              </div>
+              <div>
+                <span class="etiquette" id="lib-ascenseur">Ascenseur</span>
+                <div class="puces" role="group" aria-labelledby="lib-ascenseur">
+                  <label class="puce"><input type="radio" name="ascenseur" value="oui"><span>Oui</span></label>
+                  <label class="puce"><input type="radio" name="ascenseur" value="non"><span>Non</span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <label for="surface"><span class="etiquette">Surface concernée (m²)</span></label>
+          <input type="number" id="surface" name="surface" min="0" inputmode="numeric">
+
+          <fieldset>
+            <legend>Le logement est</legend>
+            <div class="puces">
+              <label class="puce"><input type="radio" name="occupation" value="occupé"><span>Occupé</span></label>
+              <label class="puce"><input type="radio" name="occupation" value="vide"><span>Vide</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Délai</legend>
+            <div class="puces">
+              <label class="puce"><input type="radio" name="delai" value="urgent"><span>Urgent</span></label>
+              <label class="puce"><input type="radio" name="delai" value="1 à 3 mois"><span>1 à 3 mois</span></label>
+              <label class="puce"><input type="radio" name="delai" value="plus tard"><span>Plus tard</span></label>
+              <label class="puce"><input type="radio" name="delai" value="je me renseigne"><span>Je me renseigne</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Budget envisagé</legend>
+            <div class="puces">
+              <label class="puce"><input type="radio" name="budget" value="moins de 2 000 €"><span>Moins de 2 000 €</span></label>
+              <label class="puce"><input type="radio" name="budget" value="2 000 à 5 000 €"><span>2 000 à 5 000 €</span></label>
+              <label class="puce"><input type="radio" name="budget" value="5 000 à 10 000 €"><span>5 000 à 10 000 €</span></label>
+              <label class="puce"><input type="radio" name="budget" value="10 000 à 20 000 €"><span>10 000 à 20 000 €</span></label>
+              <label class="puce"><input type="radio" name="budget" value="plus de 20 000 €"><span>Plus de 20 000 €</span></label>
+              <label class="puce"><input type="radio" name="budget" value="je ne sais pas"><span>Je ne sais pas</span></label>
+            </div>
+          </fieldset>
+
+          <label for="description"><span class="etiquette">Description</span></label>
+          <textarea id="description" name="description" rows="5"></textarea>
+        </fieldset>
+
+        <!-- ÉTAPE 3 — PHOTOS -->
+        <fieldset data-etape="3" hidden>
+          <legend>Photos</legend>
+          <p class="intro">
+            Les photos permettent une première estimation sans déplacement.
+            Elles peuvent aussi être envoyées directement par
+            <a href="https://wa.me/33614495837" rel="noopener">WhatsApp</a>.
+          </p>
+
+          <label for="photos"><span class="etiquette">Ajouter 3 à 8 photos</span></label>
+          <input type="file" id="photos" name="photos" accept="image/*" multiple>
+          <p class="erreur" data-erreur-pour="photos" role="alert"></p>
+
+          <ul id="apercu-photos"></ul>
+        </fieldset>
+
+        <!-- ÉTAPE 4 — CONTACT -->
+        <fieldset data-etape="4" hidden>
+          <legend>Coordonnées</legend>
+
+          <label for="nom"><span class="etiquette">Nom *</span></label>
+          <input type="text" id="nom" name="nom" autocomplete="name" required>
+          <p class="erreur" data-erreur-pour="nom" role="alert"></p>
+
+          <div class="duo">
+            <div>
+              <label for="telephone"><span class="etiquette">Téléphone *</span></label>
+              <input type="tel" id="telephone" name="telephone" autocomplete="tel" required>
+              <p class="erreur" data-erreur-pour="telephone" role="alert"></p>
+            </div>
+            <div>
+              <label for="email"><span class="etiquette">Email *</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+              <p class="erreur" data-erreur-pour="email" role="alert"></p>
+            </div>
+          </div>
+
+          <label class="choix" style="margin-top:2rem">
+            <input type="checkbox" id="consentement" name="consentement" value="oui" required>
+            <span>J'accepte que Borsci Rénovation conserve ces informations pour me recontacter au sujet de ce projet.</span>
+          </label>
+          <p class="erreur" data-erreur-pour="consentement" role="alert"></p>
+        </fieldset>
+
+        <div class="navigation">
+          <button type="button" id="precedent" class="secondaire" hidden>Précédent</button>
+          <button type="button" id="suivant">Suivant</button>
+          <button type="submit" id="envoyer" hidden>Envoyer</button>
+        </div>
+
+        <p class="erreur" data-erreur-pour="formulaire" role="alert"></p>
+      </form>
+
+      <div id="confirmation" hidden role="status">
+        <p class="mono">Demande envoyée</p>
+        <p>Rappel sous 24 h au numéro indiqué.</p>
+      </div>
+
+      <noscript>
+        <p class="intro">
+          Le formulaire nécessite JavaScript.
+          Appeler le <a href="tel:+33614495837">06 14 49 58 37</a>.
+        </p>
+      </noscript>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. CHANTIERS RÉALISÉS
+       4 chantiers : trois photos simples et une paire avant/après.
+       Grille en 2 x 2 sur grand écran — rester sur un nombre pair.
+       Pour chaque chantier, la légende donne : type de bien, commune,
+       nature des travaux. 2 lignes maximum. Photos avant/après quand
+       elles existent.
+       ============================================================ -->
+  <section id="chantiers" aria-labelledby="titre-chantiers">
+    <div class="tete-section rv">
+      <p class="mono"><span class="num">04</span>Chantiers réalisés</p>
+      <h2 id="titre-chantiers">Travaux livrés</h2>
+    </div>
+
+    <ul class="grille-chantiers">
+      <!-- CHANTIER 1 — modèle à dupliquer.
+           Markup image à utiliser une fois la photo déposée dans assets/chantiers/ :
+           <picture>
+             <source srcset="assets/chantiers/chantier-1.webp" type="image/webp">
+             <img src="assets/chantiers/chantier-1.jpg" width="1200" height="900" loading="lazy"
+                  alt="Parquet massif chêne posé dans un séjour d'appartement à Montreuil">
+           </picture>
+           L'attribut alt décrit : matériau + type de pièce + commune. -->
+      <li class="rv">
+        <figure>
+          <picture>
+            <source srcset="assets/chantiers/chantier-1-depose.webp" type="image/webp">
+            <img src="assets/chantiers/chantier-1-depose.jpg" width="608" height="811" loading="lazy" decoding="async"
+                 alt="Dépose d'un enduit dégradé par un dégât des eaux, plafond ouvert">
+          </picture>
+          <figcaption class="mono">
+            <span class="lieu a-fournir">[Type de bien — commune]</span>
+            <span class="quoi a-fournir">[Nature des travaux]</span>
+          </figcaption>
+        </figure>
+      </li>
+
+      <li class="rv">
+        <figure>
+          <picture>
+            <source srcset="assets/chantiers/chantier-2-vinyle.webp" type="image/webp">
+            <img src="assets/chantiers/chantier-2-vinyle.jpg" width="608" height="811" loading="lazy" decoding="async"
+                 alt="Pose d'un sol vinyle en lés dans une cuisine">
+          </picture>
+          <figcaption class="mono">
+            <span class="lieu a-fournir">[Type de bien — commune]</span>
+            <span class="quoi a-fournir">[Nature des travaux]</span>
+          </figcaption>
+        </figure>
+      </li>
+
+      <li class="rv">
+        <figure>
+          <picture>
+            <source srcset="assets/chantiers/chantier-3-cloison.webp" type="image/webp">
+            <img src="assets/chantiers/chantier-3-cloison.jpg" width="608" height="811" loading="lazy" decoding="async"
+                 alt="Vissage d'une plaque de plâtre sur ossature, isolant en place">
+          </picture>
+          <figcaption class="mono">
+            <span class="lieu a-fournir">[Type de bien — commune]</span>
+            <span class="quoi a-fournir">[Nature des travaux]</span>
+          </figcaption>
+        </figure>
+      </li>
+
+      <!-- CHANTIER 4 — présentation avant/après : deux photos, une seule légende. -->
+      <li class="rv">
+        <figure>
+<picture>
+            <source srcset="assets/chantiers/chantier-4-peinture.webp" type="image/webp">
+            <img src="assets/chantiers/chantier-4-peinture.jpg" width="608" height="811" loading="lazy" decoding="async"
+                 alt="Application de peinture au rouleau, sol protégé">
+          </picture>
+          <figcaption class="mono">
+            <span class="lieu a-fournir">[Type de bien — commune]</span>
+            <span class="quoi a-fournir">[Nature des travaux]</span>
+          </figcaption>
+        </figure>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============================================================
+       6. AVIS CLIENTS — SECTION DÉSACTIVÉE
        Ne pas décommenter tant que les avis n'existent pas réellement.
        Recopier mot pour mot des avis publiés sur la fiche Google Business
        Profile, sans les reformuler. Ne jamais rédiger d'avis.
-       Penser à renuméroter les sections suivantes (04, 05).
+       La numéroter 05 et repousser le pied de page en 06.
        ============================================================ -->
   <!--
   <section id="avis" aria-labelledby="titre-avis">
     <div class="tete-section">
-      <p class="mono"><span class="num">04</span>Avis clients</p>
+      <p class="mono"><span class="num">05</span>Avis clients</p>
       <h2 id="titre-avis">Ce qu'ils en disent</h2>
       <p class="intro">Note de [NOTE]/5 sur [NOMBRE] avis Google.</p>
     </div>
@@ -1025,144 +1527,30 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   -->
 
   <!-- ============================================================
-       6. FORMULAIRE
-       Structure des 4 étapes. La navigation entre étapes, la validation
-       inline et la compression des photos arrivent à l'étape 3.
+       7. RAPPEL DE FIN DE PAGE
+       Second point d'entree vers le formulaire, pour qui a lu toute la
+       page avant de se decider. Volontairement sans numero : la bande
+       n'entre pas dans la sequence 01-05 des sections.
        ============================================================ -->
-  <section id="contact" aria-labelledby="titre-contact">
-    <div class="tete-section rv">
-      <p class="mono"><span class="num">04</span>Contact</p>
-      <h2 id="titre-contact">Décrire un projet</h2>
+  <section id="rappel" aria-labelledby="titre-rappel">
+    <div class="rappel-corps rv">
+      <h2 id="titre-rappel">Le décrire prend deux minutes</h2>
       <p class="intro">
-        Quatre étapes, deux minutes. Les photos permettent une première
-        estimation sans déplacement. Rappel sous 24 h.
+        Surfaces, délai, photos : plus la description est précise,
+        plus le devis l'est.
       </p>
     </div>
-
-    <form id="formulaire-projet" method="post" novalidate>
-
-      <p class="mono" id="progression" aria-live="polite">Étape 1 sur 4</p>
-      <div class="barre-progression" aria-hidden="true"><span id="jauge"></span></div>
-
-      <!-- ÉTAPE 1 — PRESTATION -->
-      <fieldset data-etape="1">
-        <legend>Type de travaux</legend>
-        <p class="mono">Plusieurs choix possibles</p>
-        <div style="margin-top:1.25rem">
-          <label class="choix"><input type="checkbox" name="prestation" value="Après une fuite ou un dégât des eaux"> Après une fuite ou un dégât des eaux</label>
-          <label class="choix"><input type="checkbox" name="prestation" value="Peinture intérieure"> Peinture intérieure</label>
-          <label class="choix"><input type="checkbox" name="prestation" value="Revêtement de sol"> Revêtement de sol — parquet, vinyle, carrelage, moquette</label>
-          <label class="choix"><input type="checkbox" name="prestation" value="Cloisons et placo"> Cloisons et placo</label>
-          <label class="choix"><input type="checkbox" name="prestation" value="Terrasse bois sur pilotis"> Terrasse bois sur pilotis</label>
-          <label class="choix"><input type="checkbox" name="prestation" value="Conseil et accompagnement de projet"> Conseil et accompagnement</label>
-        </div>
-        <p class="erreur" data-erreur-pour="prestation" role="alert"></p>
-      </fieldset>
-
-      <!-- ÉTAPE 2 — PROJET -->
-      <fieldset data-etape="2" hidden>
-        <legend>Le projet</legend>
-
-        <label for="commune"><span class="etiquette">Commune *</span></label>
-        <input type="text" id="commune" name="commune" autocomplete="address-level2" required>
-        <p class="erreur" data-erreur-pour="commune" role="alert"></p>
-
-        <label for="surface"><span class="etiquette">Surface approximative (m²)</span></label>
-        <input type="number" id="surface" name="surface" min="0" inputmode="numeric">
-
-        <fieldset>
-          <legend>Le logement est</legend>
-          <label class="choix"><input type="radio" name="occupation" value="occupé"> Occupé</label>
-          <label class="choix"><input type="radio" name="occupation" value="vide"> Vide</label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Délai</legend>
-          <label class="choix"><input type="radio" name="delai" value="urgent"> Urgent</label>
-          <label class="choix"><input type="radio" name="delai" value="1 à 3 mois"> 1 à 3 mois</label>
-          <label class="choix"><input type="radio" name="delai" value="plus tard"> Plus tard</label>
-          <label class="choix"><input type="radio" name="delai" value="je me renseigne"> Je me renseigne</label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Budget envisagé</legend>
-          <label class="choix"><input type="radio" name="budget" value="moins de 2 000 €"> Moins de 2 000 €</label>
-          <label class="choix"><input type="radio" name="budget" value="2 000 à 5 000 €"> 2 000 à 5 000 €</label>
-          <label class="choix"><input type="radio" name="budget" value="5 000 à 10 000 €"> 5 000 à 10 000 €</label>
-          <label class="choix"><input type="radio" name="budget" value="10 000 à 20 000 €"> 10 000 à 20 000 €</label>
-          <label class="choix"><input type="radio" name="budget" value="plus de 20 000 €"> Plus de 20 000 €</label>
-          <label class="choix"><input type="radio" name="budget" value="je ne sais pas"> Je ne sais pas</label>
-        </fieldset>
-
-        <label for="description"><span class="etiquette">Description</span></label>
-        <textarea id="description" name="description" rows="5"></textarea>
-      </fieldset>
-
-      <!-- ÉTAPE 3 — PHOTOS -->
-      <fieldset data-etape="3" hidden>
-        <legend>Photos</legend>
-        <p class="intro">
-          Les photos permettent une première estimation sans déplacement.
-          Elles peuvent aussi être envoyées directement par
-          <a href="https://wa.me/33614495837" rel="noopener">WhatsApp</a>.
-        </p>
-
-        <label for="photos"><span class="etiquette">Ajouter 3 à 8 photos</span></label>
-        <input type="file" id="photos" name="photos" accept="image/*" multiple>
-        <p class="erreur" data-erreur-pour="photos" role="alert"></p>
-
-        <ul id="apercu-photos"></ul>
-      </fieldset>
-
-      <!-- ÉTAPE 4 — CONTACT -->
-      <fieldset data-etape="4" hidden>
-        <legend>Coordonnées</legend>
-
-        <label for="nom"><span class="etiquette">Nom *</span></label>
-        <input type="text" id="nom" name="nom" autocomplete="name" required>
-        <p class="erreur" data-erreur-pour="nom" role="alert"></p>
-
-        <label for="telephone"><span class="etiquette">Téléphone *</span></label>
-        <input type="tel" id="telephone" name="telephone" autocomplete="tel" required>
-        <p class="erreur" data-erreur-pour="telephone" role="alert"></p>
-
-        <label for="email"><span class="etiquette">Email *</span></label>
-        <input type="email" id="email" name="email" autocomplete="email" required>
-        <p class="erreur" data-erreur-pour="email" role="alert"></p>
-
-        <label class="choix" style="margin-top:2rem">
-          <input type="checkbox" id="consentement" name="consentement" value="oui" required>
-          <span>J'accepte que Borsci Rénovation conserve ces informations pour me recontacter au sujet de ce projet.</span>
-        </label>
-        <p class="erreur" data-erreur-pour="consentement" role="alert"></p>
-      </fieldset>
-
-      <div class="navigation">
-        <button type="button" id="precedent" class="secondaire" hidden>Précédent</button>
-        <button type="button" id="suivant">Suivant</button>
-        <button type="submit" id="envoyer" hidden>Envoyer</button>
-      </div>
-
-      <p class="erreur" data-erreur-pour="formulaire" role="alert"></p>
-    </form>
-
-    <div id="confirmation" hidden role="status">
-      <p class="mono">Demande envoyée</p>
-      <p>Rappel sous 24 h au numéro indiqué.</p>
+    <div class="rappel-actions rv">
+      <a class="rappel-formulaire" href="#contact">Remplir le formulaire</a>
+      <a class="bouton-tel" href="tel:+33614495837">06 14 49 58 37</a>
+      <a class="lien-whatsapp" href="https://wa.me/33614495837" rel="noopener">WhatsApp — envoyer des photos</a>
     </div>
-
-    <noscript>
-      <p class="intro">
-        Le formulaire nécessite JavaScript.
-        Appeler le <a href="tel:+33614495837">06 14 49 58 37</a>.
-      </p>
-    </noscript>
   </section>
 
 </main>
 
 <!-- ============================================================
-     7. PIED DE PAGE
+     8. PIED DE PAGE
      ============================================================ -->
 <footer>
   <p class="mono"><span class="num">05</span>Informations légales</p>
@@ -1288,6 +1676,19 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
   }
   function effacer(cle) { poser(cle, ''); }
 
+  /* --- Questions conditionnelles.
+     Chaque bloc [data-si="cle"] n'apparait que si une case portant
+     data-cle="cle" est cochee. Un bloc masque garde ses reponses en
+     memoire mais ne les envoie pas : voir la construction du payload. --- */
+  var conditionnels = Array.prototype.slice.call(form.querySelectorAll('[data-si]'));
+
+  function majConditionnels() {
+    conditionnels.forEach(function (bloc) {
+      var cle = bloc.getAttribute('data-si');
+      bloc.hidden = !form.querySelector('input[data-cle="' + cle + '"]:checked');
+    });
+  }
+
   function montrer(n, defiler) {
     courante = n;
     etapes.forEach(function (f) {
@@ -1356,6 +1757,7 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
     if (champ.name === 'prestation') effacer('prestation');
     if (champ.id && zoneErreur(champ.id)) effacer(champ.id);
     if (champ.id === 'consentement') effacer('consentement');
+    if (champ.hasAttribute && champ.hasAttribute('data-cle')) majConditionnels();
   });
 
   /* --- Compression d'une image : réduction au plus grand côté COTE_MAX,
@@ -1437,16 +1839,22 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
       return;
     }
 
+    /* Parcours generique : ajouter une question au HTML suffit, il n'y a
+       pas de liste de champs a tenir a jour ici. Un champ situe dans un
+       bloc conditionnel masque n'est pas envoye. */
+    var masque = function (champ) { return !!champ.closest('[data-si][hidden]'); };
+
     var donnees = new FormData();
-    ['prestation', 'occupation', 'delai', 'budget'].forEach(function (nom) {
-      form.querySelectorAll('input[name="' + nom + '"]:checked').forEach(function (c) {
-        donnees.append(nom, c.value);
+    form.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked')
+      .forEach(function (c) {
+        if (c.id === 'consentement' || masque(c)) return;
+        donnees.append(c.name, c.value);
       });
-    });
-    ['commune', 'surface', 'description', 'nom', 'telephone', 'email'].forEach(function (id) {
-      var champ = document.getElementById(id);
-      if (champ && champ.value.trim()) donnees.append(id, champ.value.trim());
-    });
+    form.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], input[type="number"], textarea')
+      .forEach(function (champ) {
+        if (!champ.value.trim() || masque(champ)) return;
+        donnees.append(champ.name || champ.id, champ.value.trim());
+      });
     donnees.append('consentement', 'oui');
     photos.forEach(function (p, i) {
       donnees.append('photo-' + (i + 1), p.blob, p.nom);
@@ -1472,6 +1880,7 @@ document.querySelectorAll('[data-ba]').forEach(function (ba) {
     });
   });
 
+  majConditionnels();
   montrer(1);
 })();
 </script>

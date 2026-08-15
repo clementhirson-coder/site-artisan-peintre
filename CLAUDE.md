@@ -20,6 +20,27 @@ substitution, destinés uniquement à présenter la maquette au client.
 
 ## Décisions actées — ne pas revenir dessus sans accord explicite
 
+- **Ordre de la page, acté le 15/08/2026** : en-tête → 01 Prestations →
+  02 Méthode → 03 Décrire un projet → 04 Travaux livrés → bande de
+  rappel → pied de page. Le formulaire est le cœur du site : il passe
+  avant les chantiers, et une bande de rappel en fin de page offre un
+  second point d'entrée à qui a tout lu avant de se décider. Cette bande
+  ne porte volontairement pas de numéro de section.
+- **Traitement du formulaire, acté le 15/08/2026** : panneau sombre
+  pleine largeur (`--encre`), colonne de gauche collante portant la
+  promesse, trois points de réassurance et les deux voies directes
+  (téléphone, WhatsApp) — c'est elle qui remplit la hauteur du
+  formulaire au lieu de laisser un vide. Le formulaire est posé sur une
+  carte claire. Deux gris intermédiaires (`--gris-clair`, `--gris-moyen`)
+  sont définis localement sur `#contact` pour le texte secondaire sur
+  fond sombre : `--doux` et `--tenu` n'y passeraient pas le contraste.
+- **Qualification en amont** : l'étape 1 est une question unique en
+  tuiles larges ; l'étape 2 affiche des questions conditionnelles selon
+  les prestations cochées (`data-cle` sur la case → `data-si` sur le
+  bloc). Un bloc masqué garde ses réponses mais ne les envoie pas. Pour
+  ajouter une question, il suffit d'écrire le HTML : la construction du
+  payload est générique, il n'y a pas de liste de champs à maintenir.
+
 - **Direction de design actée le 15/08/2026** : variante B (titres Jost
   gras en casse normale, filets, angles vifs, header collant, bande de
   faits) + option 3 pour les prestations (cartes plates à filets
