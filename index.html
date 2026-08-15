@@ -966,5 +966,233 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 })();
 </script>
 
+<script>
+/* ==========================================================================
+   Formulaire multi-étapes.
+   - navigation sans rechargement, progression visible
+   - erreurs inline sous le champ concerné, jamais d'alerte navigateur
+   - les champs facultatifs ne bloquent jamais la progression
+   - photos compressées côté client avant envoi
+   - envoi multipart vers FORM_ENDPOINT (défini en haut du fichier) :
+     compatible Formspree, Web3Forms, FormSubmit — changer de service
+     revient à changer cette seule constante
+   ========================================================================== */
+(function () {
+  var form = document.getElementById('formulaire-projet');
+  if (!form) return;
+
+  var etapes = Array.prototype.slice.call(form.querySelectorAll('fieldset[data-etape]'));
+  var progression = document.getElementById('progression');
+  var jauge = document.getElementById('jauge');
+  var btnPrec = document.getElementById('precedent');
+  var btnSuiv = document.getElementById('suivant');
+  var btnEnvoi = document.getElementById('envoyer');
+  var champPhotos = document.getElementById('photos');
+  var apercu = document.getElementById('apercu-photos');
+  var confirmation = document.getElementById('confirmation');
+  var TOTAL = etapes.length;
+  var courante = 1;
+
+  /* Photos retenues après compression : { blob, nom } */
+  var photos = [];
+  var MAX_PHOTOS = 8;
+  var COTE_MAX = 1600;      /* px, plus grand côté après réduction   */
+  var QUALITE = 0.78;       /* JPEG                                   */
+
+  function zoneErreur(cle) {
+    return form.querySelector('[data-erreur-pour="' + cle + '"]');
+  }
+  function poser(cle, message) {
+    var z = zoneErreur(cle);
+    if (z) z.textContent = message;
+  }
+  function effacer(cle) { poser(cle, ''); }
+
+  function montrer(n) {
+    courante = n;
+    etapes.forEach(function (f) {
+      f.hidden = (parseInt(f.getAttribute('data-etape'), 10) !== n);
+    });
+    progression.textContent = 'Étape ' + n + ' sur ' + TOTAL;
+    if (jauge) jauge.style.width = (n / TOTAL * 100) + '%';
+    btnPrec.hidden = (n === 1);
+    btnSuiv.hidden = (n === TOTAL);
+    btnEnvoi.hidden = (n !== TOTAL);
+    effacer('formulaire');
+    form.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+
+  /* --- Validation par étape.
+     Seuls les champs obligatoires bloquent : prestation (étape 1),
+     commune (étape 2), coordonnées et consentement (étape 4).
+     L'étape photos ne bloque jamais — la limite haute est appliquée
+     à la sélection. --- */
+  function valider(n) {
+    var ok = true;
+
+    if (n === 1) {
+      var coches = form.querySelectorAll('input[name="prestation"]:checked');
+      if (!coches.length) { poser('prestation', 'Choisir au moins un type de travaux.'); ok = false; }
+    }
+
+    if (n === 2) {
+      var commune = document.getElementById('commune');
+      if (!commune.value.trim()) { poser('commune', 'Indiquer la commune du chantier.'); ok = false; }
+    }
+
+    if (n === 4) {
+      var nom = document.getElementById('nom');
+      var tel = document.getElementById('telephone');
+      var email = document.getElementById('email');
+      var consent = document.getElementById('consentement');
+
+      if (!nom.value.trim()) { poser('nom', 'Indiquer un nom.'); ok = false; }
+
+      var chiffres = tel.value.replace(/\D/g, '');
+      if (chiffres.length < 9) { poser('telephone', 'Indiquer un numéro de téléphone valide.'); ok = false; }
+
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())) {
+        poser('email', 'Indiquer une adresse email valide.'); ok = false;
+      }
+
+      if (!consent.checked) { poser('consentement', 'Cocher la case pour autoriser le rappel.'); ok = false; }
+    }
+
+    return ok;
+  }
+
+  btnSuiv.addEventListener('click', function () {
+    if (valider(courante)) montrer(courante + 1);
+  });
+  btnPrec.addEventListener('click', function () {
+    montrer(courante - 1);
+  });
+
+  /* L'erreur disparaît dès que le champ concerné est corrigé */
+  form.addEventListener('input', function (e) {
+    var champ = e.target;
+    if (champ.name === 'prestation') effacer('prestation');
+    if (champ.id && zoneErreur(champ.id)) effacer(champ.id);
+    if (champ.id === 'consentement') effacer('consentement');
+  });
+
+  /* --- Compression d'une image : réduction au plus grand côté COTE_MAX,
+     réencodage JPEG. En cas d'échec (format exotique), le fichier
+     d'origine est conservé tel quel. --- */
+  function comprimer(fichier) {
+    return new Promise(function (resoudre) {
+      var url = URL.createObjectURL(fichier);
+      var img = new Image();
+      img.onload = function () {
+        var ratio = Math.min(1, COTE_MAX / Math.max(img.width, img.height));
+        var c = document.createElement('canvas');
+        c.width = Math.round(img.width * ratio);
+        c.height = Math.round(img.height * ratio);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        c.toBlob(function (blob) {
+          if (blob && blob.size < fichier.size) {
+            resoudre({ blob: blob, nom: fichier.name.replace(/\.[^.]+$/, '') + '.jpg' });
+          } else {
+            resoudre({ blob: fichier, nom: fichier.name });
+          }
+        }, 'image/jpeg', QUALITE);
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        resoudre({ blob: fichier, nom: fichier.name });
+      };
+      img.src = url;
+    });
+  }
+
+  function poids(octets) {
+    return octets > 1048576
+      ? (octets / 1048576).toFixed(1) + ' Mo'
+      : Math.max(1, Math.round(octets / 1024)) + ' Ko';
+  }
+
+  champPhotos.addEventListener('change', function () {
+    effacer('photos');
+    var choisis = Array.prototype.slice.call(champPhotos.files)
+      .filter(function (f) { return /^image\//.test(f.type); });
+
+    if (choisis.length < champPhotos.files.length) {
+      poser('photos', 'Seules les images sont acceptées.');
+    }
+    if (choisis.length > MAX_PHOTOS) {
+      poser('photos', MAX_PHOTOS + ' photos maximum — les premières ont été retenues.');
+      choisis = choisis.slice(0, MAX_PHOTOS);
+    }
+
+    apercu.innerHTML = '';
+    photos = [];
+    if (!choisis.length) return;
+
+    var li = document.createElement('li');
+    li.textContent = 'Préparation des photos…';
+    apercu.appendChild(li);
+
+    Promise.all(choisis.map(comprimer)).then(function (resultats) {
+      photos = resultats;
+      apercu.innerHTML = '';
+      resultats.forEach(function (p) {
+        var ligne = document.createElement('li');
+        ligne.textContent = p.nom + ' — ' + poids(p.blob.size);
+        apercu.appendChild(ligne);
+      });
+    });
+  });
+
+  /* --- Envoi --- */
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!valider(TOTAL)) return;
+
+    if (typeof FORM_ENDPOINT !== 'string' || FORM_ENDPOINT.indexOf('XXXXXXXX') !== -1) {
+      poser('formulaire',
+        'Formulaire pas encore activé. Appeler directement le numéro affiché en haut de page.');
+      return;
+    }
+
+    var donnees = new FormData();
+    ['prestation', 'occupation', 'delai', 'budget'].forEach(function (nom) {
+      form.querySelectorAll('input[name="' + nom + '"]:checked').forEach(function (c) {
+        donnees.append(nom, c.value);
+      });
+    });
+    ['commune', 'surface', 'description', 'nom', 'telephone', 'email'].forEach(function (id) {
+      var champ = document.getElementById(id);
+      if (champ && champ.value.trim()) donnees.append(id, champ.value.trim());
+    });
+    donnees.append('consentement', 'oui');
+    photos.forEach(function (p, i) {
+      donnees.append('photo-' + (i + 1), p.blob, p.nom);
+    });
+
+    btnEnvoi.disabled = true;
+    btnEnvoi.textContent = 'Envoi…';
+
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      body: donnees,
+      headers: { 'Accept': 'application/json' }
+    }).then(function (reponse) {
+      if (!reponse.ok) throw new Error(reponse.status);
+      form.hidden = true;
+      confirmation.hidden = false;
+      confirmation.scrollIntoView({ block: 'center' });
+    }).catch(function () {
+      btnEnvoi.disabled = false;
+      btnEnvoi.textContent = 'Envoyer';
+      poser('formulaire',
+        "L'envoi a échoué. Réessayer dans un instant, ou appeler directement.");
+    });
+  });
+
+  montrer(1);
+})();
+</script>
+
 </body>
 </html>
