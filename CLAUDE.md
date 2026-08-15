@@ -6,9 +6,15 @@ prévisualisation sur GitHub Pages. Doit tourner 3 ans sans maintenance.
 
 ## ⚠ Visuels temporaires en place (15/08/2026)
 
-Les images de `assets/chantiers/` et `assets/artisan/` **ne sont pas des
-photos de chantiers de Borsci Rénovation**. Ce sont des visuels de
-substitution, destinés uniquement à présenter la maquette au client.
+**Deux exceptions**, ce sont de vraies photos de Vitalii Borsci :
+`chantier-a-avant|apres.*` et `chantier-b-avant|apres.*` dans
+`assets/chantiers/` — les deux avant/après de la section « Travaux
+livrés ». Ne pas les remplacer. Originaux dans `sources-photos/`.
+
+Tout le reste de `assets/chantiers/` et `assets/artisan/` **n'est pas
+constitué de photos de chantiers de Borsci Rénovation**. Ce sont des
+visuels de substitution, destinés uniquement à présenter la maquette au
+client.
 
 - la page porte un `<meta name="robots" content="noindex, nofollow">`
   tant qu'elles sont en place ; le retirer en même temps qu'elles
@@ -81,8 +87,13 @@ substitution, destinés uniquement à présenter la maquette au client.
   RGE / rénovation énergétique.
 - Jamais de faux contenu : ni avis inventés (section commentée en
   attente des vrais avis Google), ni photos de chantiers d'autrui.
-- Grille chantiers : 4 vignettes (2×2), nombre pair, format carré —
-  le portrait 3/4 donnait des tuiles de 928 px de haut sur grand écran.
+- Grille chantiers : deux chantiers, présentés en **avant / après côte
+  à côte** (chaque volet en portrait 4/5, proche du cadrage d'origine).
+  Pas sous le curseur de comparaison : les deux prises de vue d'une
+  même paire n'ont pas le même cadrage, le curseur exige des photos
+  superposables. Nombre pair, et l'écart entre deux chantiers doit
+  rester nettement plus grand que l'écart entre les deux volets d'une
+  paire — sinon quatre photos se lisent comme une seule bande.
 - Fontes hébergées en local (`assets/fonts/`), aucune requête tierce.
 
 ## Réception des demandes

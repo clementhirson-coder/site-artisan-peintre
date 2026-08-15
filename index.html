@@ -3,9 +3,15 @@
   ============================================================================
   VISUELS TEMPORAIRES — NE PAS METTRE EN LIGNE PUBLIQUEMENT EN L'ETAT.
 
-  Les images de assets/chantiers/ et assets/artisan/ ne sont PAS des photos
-  de chantiers de Borsci Renovation : ce sont des visuels de substitution,
-  destines uniquement a presenter la maquette au client.
+  DEUX EXCEPTIONS : ce sont de VRAIES photos de Vitalii Borsci.
+    assets/chantiers/chantier-a-avant|apres.*
+    assets/chantiers/chantier-b-avant|apres.*
+  Ne pas les remplacer. Originaux conserves dans sources-photos/.
+
+  Tout le reste de assets/chantiers/ et assets/artisan/ n'est PAS
+  constitue de photos de chantiers de Borsci Renovation : ce sont des
+  visuels de substitution, destines uniquement a presenter la maquette
+  au client.
 
   Elles doivent etre remplacees par de vraies photos avant toute publication.
   Publier ces images legendees comme des chantiers realises constituerait
@@ -343,7 +349,7 @@ section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid va
 
 /* --- Chantiers ----------------------------------------------------------- */
 
-.grille-chantiers { list-style: none; display: grid; gap: 4px; }
+.grille-chantiers { list-style: none; display: grid; gap: clamp(32px, 3.4vw, 52px); }
 
 .grille-chantiers figure { position: relative; overflow: hidden; background: var(--fond-2); }
 
@@ -362,13 +368,27 @@ section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid va
 
 .paire { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
-/* Dans la grille des chantiers, la paire avant/après occupe exactement
-   le gabarit carré d'une vignette simple : ses deux moitiés deviennent
-   des portraits pleine hauteur, et les rangées restent alignées. */
-.grille-chantiers .paire { aspect-ratio: 1 / 1; }
-.grille-chantiers .paire .photo-vide,
-.grille-chantiers .paire picture,
-.grille-chantiers .paire img { aspect-ratio: auto; height: 100%; }
+/* Les chantiers sont presentes en avant / apres cote a cote. Chaque
+   volet est un portrait 4/5, proche du cadrage d'origine (0,78 a 0,90) :
+   le recadrage reste imperceptible. */
+.grille-chantiers .paire { gap: 4px; }
+.grille-chantiers .volet { position: relative; overflow: hidden; background: var(--fond-2); }
+.grille-chantiers .volet picture { display: block; }
+.grille-chantiers .volet img { aspect-ratio: 4 / 5; height: auto; }
+
+/* Sans ces etiquettes, deux photos cote a cote ne disent pas dans quel
+   sens les lire. Memes couleurs que le comparateur des prestations. */
+.volet-tag {
+  position: absolute; top: 0; left: 0;
+  padding: .4rem .75rem;
+  background: var(--encre); color: var(--fond);
+  font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+}
+.volet-tag-apres { left: auto; right: 0; background: var(--accent); }
+
+/* L'agrandissement au survol ferait glisser les deux volets l'un par
+   rapport a l'autre : on le reserve aux vignettes simples. */
+.grille-chantiers figure:hover .volet img { transform: none; }
 
 /* --- Prestations : cinq blocs ------------------------------------------- */
 
@@ -829,7 +849,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 /* --- Tablette ------------------------------------------------------------ */
 
 @media (min-width: 46em) {
-  .grille-chantiers { grid-template-columns: repeat(2, 1fr); gap: 4px 4px; }
+  .grille-chantiers { grid-template-columns: repeat(2, 1fr); }
   .etapes { grid-template-columns: repeat(2, 1fr); }
   .pied-grille { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(32px, 4vw, 56px); }
 }
@@ -1489,11 +1509,20 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
   <!-- ============================================================
        5. CHANTIERS RÉALISÉS
-       4 chantiers : trois photos simples et une paire avant/après.
-       Grille en 2 x 2 sur grand écran — rester sur un nombre pair.
-       Pour chaque chantier, la légende donne : type de bien, commune,
-       nature des travaux. 2 lignes maximum. Photos avant/après quand
-       elles existent.
+       Deux chantiers, presentes en avant / apres cote a cote.
+
+       CES DEUX-LA SONT DE VRAIES PHOTOS de Vitalii Borsci, contrairement
+       au reste des visuels de la page. Ne pas les remplacer par des
+       images de substitution.
+
+       Les deux prises de vue d'une meme paire n'ont pas exactement le
+       meme cadrage : c'est pour cela qu'elles sont posees cote a cote et
+       non sous le curseur de comparaison du bloc « degat des eaux », qui
+       exige deux photos superposables.
+
+       Il manque la commune de chaque chantier : la demander a l'artisan
+       et remplacer les [entre crochets]. Le reste de la legende ne
+       decrit que ce qui est visible sur la photo.
        ============================================================ -->
   <section id="chantiers" aria-labelledby="titre-chantiers">
     <div class="tete-section rv">
@@ -1502,70 +1531,61 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     </div>
 
     <ul class="grille-chantiers">
-      <!-- CHANTIER 1 — modèle à dupliquer.
-           Markup image à utiliser une fois la photo déposée dans assets/chantiers/ :
-           <picture>
-             <source srcset="assets/chantiers/chantier-1.webp" type="image/webp">
-             <img src="assets/chantiers/chantier-1.jpg" width="1200" height="900" loading="lazy"
-                  alt="Parquet massif chêne posé dans un séjour d'appartement à Montreuil">
-           </picture>
-           L'attribut alt décrit : matériau + type de pièce + commune. -->
+
       <li class="rv">
         <figure>
-          <picture>
-            <source srcset="assets/chantiers/chantier-1-depose.webp" type="image/webp">
-            <img src="assets/chantiers/chantier-1-depose.jpg" width="608" height="811" loading="lazy" decoding="async"
-                 alt="Dépose d'un enduit dégradé par un dégât des eaux, plafond ouvert">
-          </picture>
+          <div class="paire">
+            <div class="volet">
+              <picture>
+                <source srcset="assets/chantiers/chantier-a-avant.webp" type="image/webp">
+                <img src="assets/chantiers/chantier-a-avant.jpg" width="900" height="1053" loading="lazy" decoding="async"
+                     alt="Séjour d'appartement ancien, plafond largement décollé et taché par un dégât des eaux, parquet protégé">
+              </picture>
+              <span class="volet-tag">Avant</span>
+            </div>
+            <div class="volet">
+              <picture>
+                <source srcset="assets/chantiers/chantier-a-apres.webp" type="image/webp">
+                <img src="assets/chantiers/chantier-a-apres.jpg" width="900" height="1160" loading="lazy" decoding="async"
+                     alt="Le même séjour après travaux, plafond et murs refaits, parquet à bâtons rompus dégagé">
+              </picture>
+              <span class="volet-tag volet-tag-apres">Après</span>
+            </div>
+          </div>
           <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
+            <span class="lieu">Appartement — <span class="a-fournir">[commune]</span></span>
+            <span class="quoi">Plafond et murs repris après dégât des eaux</span>
           </figcaption>
         </figure>
       </li>
 
       <li class="rv">
         <figure>
-          <picture>
-            <source srcset="assets/chantiers/chantier-2-vinyle.webp" type="image/webp">
-            <img src="assets/chantiers/chantier-2-vinyle.jpg" width="608" height="811" loading="lazy" decoding="async"
-                 alt="Pose d'un sol vinyle en lés dans une cuisine">
-          </picture>
+          <div class="paire">
+            <div class="volet">
+              <picture>
+                <source srcset="assets/chantiers/chantier-b-avant.webp" type="image/webp">
+                <img src="assets/chantiers/chantier-b-avant.jpg" width="900" height="995" loading="lazy" decoding="async"
+                     alt="Chambre d'appartement ancien, plafond décollé et mur mis à nu après dégât des eaux">
+              </picture>
+              <span class="volet-tag">Avant</span>
+            </div>
+            <div class="volet">
+              <picture>
+                <source srcset="assets/chantiers/chantier-b-apres.webp" type="image/webp">
+                <img src="assets/chantiers/chantier-b-apres.jpg" width="900" height="1069" loading="lazy" decoding="async"
+                     alt="La même chambre après travaux, plafond et murs refaits en blanc, plinthes reprises">
+              </picture>
+              <span class="volet-tag volet-tag-apres">Après</span>
+            </div>
+          </div>
           <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
+            <span class="lieu">Appartement — <span class="a-fournir">[commune]</span></span>
+            <span class="quoi">Plafond et murs refaits après dégât des eaux</span>
           </figcaption>
         </figure>
       </li>
 
-      <li class="rv">
-        <figure>
-          <picture>
-            <source srcset="assets/chantiers/chantier-3-cloison.webp" type="image/webp">
-            <img src="assets/chantiers/chantier-3-cloison.jpg" width="608" height="811" loading="lazy" decoding="async"
-                 alt="Vissage d'une plaque de plâtre sur ossature, isolant en place">
-          </picture>
-          <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
-          </figcaption>
-        </figure>
-      </li>
-
-      <!-- CHANTIER 4 — présentation avant/après : deux photos, une seule légende. -->
-      <li class="rv">
-        <figure>
-<picture>
-            <source srcset="assets/chantiers/chantier-4-peinture.webp" type="image/webp">
-            <img src="assets/chantiers/chantier-4-peinture.jpg" width="608" height="811" loading="lazy" decoding="async"
-                 alt="Application de peinture au rouleau, sol protégé">
-          </picture>
-          <figcaption class="mono">
-            <span class="lieu a-fournir">[Type de bien — commune]</span>
-            <span class="quoi a-fournir">[Nature des travaux]</span>
-          </figcaption>
-        </figure>
-      </li>
     </ul>
   </section>
 
