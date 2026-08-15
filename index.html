@@ -198,7 +198,7 @@ p { max-width: var(--texte); }
 
 /* --- Trame des sections -------------------------------------------------- */
 
-section { padding: clamp(34px, 3.6vw, 56px) var(--pad); border-top: 1px solid var(--filet); }
+section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid var(--filet); }
 
 .tete-section { margin-bottom: clamp(22px, 2.4vw, 34px); }
 .tete-section h2 { margin-top: .5rem; }
@@ -406,11 +406,16 @@ section { padding: clamp(34px, 3.6vw, 56px) var(--pad); border-top: 1px solid va
     display: grid; grid-template-columns: 1fr 1fr;
     /* Colonnes seulement : un `gap` complet ecartait aussi le sur-titre
        du h3, qui appartiennent a deux rangees de la meme colonne. */
-    gap: 0 clamp(32px, 4vw, 64px); align-items: center;
+    gap: 0 clamp(32px, 4vw, 64px);
+    /* Alignement par le haut : centre, le paragraphe commencait 3 px
+       au-dessus du sur-titre et 34 px au-dessus du titre — cale sur ni
+       l'un ni l'autre. Il part maintenant de la meme ligne que le
+       titre, avec le meme retrait. */
+    align-items: start;
   }
-  .bloc-conseil .mono { grid-column: 1; }
-  .bloc-conseil h3 { grid-column: 1; margin: .45rem 0 0; }
-  .bloc-conseil p:not(.mono) { grid-column: 2; grid-row: 1 / 3; align-self: center; font-size: 1.0625em; }
+  .bloc-conseil .mono { grid-column: 1; grid-row: 1; }
+  .bloc-conseil h3 { grid-column: 1; grid-row: 2; margin: .45rem 0 0; }
+  .bloc-conseil p:not(.mono) { grid-column: 2; grid-row: 2; margin-top: .45rem; font-size: 1.0625em; }
 }
 
 /* Comparateur avant/après. Les couches .photo-vide seront remplacées
