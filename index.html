@@ -192,6 +192,14 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 
 .paire { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
+/* Dans la grille des chantiers, la paire avant/après occupe exactement
+   le gabarit 4/3 d'une vignette simple : ses deux moitiés deviennent
+   des portraits pleine hauteur, et les rangées restent alignées. */
+.grille-chantiers .paire { aspect-ratio: 4 / 3; }
+.grille-chantiers .paire .photo-vide,
+.grille-chantiers .paire picture,
+.grille-chantiers .paire img { aspect-ratio: auto; height: 100%; }
+
 /* --- Prestations : cinq blocs ------------------------------------------- */
 
 .prestations { display: grid; gap: clamp(56px, 8vw, 112px); }
