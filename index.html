@@ -38,11 +38,7 @@
       "postalCode": "[À FOURNIR : code postal]",
       "addressCountry": "FR"
     },
-    "areaServed": [
-      "[À FOURNIR : commune 1]",
-      "[À FOURNIR : commune 2]",
-      "[À FOURNIR : commune 3]"
-    ],
+    "areaServed": ["Paris", "Hauts-de-Seine", "Seine-Saint-Denis", "Val-de-Marne"],
     "openingHoursSpecification": {
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
@@ -278,7 +274,9 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 .bloc-large .paire .photo-vide { aspect-ratio: 4 / 3; }
 
 .lien-formulaire {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touche);
   margin-top: 1.25rem;
   font-family: var(--mono);
   font-size: 11px;
@@ -300,6 +298,42 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
 
 .bloc-conseil h3 { margin-bottom: 1rem; }
 .bloc-conseil p { color: var(--doux); }
+
+/* Pastilles de zone d'intervention */
+.puces {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .75rem;
+  padding: 0;
+  max-width: var(--texte);
+}
+
+.puces li {
+  border: 1px solid var(--filet);
+  border-radius: 999px;
+  padding: .3rem .9rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--doux);
+}
+
+/* Lien WhatsApp : contact secondaire, sans script ni dependance */
+.lien-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touche);
+  margin-top: .5rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: .2rem;
+}
 
 /* --- Déroulement --------------------------------------------------------- */
 
@@ -534,6 +568,10 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     <!-- Téléphone : trois occurrences à remplacer dans la page (en-tête, noscript,
          barre fixe). Le href ne contient ni espace ni point : tel:+33612345678 -->
     <a href="tel:+33614495837" class="bouton-tel">06 14 49 58 37</a>
+    <br>
+    <a href="https://wa.me/33614495837" class="lien-whatsapp" rel="noopener">
+      WhatsApp — envoyer des photos du chantier
+    </a>
   </div>
 </header>
 
@@ -853,7 +891,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       <!-- ÉTAPE 3 — PHOTOS -->
       <fieldset data-etape="3" hidden>
         <legend>Photos</legend>
-        <p class="intro">Les photos permettent une première estimation sans déplacement.</p>
+        <p class="intro">
+          Les photos permettent une première estimation sans déplacement.
+          Elles peuvent aussi être envoyées directement par
+          <a href="https://wa.me/33614495837" rel="noopener">WhatsApp</a>.
+        </p>
 
         <label for="photos"><span class="etiquette">Ajouter 3 à 8 photos</span></label>
         <input type="file" id="photos" name="photos" accept="image/*" multiple>
@@ -937,11 +979,15 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
     <div class="bloc-pied">
       <p class="mono">Zone d'intervention</p>
-      <p class="a-fournir">
-        [Liste réelle des communes à fournir — uniquement celles où l'artisan
-        se déplace effectivement. Cette liste sert aussi au areaServed des
-        données structurées, étape 4.]
-      </p>
+      <p>Paris et petite couronne.</p>
+      <!-- Pour affiner par commune, remplacer les pastilles ci-dessous
+           et tenir areaServed (JSON-LD, en haut du fichier) synchronisé. -->
+      <ul class="puces">
+        <li>Paris</li>
+        <li>Hauts-de-Seine</li>
+        <li>Seine-Saint-Denis</li>
+        <li>Val-de-Marne</li>
+      </ul>
     </div>
 
     <div class="bloc-pied">
