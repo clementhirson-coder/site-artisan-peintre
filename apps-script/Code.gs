@@ -1,3 +1,31 @@
+/* ============================================================
+   REGLAGES — LES DEUX SEULES LIGNES A MODIFIER
+   ============================================================ */
+
+/** Adresse qui reçoit les notifications. */
+var DESTINATAIRE = 'contact.borsci@gmail.com';
+
+/**
+ * Identifiant de la feuille de calcul.
+ *
+ * Le laisser vide si ce script a été créé DEPUIS la feuille
+ * (Extensions › Apps Script) : il la trouve tout seul.
+ *
+ * Le remplir si ce script a été créé séparément, depuis
+ * script.google.com. Sinon getActiveSpreadsheet() ne renvoie rien,
+ * l'écriture échoue, et l'exécution s'affiche quand même « Terminée »
+ * sans qu'aucune ligne n'apparaisse.
+ *
+ * L'identifiant se lit dans l'adresse de la feuille, entre /d/ et /edit :
+ *   docs.google.com/spreadsheets/d/ 1AbC…XyZ /edit
+ *                                   ^^^^^^^^^
+ */
+var FEUILLE_ID = '';
+
+/* ============================================================
+   Au-dessous, plus rien à modifier.
+   ============================================================ */
+
 /**
  * Borsci Rénovation — réception des demandes du site.
  *
@@ -18,26 +46,6 @@
  * colonnes connues ; tout le reste est ajouté à la suite.
  * ---------------------------------------------------------------------
  */
-
-/** Adresse qui reçoit les notifications. */
-var DESTINATAIRE = 'contact.borsci@gmail.com';
-
-/**
- * Identifiant de la feuille de calcul.
- *
- * À LAISSER VIDE si le script a été créé depuis la feuille elle-même
- * (Extensions › Apps Script) : il la trouve tout seul.
- *
- * À REMPLIR si le script a été créé séparément, depuis
- * script.google.com. Dans ce cas getActiveSpreadsheet() ne renvoie
- * rien et l'écriture échoue sans que rien ne le montre : l'exécution
- * s'affiche « Terminée » alors qu'aucune ligne n'a été ajoutée.
- *
- * L'identifiant se lit dans l'adresse de la feuille, entre /d/ et /edit :
- *   docs.google.com/spreadsheets/d/ 1AbC…XyZ /edit
- *                                   ^^^^^^^^^
- */
-var FEUILLE_ID = '';
 
 /** Numéro WhatsApp de l'artisan, au format international sans le +. */
 var WHATSAPP = '33614495837';
