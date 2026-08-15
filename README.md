@@ -24,6 +24,7 @@ Contrainte de conception : **tenir trois ans sans maintenance.**
 | `apps-script/DEPLOIEMENT.md` | Comment le déployer, pas à pas |
 | `sources-photos/` | Photos d'origine, non publiées — pour recadrer plus tard |
 | `fiche-photos-vitalii.md` | Ce que l'artisan doit photographier, et comment |
+| `FAQ.md` | **En cas de problème** — classé par symptôme |
 | `CLAUDE.md` | **Les décisions actées et les pièges connus** |
 
 ## Comment ça marche
@@ -89,6 +90,13 @@ en terre cuite dans la page, entre crochets :
 - [ ] le renommer — `site-artisan-peintre` contredit le positionnement
       tenu partout ailleurs : jamais « peintre »
 - [ ] acheter et brancher `borsci-renovation.fr`
+
+## Quelque chose ne marche pas
+
+Voir **`FAQ.md`**, classé par ce que l'on voit à l'écran. Les deux
+réflexes qui résolvent la moitié des cas : recharger de force
+(`Ctrl+Shift+R`), et ouvrir l'onglet **Exécutions** de l'éditeur Apps
+Script, qui journalise chaque appel reçu avec son erreur.
 
 ## Avant de modifier quoi que ce soit
 
