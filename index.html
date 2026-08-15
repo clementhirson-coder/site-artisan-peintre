@@ -263,14 +263,16 @@ section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var
 
 .entete h1 { margin: .6rem 0 .9rem; }
 
-/* Les trois paragraphes partagent la meme largeur : le bord droit du
-   bloc reste regulier. text-wrap:balance repartit les lignes et evite
-   les mots orphelins ; ignore par les navigateurs qui ne le gerent pas. */
-.entete .metier,
-.entete .accroche { text-wrap: balance; }
+/* Les deux lignes d'identite tiennent chacune sur une seule ligne et
+   occupent la meme longueur. La zone d'intervention suit le metier,
+   en plus petit et plus tenu. */
+.entete .metier { color: var(--doux); max-width: none; font-size: 1.0625em; line-height: 1.5; }
+.entete .metier + .metier { margin-top: .3rem; font-size: .9375em; }
 
-.entete .metier { color: var(--doux); max-width: 33rem; font-size: 1.125em; line-height: 1.45; }
-.entete .metier + .metier { margin-top: .45rem; font-size: 1em; line-height: 1.5; }
+.entete .metier .zone { font-size: .84em; color: var(--tenu); white-space: nowrap; }
+.entete .metier .zone::before { content: '·'; margin: 0 .75em; }
+
+.entete .accroche { text-wrap: balance; }
 
 /* Accroche : dit le métier en une phrase, sous l'identité. */
 .entete .accroche {
@@ -300,18 +302,10 @@ section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var
   font-size: clamp(12px, .8vw + 9px, 15px);
   letter-spacing: .1em;
   text-transform: uppercase;
-  /* Exception aux angles vifs : les deux boutons d'appel sont arrondis
-     et poses, pour se detacher du reste de la page. */
-  border-radius: 999px;
-  box-shadow: 0 8px 20px -12px rgba(41, 37, 36, .55);
-  transition: opacity .25s, transform .25s, box-shadow .25s;
+  transition: opacity .25s;
 }
 
-.bouton-tel:hover {
-  opacity: .92;
-  transform: translateY(-1px);
-  box-shadow: 0 12px 26px -12px rgba(41, 37, 36, .6);
-}
+.bouton-tel:hover { opacity: .88; }
 
 /* --- Chantiers ----------------------------------------------------------- */
 
@@ -461,20 +455,14 @@ section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var
      sur ce vert ne donne que 2:1, l'encre donne 7,6:1. */
   background: #25d366;
   color: var(--encre);
-  border-radius: 999px;
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: .1em;
   text-transform: uppercase;
-  box-shadow: 0 8px 20px -12px rgba(37, 211, 102, .8);
-  transition: opacity .25s, transform .25s, box-shadow .25s;
+  transition: opacity .25s;
 }
 
-.lien-whatsapp:hover {
-  opacity: .92;
-  transform: translateY(-1px);
-  box-shadow: 0 12px 26px -12px rgba(37, 211, 102, .9);
-}
+.lien-whatsapp:hover { opacity: .88; }
 
 /* --- Déroulement --------------------------------------------------------- */
 
@@ -721,12 +709,10 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     <!-- Ne pas nommer l'ancien employeur. Ne pas écrire ni suggérer une
          collaboration actuelle avec des compagnies d'assurance. -->
     <p class="metier">
-      Vitalii Borsci — Rénovation et finitions intérieures<br>
-      Paris et petite couronne
+      Vitalii Borsci — Rénovation et finitions intérieures<span class="zone">Paris et petite couronne</span>
     </p>
     <p class="metier">
-      Formé aux interventions après sinistre
-      au sein d'une entreprise spécialisée.
+      Formé aux interventions après sinistre au sein d'une entreprise spécialisée.
     </p>
 
     <p class="accroche">
