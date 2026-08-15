@@ -198,7 +198,7 @@ p { max-width: var(--texte); }
 
 /* --- Trame des sections -------------------------------------------------- */
 
-section { padding: clamp(56px, 7vw, 104px) var(--pad); border-top: 1px solid var(--filet); }
+section { padding: clamp(44px, 5vw, 76px) var(--pad); border-top: 1px solid var(--filet); }
 
 .tete-section { margin-bottom: clamp(28px, 3.2vw, 44px); }
 .tete-section h2 { margin-top: .5rem; }
@@ -744,17 +744,15 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   <!-- ============================================================
        2. CHANTIERS RÉALISÉS
        4 chantiers : trois photos simples et une paire avant/après.
-       Grille en 2 x 2 sur grand écran — rester sur un nombre pair. Légende : 2 lignes maximum.
+       Grille en 2 x 2 sur grand écran — rester sur un nombre pair.
+       Pour chaque chantier, la légende donne : type de bien, commune,
+       nature des travaux. 2 lignes maximum. Photos avant/après quand
+       elles existent.
        ============================================================ -->
   <section id="chantiers" aria-labelledby="titre-chantiers">
     <div class="tete-section rv">
       <p class="mono"><span class="num">01</span>Chantiers réalisés</p>
       <h2 id="titre-chantiers">Travaux livrés</h2>
-      <p class="intro a-fournir">
-        À fournir : photos et descriptions de 4 chantiers récents.
-        Pour chacun : type de bien, commune, nature des travaux.
-        Photos avant/après quand elles existent.
-      </p>
     </div>
 
     <ul class="grille-chantiers">
