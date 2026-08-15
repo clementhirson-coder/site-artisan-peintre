@@ -234,6 +234,18 @@ section { padding: clamp(64px, 11vw, 150px) var(--pad); border-top: 1px solid va
   padding-bottom: .25em;
 }
 
+/* Bloc conseil : distinct des cinq prestations, sans photo.
+   Un panneau calme sur fond doux, redige du point de vue du client. */
+.bloc-conseil {
+  background: var(--fond-2);
+  border: 1px solid var(--filet);
+  padding: clamp(28px, 5vw, 56px);
+  max-width: 44rem;
+}
+
+.bloc-conseil h3 { margin-bottom: 1rem; }
+.bloc-conseil p { color: var(--doux); }
+
 /* --- Déroulement --------------------------------------------------------- */
 
 .etapes { list-style: none; display: grid; gap: clamp(32px, 4vw, 48px); }
@@ -622,6 +634,17 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
           <div class="photo-vide">Après — à fournir</div>
         </div>
       </article>
+
+      <!-- CONSEIL — hors prestations (correction 5) : accompagnement,
+           pas un chantier. Redige du point de vue du client. -->
+      <aside class="bloc-conseil rv" id="conseil" aria-labelledby="t-conseil">
+        <p class="mono">Conseil</p>
+        <h3 id="t-conseil">Vous ne savez pas par où commencer ?</h3>
+        <p>
+          Accompagnement sur le choix des matériaux, la lecture des devis
+          et le suivi de vos artisans.
+        </p>
+      </aside>
 
     </div>
   </section>
