@@ -73,17 +73,30 @@ client.
   bois, conseils. Le texte « je vous garantis une installation
   impeccable » fourni pour les sols a été refusé : promesse de résultat
   interdite par le brief.
-- **Bande de faits, révisée le 17/08/2026** : quatre cases —
-  « Sinistres & rénovations », « 1 seul interlocuteur »,
-  « Devis sous 24 h », « Paris · 91 · 93 · 94 ». La case
+- **Bande de faits, révisée le 17/08/2026.** Quatre cases, chacune un
+  intitulé sur une ligne et une légende sur une ligne : **20 ans
+  d'expérience** / sinistres & rénovations — **1 seul interlocuteur** /
+  du devis au chantier — **Devis sous 24 h** / après visite ou photos —
+  **Paris · 91 · 93 · 94** / zone d'intervention. La case
   « Décennale / chantiers assurés » a été retirée à la demande du
-  client ; la garantie décennale ne se lit plus que dans les mentions
-  légales du pied de page. Rien n'y est inventé : **« 20 ans
-  d'expérience » est un chiffre fourni par le client** le 17/08/2026,
-  pas une estimation — s'il devait bouger, il bougerait ici et nulle
-  part ailleurs, la page n'en donne aucun autre. (« 15 ans »,
-  « +400 chantiers », « 4,9/5 » des sites concurrents restent l'exemple
-  à ne pas suivre.)
+  client ; la garantie ne se lit plus que dans les mentions légales du
+  pied de page. Rien n'y est inventé : **« 20 ans d'expérience » est un
+  chiffre fourni par le client** le 17/08/2026, pas une estimation —
+  s'il devait bouger, il bougerait ici et nulle part ailleurs, la page
+  n'en donne aucun autre. (« 15 ans », « +400 chantiers », « 4,9/5 »
+  des sites concurrents restent l'exemple à ne pas suivre.)
+- **La bande se lit comme un tableau, et cela tient à sa gouttière.**
+  Chaque case portait `--pad` (jusqu'à 56 px) de chaque côté, soit
+  112 px prélevés sur une colonne qui n'en fait que 256 à 1024 px : les
+  intitulés repassaient sur deux lignes, chacun à une largeur
+  différente, et la bande paraissait bâclée. Les cases intérieures ont
+  désormais une gouttière fixe de 1,4 rem ; seuls les deux bords
+  extérieurs gardent `--pad`, pour rester alignés sur la marge des
+  sections. Le passage en 2×2 a été remonté de 46em à **60em** pour la
+  même raison. Mesuré uniforme de 480 px à 1600 px. **Avant de rallonger
+  un intitulé ou une légende, re-mesurer** : les légendes ont été
+  raccourcies exprès (« du devis au chantier », pas « du devis à la fin
+  du chantier ») pour tenir sur une ligne à 1024 px.
 - Piège CSS de la bande : la légende se sélectionne en `.fait > span`,
   **jamais `.fait span`**. Le titre contient lui aussi un `span` — le
   « sous 24 h » en accent — et le sélecteur descendant le faisait

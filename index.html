@@ -326,37 +326,43 @@ section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid va
 
 .faits { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--filet); }
 
-/* Les intitules n'ont pas tous la meme longueur : « Sinistres &
-   renovations » passe sur deux lignes la ou les autres tiennent sur une.
-   Sans cela, les legendes se retrouvent a quatre hauteurs differentes.
-   La colonne en flex pousse la legende en bas de sa case : les quatre
-   s'alignent, quel que soit le nombre de lignes au-dessus. */
+/* La bande doit se lire comme un tableau : un intitule par ligne, une
+   legende par ligne, les quatre a la meme hauteur. Ce qui l'en empechait
+   n'etait pas la longueur des textes mais la gouttiere : chaque case
+   portait --pad (jusqu'a 56px) de chaque cote, soit 112px preleves sur
+   une colonne qui n'en fait que 256 a 1024px. Les cases interieures se
+   contentent donc d'une gouttiere fixe ; seuls les deux bords exterieurs
+   gardent --pad, pour rester alignes sur la marge des sections. */
 .fait {
-  padding: 1.6rem var(--pad); border-right: 1px solid var(--filet);
+  padding: 1.5rem 1.4rem; border-right: 1px solid var(--filet);
   display: flex; flex-direction: column;
 }
+.fait:first-child { padding-left: var(--pad); }
+.fait:last-child { padding-right: var(--pad); border-right: 0; }
+
+/* Filet de securite pour les largeurs ou un intitule repasse malgre tout
+   sur deux lignes : la colonne en flex pousse la legende en bas de sa
+   case, et les quatre restent alignees entre elles. */
 .fait strong { flex: 1; }
-.fait:last-child { border-right: 0; }
-.fait strong { display: block; font-size: clamp(19px, 2vw, 26px); font-weight: 560; letter-spacing: -.01em; margin-bottom: .25rem; }
+
+.fait strong { display: block; font-size: clamp(18px, 1.6vw, 24px); font-weight: 560; letter-spacing: -.01em; margin-bottom: .35rem; }
 /* « > span » et non « span » : la legende est l'enfant direct de la
    case. Un span imbrique dans le titre — le « sous 24 h » en accent —
    heriterait sinon du mono 10px capitales et disparaitrait. */
-.fait > span { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--tenu); }
-
-/* « 20 ans » est le seul chiffre de la bande, et il vient du client :
-   il passe en accent, sur sa propre ligne, un cran au-dessus du reste
-   de la legende. L'emphase est portee par la couleur et non par la
-   graisse — DM Mono n'existe qu'en 400, le navigateur en fabriquerait
-   un faux gras. */
-.fait > span .fait-fort { display: block; font-size: 12px; color: var(--accent); }
+.fait > span { font-family: var(--mono); font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: var(--tenu); }
 
 /* Le delai est l'argument que le prospect doit reperer sans lire : il
    garde la taille du titre et prend la couleur d'accent. */
 .fait strong .delai { color: var(--accent); }
 
-@media (max-width: 46em) {
+/* Le passage en 2x2 arrive tot (60em) : entre 46 et 60em, quatre
+   colonnes ne laissent plus assez de place a un intitule pour tenir sur
+   une ligne, et la bande redevient inegale. */
+@media (max-width: 60em) {
   .faits { grid-template-columns: 1fr 1fr; }
-  .fait:nth-child(2n) { border-right: 0; }
+  .fait { padding-left: 1.4rem; padding-right: 1.4rem; }
+  .fait:nth-child(2n+1) { padding-left: var(--pad); }
+  .fait:nth-child(2n) { padding-right: var(--pad); border-right: 0; }
   .fait:nth-child(-n+2) { border-bottom: 1px solid var(--filet); }
 }
 
@@ -1045,20 +1051,20 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
      ni promesses — voir CLAUDE.md. -->
 <div class="faits" aria-label="Repères">
   <div class="fait">
-    <strong>Sinistres &amp; rénovations</strong>
-    <span><span class="fait-fort">20 ans d'expérience</span>formé en entreprise spécialisée</span>
+    <strong>20 ans d'expérience</strong>
+    <span>sinistres &amp; rénovations</span>
   </div>
   <div class="fait">
     <strong>1 seul interlocuteur</strong>
-    <span>du devis à la fin du chantier</span>
+    <span>du devis au chantier</span>
   </div>
   <div class="fait">
     <strong>Devis <span class="delai">sous 24 h</span></strong>
-    <span>après la visite ou vos photos</span>
+    <span>après visite ou photos</span>
   </div>
   <div class="fait">
     <strong>Paris · 91 · 93 · 94</strong>
-    <span>départements d'intervention</span>
+    <span>zone d'intervention</span>
   </div>
 </div>
 
