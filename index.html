@@ -326,7 +326,16 @@ section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid va
 
 .faits { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--filet); }
 
-.fait { padding: 1.6rem var(--pad); border-right: 1px solid var(--filet); }
+/* Les intitules n'ont pas tous la meme longueur : « Sinistres &
+   renovations » passe sur deux lignes la ou les autres tiennent sur une.
+   Sans cela, les legendes se retrouvent a quatre hauteurs differentes.
+   La colonne en flex pousse la legende en bas de sa case : les quatre
+   s'alignent, quel que soit le nombre de lignes au-dessus. */
+.fait {
+  padding: 1.6rem var(--pad); border-right: 1px solid var(--filet);
+  display: flex; flex-direction: column;
+}
+.fait strong { flex: 1; }
 .fait:last-child { border-right: 0; }
 .fait strong { display: block; font-size: clamp(19px, 2vw, 26px); font-weight: 560; letter-spacing: -.01em; margin-bottom: .25rem; }
 .fait span { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--tenu); }
@@ -1005,7 +1014,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     <a href="tel:+33614495837" class="bouton-tel">06 14 49 58 37</a>
     <br>
     <a href="https://wa.me/33614495837" class="lien-whatsapp" rel="noopener">
-      WhatsApp — envoyer des photos du chantier
+      WhatsApp — envoyer vos photos du chantier
     </a>
   </div>
 </header>
@@ -1013,10 +1022,10 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 <!-- Bande de faits : uniquement du vérifiable. Ni chiffres inventés,
      ni promesses — voir CLAUDE.md. -->
 <div class="faits" aria-label="Repères">
-  <div class="fait"><strong>Sinistres</strong><span>formé en entreprise spécialisée</span></div>
+  <div class="fait"><strong>Sinistres &amp; rénovations</strong><span>formé en entreprise spécialisée</span></div>
   <div class="fait"><strong>Décennale</strong><span>chantiers assurés</span></div>
-  <div class="fait"><strong>1 seul</strong><span>interlocuteur, devis compris</span></div>
-  <div class="fait"><strong>Île-de-France</strong><span>8 départements couverts</span></div>
+  <div class="fait"><strong>1 seul interlocuteur</strong><span>devis compris, sous 24 h</span></div>
+  <div class="fait"><strong>Paris · 91 · 93 · 94</strong><span>départements d'intervention</span></div>
 </div>
 
 <main>
@@ -1201,7 +1210,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     <div class="contact-rail">
       <div class="tete-section rv">
         <p class="mono"><span class="num">03</span>Contact</p>
-        <h2 id="titre-contact">Décrire un projet</h2>
+        <h2 id="titre-contact">Décrire votre projet</h2>
         <p class="intro">
           Trois étapes, deux minutes. Plus la description est précise,
           plus le devis l'est. Les photos, à envoyer ensuite par WhatsApp,
@@ -1226,7 +1235,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 
       <div class="directs">
         <a class="direct-tel" href="tel:+33614495837">06 14 49 58 37 — appeler</a>
-        <a class="direct-wa" href="https://wa.me/33614495837" rel="noopener">WhatsApp — envoyer des photos</a>
+        <a class="direct-wa" href="https://wa.me/33614495837" rel="noopener">WhatsApp — envoyer vos photos</a>
       </div>
     </div>
 
@@ -1703,7 +1712,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
     <div class="rappel-actions rv">
       <a class="rappel-formulaire" href="#contact">Remplir le formulaire</a>
       <a class="bouton-tel" href="tel:+33614495837">06 14 49 58 37</a>
-      <a class="lien-whatsapp" href="https://wa.me/33614495837" rel="noopener">WhatsApp — envoyer des photos</a>
+      <a class="lien-whatsapp" href="https://wa.me/33614495837" rel="noopener">WhatsApp — envoyer vos photos</a>
     </div>
   </section>
 

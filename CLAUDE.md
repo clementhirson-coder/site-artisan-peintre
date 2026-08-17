@@ -27,7 +27,7 @@ client.
 ## Décisions actées — ne pas revenir dessus sans accord explicite
 
 - **Ordre de la page, acté le 15/08/2026** : en-tête → 01 Prestations →
-  02 Méthode → 03 Décrire un projet → 04 Travaux livrés → bande de
+  02 Méthode → 03 Décrire votre projet → 04 Travaux livrés → bande de
   rappel → pied de page. Le formulaire est le cœur du site : il passe
   avant les chantiers, et une bande de rappel en fin de page offre un
   second point d'entrée à qui a tout lu avant de se décider. Cette bande
@@ -55,10 +55,16 @@ client.
   Le bouton WhatsApp garde le vert de marque `#25d366`, avec du texte
   en `--encre` et non en blanc : du blanc sur ce vert ne donne que
   2:1, l'encre donne 7,6:1.
-- **Zone d'intervention** : les 8 départements d'Île-de-France
-  (75, 92, 93, 94, 77, 95, 91, 78). Le positionnement de titre reste
-  « Paris et petite couronne » — c'est le cœur d'activité ; la zone
-  élargie est indiquée dans la section dédiée et dans areaServed.
+- **Zone d'intervention** : la bande de faits annonce depuis le
+  15/08/2026 « Paris · 91 · 93 · 94 », tandis que le pied de page et
+  `areaServed` listent toujours les 8 départements d'Île-de-France
+  (75, 92, 93, 94, 77, 95, 91, 78). **Cette contradiction est en
+  attente d'arbitrage** : soit la zone se resserre et il faut corriger
+  le pied de page, la section dédiée et le JSON-LD, soit la bande ne
+  fait que mettre en avant le cœur d'activité et il faut le dire
+  autrement. Ne pas laisser les deux versions cohabiter en ligne.
+  À noter : le 92 est absent de la bande alors qu'il est plus proche
+  de Paris que le 91 — vérifier que ce n'est pas un oubli.
 - **Positionnement élargi** : ne jamais présenter l'activité comme
   limitée à la remise en état après sinistre. Six domaines : remise en
   état après dégât des eaux, peinture et enduits, revêtement de sol
@@ -67,7 +73,10 @@ client.
   impeccable » fourni pour les sols a été refusé : promesse de résultat
   interdite par le brief.
 - La bande de faits ne contient que du vérifiable — jamais de chiffres
-  inventés (« 15 ans », « +400 chantiers », « 4,9/5 » des sites
+  inventés. « Devis compris, sous 24 h » y a été ajouté le 15/08/2026 :
+  c'est un engagement commercial, il doit être tenable et cohérent avec
+  la section Méthode, où le délai d'envoi du devis est encore en
+  `[délai à fournir]`. (« 15 ans », « +400 chantiers », « 4,9/5 » des sites
   concurrents sont l'exemple à ne pas suivre).
 - **Palette validée le 15/08/2026** : les sept variables du bloc `:root`
   (papier chaud `#f8f6f1`, encre espresso `#292524`, accent terre cuite
