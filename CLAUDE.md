@@ -73,13 +73,29 @@ client.
   bois, conseils. Le texte « je vous garantis une installation
   impeccable » fourni pour les sols a été refusé : promesse de résultat
   interdite par le brief.
-- La bande de faits ne contient que du vérifiable — jamais de chiffres
-  inventés. (« 15 ans », « +400 chantiers », « 4,9/5 » des sites
-  concurrents sont l'exemple à ne pas suivre).
+- **Bande de faits, révisée le 17/08/2026** : quatre cases —
+  « Sinistres & rénovations », « 1 seul interlocuteur »,
+  « Devis sous 24 h », « Paris · 91 · 93 · 94 ». La case
+  « Décennale / chantiers assurés » a été retirée à la demande du
+  client ; la garantie décennale ne se lit plus que dans les mentions
+  légales du pied de page. Rien n'y est inventé : **« 20 ans
+  d'expérience » est un chiffre fourni par le client** le 17/08/2026,
+  pas une estimation — s'il devait bouger, il bougerait ici et nulle
+  part ailleurs, la page n'en donne aucun autre. (« 15 ans »,
+  « +400 chantiers », « 4,9/5 » des sites concurrents restent l'exemple
+  à ne pas suivre.)
+- Piège CSS de la bande : la légende se sélectionne en `.fait > span`,
+  **jamais `.fait span`**. Le titre contient lui aussi un `span` — le
+  « sous 24 h » en accent — et le sélecteur descendant le faisait
+  basculer en mono 10 px capitales grises, c'est-à-dire exactement
+  l'inverse de la mise en évidence demandée.
 - **Délai du devis, arbitré le 17/08/2026 : 24 h.** C'est le seul
-  engagement chiffré de la page, et il est mis en évidence à quatre
-  endroits — bande de faits, titre de l'étape 03 de la Méthode, points
-  de réassurance du formulaire, bande de rappel de fin de page. La
+  engagement chiffré de la page hors « 20 ans », et il est mis en
+  évidence à quatre endroits — bande de faits, titre de l'étape 03 de
+  la Méthode, points de réassurance du formulaire, bande de rappel de
+  fin de page. On dit **« Devis sous 24 h »**, pas « devis écrit » :
+  l'adjectif a été retiré le 17/08/2026 à la demande du client, le
+  détail du contenu du devis reste dans le corps de l'étape 03. La
   classe `.delai` le passe en couleur d'accent sur fond clair ; **ne pas
   l'employer dans `#contact`**, l'accent terre cuite ne passe pas le
   contraste sur le fond encre — là, c'est le `<strong>` des `.argus` qui

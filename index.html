@@ -30,7 +30,7 @@
   <meta name="robots" content="noindex, nofollow">
 
   <title>Borsci Rénovation — Rénovation et finitions intérieures — Paris, 91, 93, 94</title>
-  <meta name="description" content="Artisan indépendant en rénovation et finitions intérieures à Paris, 91, 93 et 94. Remise en état après dégât des eaux. Devis écrit sous 24 h.">
+  <meta name="description" content="Artisan indépendant en rénovation et finitions intérieures à Paris, 91, 93 et 94. Remise en état après dégât des eaux. Devis sous 24 h.">
   <link rel="canonical" href="https://borsci-renovation.fr/">
 
   <!-- Open Graph. og:image : ajouter une fois la photo d'en-tete fournie,
@@ -38,7 +38,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Borsci Rénovation">
   <meta property="og:title" content="Borsci Rénovation — Rénovation et finitions intérieures — Paris, 91, 93, 94">
-  <meta property="og:description" content="Artisan indépendant en rénovation et finitions intérieures à Paris, 91, 93 et 94. Remise en état après dégât des eaux. Devis écrit sous 24 h.">
+  <meta property="og:description" content="Artisan indépendant en rénovation et finitions intérieures à Paris, 91, 93 et 94. Remise en état après dégât des eaux. Devis sous 24 h.">
   <meta property="og:url" content="https://borsci-renovation.fr/">
   <meta property="og:locale" content="fr_FR">
 
@@ -338,7 +338,21 @@ section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid va
 .fait strong { flex: 1; }
 .fait:last-child { border-right: 0; }
 .fait strong { display: block; font-size: clamp(19px, 2vw, 26px); font-weight: 560; letter-spacing: -.01em; margin-bottom: .25rem; }
-.fait span { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--tenu); }
+/* « > span » et non « span » : la legende est l'enfant direct de la
+   case. Un span imbrique dans le titre — le « sous 24 h » en accent —
+   heriterait sinon du mono 10px capitales et disparaitrait. */
+.fait > span { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--tenu); }
+
+/* « 20 ans » est le seul chiffre de la bande, et il vient du client :
+   il passe en accent, sur sa propre ligne, un cran au-dessus du reste
+   de la legende. L'emphase est portee par la couleur et non par la
+   graisse — DM Mono n'existe qu'en 400, le navigateur en fabriquerait
+   un faux gras. */
+.fait > span .fait-fort { display: block; font-size: 12px; color: var(--accent); }
+
+/* Le delai est l'argument que le prospect doit reperer sans lire : il
+   garde la taille du titre et prend la couleur d'accent. */
+.fait strong .delai { color: var(--accent); }
 
 @media (max-width: 46em) {
   .faits { grid-template-columns: 1fr 1fr; }
@@ -1030,10 +1044,22 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 <!-- Bande de faits : uniquement du vérifiable. Ni chiffres inventés,
      ni promesses — voir CLAUDE.md. -->
 <div class="faits" aria-label="Repères">
-  <div class="fait"><strong>Sinistres &amp; rénovations</strong><span>formé en entreprise spécialisée</span></div>
-  <div class="fait"><strong>Décennale</strong><span>chantiers assurés</span></div>
-  <div class="fait"><strong>1 seul interlocuteur</strong><span>devis compris, sous 24 h</span></div>
-  <div class="fait"><strong>Paris · 91 · 93 · 94</strong><span>départements d'intervention</span></div>
+  <div class="fait">
+    <strong>Sinistres &amp; rénovations</strong>
+    <span><span class="fait-fort">20 ans d'expérience</span>formé en entreprise spécialisée</span>
+  </div>
+  <div class="fait">
+    <strong>1 seul interlocuteur</strong>
+    <span>du devis à la fin du chantier</span>
+  </div>
+  <div class="fait">
+    <strong>Devis <span class="delai">sous 24 h</span></strong>
+    <span>après la visite ou vos photos</span>
+  </div>
+  <div class="fait">
+    <strong>Paris · 91 · 93 · 94</strong>
+    <span>départements d'intervention</span>
+  </div>
 </div>
 
 <main>
@@ -1188,7 +1214,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       </li>
       <li class="rv">
         <p class="mono"><span class="num">03</span></p>
-        <h3>Devis écrit <span class="delai">sous 24 h</span></h3>
+        <h3>Devis <span class="delai">sous 24 h</span></h3>
         <p>Détail des postes, des matériaux et de la durée estimée. Envoyé sous 24 h après la visite ou la réception des photos.</p>
       </li>
       <li class="rv">
@@ -1236,7 +1262,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
           <span>celui qui établit le devis est celui qui fait le chantier</span>
         </li>
         <li>
-          <strong>Devis écrit sous 24 h</strong>
+          <strong>Devis sous 24 h</strong>
           <span>postes, matériaux et durée estimée, après la visite</span>
         </li>
       </ul>
@@ -1714,7 +1740,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       <h2 id="titre-rappel">Le décrire prend deux minutes</h2>
       <p class="intro">
         Surfaces, délai, photos : plus la description est précise,
-        plus le devis l'est. Devis écrit envoyé
+        plus le devis l'est. Devis envoyé
         <span class="delai">sous 24 h</span>.
       </p>
     </div>
