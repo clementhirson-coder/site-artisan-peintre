@@ -934,8 +934,15 @@ textarea { resize: vertical; }
 
 /* --- Pied de page -------------------------------------------------------- */
 
-footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(--filet); }
+/* Les mentions legales sont de la lecture de verification, pas de la
+   lecture suivie : elles n'ont pas besoin d'autant d'air que le corps de
+   la page. 110px de marge haute et basse ont ete ramenes a 64. */
+footer { padding: clamp(40px, 4.4vw, 64px) var(--pad); border-top: 1px solid var(--filet); }
 
+/* Empiles (sous 46em), les blocs s'espacent par leur propre marge. En
+   grille, c'est le `gap` qui s'en charge et cette marge s'y ajoutait :
+   96px entre deux rangees au lieu des 56 voulus. Voir la regle qui la
+   neutralise dans la media query 46em. */
 .bloc-pied { margin-top: 2.5rem; }
 .bloc-pied p { color: var(--doux); font-size: .9375em; margin-top: .75rem; }
 
@@ -1005,7 +1012,27 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
 @media (min-width: 46em) {
   .grille-chantiers { grid-template-columns: repeat(2, 1fr); }
   .etapes { grid-template-columns: repeat(2, 1fr); }
-  .pied-grille { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(32px, 4vw, 56px); }
+  /* La marge des blocs est reportee une seule fois sur la grille, pour
+     detacher la premiere rangee de l'etiquette « 05 Informations
+     legales » ; entre les rangees, seul le `gap` compte. */
+  .pied-grille {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: clamp(28px, 3vw, 44px);
+    margin-top: 2.5rem; align-items: start;
+  }
+  .pied-grille .bloc-pied { margin-top: 0; }
+}
+
+/* Au-dela de 75em, les quatre blocs tiennent sur une seule rangee : plus
+   de seconde rangee, donc plus de decalage entre une colonne courte et
+   une colonne longue. Les quatre intitules s'alignent sur une ligne.
+   Les colonnes ne sont pas egales : « Hebergement et donnees » porte
+   quatre fois plus de texte que « Entreprise ». A colonnes egales, elle
+   descendait 171px plus bas que ses voisines et son intitule passait sur
+   deux lignes. Mesure a quatre largeurs : cette repartition ramene
+   l'ecart a 28-57px et remet tous les intitules sur une ligne. */
+@media (min-width: 75em) {
+  .pied-grille { grid-template-columns: .9fr .9fr 1fr 1.5fr; }
 }
 
 /* --- Desktop : en-tête en deux colonnes, barre d'appel inutile ------------ */
@@ -1152,7 +1179,10 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   <section id="prestations" aria-labelledby="titre-prestations">
     <div class="tete-section rv">
       <p class="mono"><span class="num">01</span>Prestations</p>
-      <h2 id="titre-prestations">Ce qui est fait</h2>
+      <!-- Le chiffre engage : il doit rester egal au nombre de blocs
+           ci-dessous (01 a 06, conseils compris). Ajouter ou retirer un
+           domaine oblige a corriger ce titre. -->
+      <h2 id="titre-prestations">Six domaines d'intervention</h2>
     </div>
 
     <div class="prestations">

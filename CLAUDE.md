@@ -168,6 +168,27 @@ client.
 - Positionnement : « Rénovation et finitions intérieures », jamais
   « peintre ». Aucune énumération de prestations dans un titre ou une
   meta description.
+- **Titre de la section Prestations, acté le 17/08/2026** : **« Six
+  domaines d'intervention »**, à la place de « Ce qui est fait » — un
+  passif sans agent, et une formule trop proche de « Travaux livrés »
+  (section 04). Le nouveau titre dit l'étendue avant même la lecture
+  des cartes, ce qui sert le positionnement élargi. **Le chiffre
+  engage** : il doit rester égal au nombre de blocs 01 à 06, conseils
+  compris. Ajouter ou retirer un domaine oblige à corriger ce titre —
+  un rappel figure en commentaire HTML juste au-dessus.
+- **Pied de page : quatre colonnes au-delà de 75em, largeurs
+  inégales.** Acté le 17/08/2026 après mesure. Trois défauts se
+  cumulaient : 110px de marge haute et basse, un `gap` de grille de
+  56px auquel s'ajoutait la marge de 40px de chaque `.bloc-pied` (96px
+  entre deux rangées au lieu de 56), et deux rangées dont la seconde
+  décrochait. Le pied est passé de 708px à 409px de haut à 1440px.
+  Les colonnes ne sont **pas** égales (`.9fr .9fr 1fr 1.5fr`) :
+  « Hébergement et données » porte quatre fois plus de texte
+  qu'« Entreprise » et, à colonnes égales, descendait 171px plus bas
+  que ses voisines avec son intitulé sur deux lignes. Cette répartition
+  a été retenue après comparaison de quatre ratios à quatre largeurs.
+  **La marge de `.bloc-pied` sert uniquement à l'empilement sous 46em**
+  et est neutralisée dans la grille — ne pas la rétablir là.
 - **Registre des titres de section : écrit, jamais parlé.** Le
   17/08/2026, « Comment ça se passe » a été remplacé par **« Du premier
   échange au chantier »** — la tournure interrogative et le « ça »
