@@ -97,6 +97,27 @@ client.
   un intitulé ou une légende, re-mesurer** : les légendes ont été
   raccourcies exprès (« du devis au chantier », pas « du devis à la fin
   du chantier ») pour tenir sur une ligne à 1024 px.
+- **Appel à l'action du bloc dégât des eaux, acté le 17/08/2026** :
+  rectangle plein en terre cuite (`--accent`), texte en `--fond`,
+  deux niveaux — l'action (`Décrire le sinistre →`) puis la raison de
+  cliquer (`Première estimation possible à partir de photos`). C'était
+  un lien souligné en mono 11 px : posé au milieu d'un paragraphe de la
+  même couleur, il ne se voyait pas. **Ce n'est pas une couleur
+  nouvelle** — c'est le traitement du bouton téléphone, la palette
+  reste gelée. Ne pas passer le texte en blanc pur ni le griser : sur
+  `--accent`, `--fond` donne 6,1:1, tout le reste tombe sous AA.
+- **Le vide dans la carte dégât des eaux est un réglage à deux
+  branches.** `align-items: center` centrait une colonne de texte de
+  251 px contre une photo de 394 px : les 143 px d'écart se reversaient
+  en 71 px de vide au-dessus du chapeau et 71 px sous l'appel à
+  l'action. Corrigé le 17/08/2026 par quatre réglages solidaires —
+  `align-items: stretch`, colonne de texte en flex avec le bouton en
+  `margin-top: auto`, colonnes passées de `1fr 1.1fr` à `1.2fr 1fr`, et
+  comparateur ramené de 16/10 à 16/9. **Modifier l'un sans les autres
+  fait revenir le vide** : l'écart restant a été mesuré à 40 px à
+  1440 px et 18 px à 1280 px. En dessous de 46em les colonnes
+  s'empilent, `margin-top: auto` retombe à zéro et une marge explicite
+  prend le relais.
 - Piège CSS de la bande : la légende se sélectionne en `.fait > span`,
   **jamais `.fait span`**. Le titre contient lui aussi un `span` — le
   « sous 24 h » en accent — et le sélecteur descendant le faisait

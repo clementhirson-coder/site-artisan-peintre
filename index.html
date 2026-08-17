@@ -217,7 +217,7 @@ p { max-width: var(--texte); }
 
 /* --- Trame des sections -------------------------------------------------- */
 
-section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid var(--filet); }
+section { padding: clamp(24px, 2.1vw, 34px) var(--pad); border-top: 1px solid var(--filet); }
 
 .tete-section { margin-bottom: clamp(22px, 2.4vw, 34px); }
 .tete-section h2 { margin-top: .5rem; }
@@ -491,36 +491,67 @@ section { padding: clamp(30px, 2.9vw, 46px) var(--pad); border-top: 1px solid va
 .bloc-large img { aspect-ratio: auto; }
 .entete-photo picture { display: block; height: 100%; }
 
-/* Blocs 1 et 5 : pleine largeur, texte + photos côte à côte. */
+/* Bloc 1 : pleine largeur, texte a gauche, comparateur a droite.
+   `align-items: center` centrait la colonne de texte contre une photo
+   nettement plus haute : les 143px d'ecart se reversaient en 71px de
+   vide au-dessus du chapeau et 71px sous l'appel a l'action. La colonne
+   s'etire desormais sur toute la hauteur, le texte cale en haut et le
+   bouton en bas (`margin-top: auto`), a hauteur du bas de la photo.
+   Les deux colonnes sont a egalite : plus la photo est large, plus elle
+   est haute, et plus le vide revient. */
 .bloc-large {
   grid-column: 1 / -1;
-  display: grid; grid-template-columns: 1fr 1.1fr;
-  gap: clamp(20px, 3vw, 44px); align-items: center;
+  display: grid; grid-template-columns: 1.2fr 1fr;
+  gap: clamp(20px, 3vw, 44px); align-items: stretch;
 }
+.bloc-large .bloc-texte { display: flex; flex-direction: column; }
 .bloc-large .paire .photo-vide { aspect-ratio: 4 / 3; }
 /* Le comparateur est recadre plus large que les autres visuels : en 4/3
-   il depassait la colonne de texte de plus de 200 px, et le centrage
-   vertical reversait ce surplus en vide au-dessus et au-dessous. */
-.bloc-large .ba { aspect-ratio: 16 / 10; }
+   il depassait la colonne de texte de plus de 200px, et le surplus se
+   reversait en vide dans la colonne d'a cote. Ramene de 16/10 a 16/9 le
+   17/08/2026, colonne de texte elargie a 1.2fr dans le meme mouvement :
+   les deux colonnes se rejoignent a 40px pres au lieu de 110. Modifier
+   l'un des deux reglages sans l'autre fait revenir le vide — mesurer. */
+.bloc-large .ba { aspect-ratio: 16 / 9; }
 
 @media (max-width: 46em) {
   .prestations { grid-template-columns: 1fr; }
   .bloc-large { grid-template-columns: 1fr; }
+  /* Empilees, les deux colonnes n'ont plus d'ecart de hauteur a
+     rattraper : `margin-top: auto` retombe a zero et le bouton viendrait
+     coller au paragraphe. */
+  .lien-formulaire { margin-top: 1.5rem; }
 }
 
+/* Appel a l'action du bloc degat des eaux. C'etait un lien souligne en
+   mono 11px : au milieu d'un bloc de texte de la meme couleur, il ne se
+   voyait pas. Il devient un rectangle plein en terre cuite — le meme
+   traitement que le bouton telephone, pas une nouvelle couleur : la
+   palette est gelee. Le texte sur --accent est en --fond (6,1:1) ; ne
+   pas le passer en blanc pur ni le griser, ce serait sous AA.
+   Deux niveaux dans le meme rectangle : l'action d'abord, la raison de
+   cliquer ensuite. `margin-top: auto` le colle au bas de sa colonne, a
+   hauteur du bas de la photo — voir .bloc-large. */
 .lien-formulaire {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--touche);
-  margin-top: 1.25rem;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--accent);
-  border-bottom: 1px solid var(--accent);
-  padding-bottom: .25em;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  margin-top: auto;
+  padding: 1rem 1.5rem;
+  background: var(--accent);
+  color: var(--fond);
+  transition: opacity .25s;
 }
+.lien-formulaire:hover { opacity: .88; }
+.lien-formulaire strong {
+  display: flex; align-items: center; gap: .6em;
+  font-family: var(--mono); font-weight: 400;
+  font-size: clamp(12px, .8vw + 9px, 15px);
+  letter-spacing: .1em; text-transform: uppercase;
+}
+.lien-formulaire i { font-style: normal; transition: transform .25s; }
+.lien-formulaire:hover i { transform: translateX(.25em); }
+.lien-formulaire span { font-size: .875em; }
 
 /* Bloc conseil : distinct des cinq prestations, sans photo.
    Un panneau calme sur fond doux, redige du point de vue du client. */
@@ -1105,7 +1136,8 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
             devis détaillé sur demande.
           </p>
           <a class="lien-formulaire" href="#contact">
-            Décrire le sinistre — première estimation possible à partir de photos
+            <strong>Décrire le sinistre<i aria-hidden="true">→</i></strong>
+            <span>Première estimation possible à partir de photos</span>
           </a>
         </div>
         <!-- Comparateur : remplacer les deux .photo-vide par des <img>
