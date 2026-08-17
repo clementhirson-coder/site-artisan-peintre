@@ -97,15 +97,27 @@ client.
   un intitulé ou une légende, re-mesurer** : les légendes ont été
   raccourcies exprès (« du devis au chantier », pas « du devis à la fin
   du chantier ») pour tenir sur une ligne à 1024 px.
-- **Trois voies d'entrée dans l'en-tête, actées le 17/08/2026** :
-  appeler, « Décrire votre projet » (vers `#contact`), envoyer des
-  photos sur WhatsApp — sur une même rangée qui se replie d'elle-même.
-  Les deux premiers boutons portent **le même rectangle terre cuite** :
-  aucune des deux voies ne prime, c'est un choix, pas un oubli de
-  hiérarchie. Le libellé est identique au titre de la section 03 et à
-  l'entrée du menu : qui clique doit retrouver le mot à l'arrivée. Même
-  libellé sur l'appel à l'action du bloc dégât des eaux — « Décrire le
-  sinistre » y a été abandonné le 17/08/2026.
+- **Trois voies d'entrée dans l'en-tête, actées le 17/08/2026** après
+  comparaison de quatre maquettes. Grille : « Décrire votre projet » en
+  pleine largeur au-dessus, puis téléphone et WhatsApp à parts égales
+  dessous, le tout dans 34rem — une action principale, deux voies
+  directes. Une seule colonne sous 34em, où deux ne laisseraient plus
+  tenir le numéro sur une ligne.
+  **Une couleur = une action, sur toute la page** : terre cuite pour le
+  téléphone, encre pour le formulaire (le même traitement que
+  « Remplir le formulaire » de la bande de rappel, à l'autre bout de la
+  page), vert de marque pour WhatsApp. C'est la raison d'être du choix,
+  pas un effet de style — ne pas repasser le bouton du formulaire en
+  terre cuite sans casser cette lecture.
+  Le libellé WhatsApp de l'en-tête est raccourci en « WhatsApp — vos
+  photos » pour tenir sur une ligne dans une demi-colonne. Le libellé
+  du bouton formulaire est identique au titre de la section 03 et à
+  l'entrée du menu : qui clique doit retrouver le mot à l'arrivée.
+  Même libellé sur l'appel à l'action du bloc dégât des eaux —
+  « Décrire le sinistre » y a été abandonné le 17/08/2026. **Réserve
+  connue** : cet appel à l'action-là est resté en terre cuite alors
+  qu'il mène lui aussi au formulaire ; c'est la seule entorse à la
+  règle « une couleur = une action », en attente d'arbitrage.
 - **Appel à l'action du bloc dégât des eaux, acté le 17/08/2026** :
   rectangle plein en terre cuite (`--accent`), texte en `--fond`,
   deux niveaux — l'action (`Décrire le sinistre →`) puis la raison de
@@ -260,6 +272,26 @@ d'appeler l'ancien code.
 
 ## Vérifications attendues avant tout push
 
-Rendu contrôlé sous Chromium (émulation mobile 390px) : pas de
-débordement horizontal, cibles tactiles ≥ 44px, contrastes AA,
-formulaire testé de bout en bout. Zéro occurrence de « peintre ».
+Rendu contrôlé sous Chromium : pas de débordement horizontal, cibles
+tactiles ≥ 44px, contrastes AA, formulaire testé de bout en bout. Zéro
+occurrence de « peintre ».
+
+**Balayer les largeurs, pas seulement 390 et 1440.** Leçon du
+17/08/2026 : le passage de la carte dégât des eaux en `align-items:
+stretch` a créé un débordement horizontal allant jusqu'à 296px — mais
+uniquement entre 768 et 1100px. Mesuré aux deux seules largeurs
+habituelles, il était invisible, et il est parti en production.
+Quinze largeurs de 320 à 1600px sont désormais contrôlées.
+
+**Mesurer le débordement avant de révéler les blocs `[hidden]`.**
+Les révéler tous d'un coup — étapes 2 et 3 du formulaire, écran de
+confirmation et lien de secours affichés en même temps — fabrique un
+état que la page n'atteint jamais, et signalait un faux débordement de
+30px à 320px. Les cibles tactiles, elles, se mesurent bien blocs
+révélés.
+
+**Piège CSS à retenir : `aspect-ratio` sur un enfant de grille étiré.**
+Quand la rangée impose la hauteur (`align-items: stretch`) et que la
+largeur est `auto`, `aspect-ratio` recalcule la largeur à partir de la
+hauteur, et l'élément sort de sa colonne. Tout élément à `aspect-ratio`
+dans une grille étirée doit porter `width: 100%` et `min-width: 0`.

@@ -407,8 +407,6 @@ section { padding: clamp(24px, 2.1vw, 34px) var(--pad); border-top: 1px solid va
 
 /* --- Boutons pleins : téléphone et « Décrire votre projet » -------------- */
 
-/* Meme rectangle pour les deux : ce sont les deux facons d'entrer en
-   contact, aucune ne prime sur l'autre. Le second mene au formulaire. */
 .bouton-tel,
 .bouton-projet {
   display: inline-flex;
@@ -426,19 +424,36 @@ section { padding: clamp(24px, 2.1vw, 34px) var(--pad); border-top: 1px solid va
   transition: opacity .25s;
 }
 
+/* Le bouton du formulaire est en encre et non en terre cuite : ainsi
+   chaque couleur ne dit qu'une seule chose sur toute la page — terre
+   cuite pour le telephone, encre pour le formulaire (le meme traitement
+   que « Remplir le formulaire » de la bande de rappel, a l'autre bout
+   de la page), vert de marque pour WhatsApp. */
+.bouton-projet { background: var(--encre); }
+
 .bouton-tel:hover,
 .bouton-projet:hover { opacity: .88; }
 .bouton-projet i { font-style: normal; transition: transform .25s; }
 .bouton-projet:hover i { transform: translateX(.25em); }
 
-/* Les trois voies d'entree de l'en-tete sur une meme rangee. Elles se
-   replient d'elles-memes quand la colonne se resserre ; les marges
-   hautes des boutons sont neutralisees, c'est le gap qui les espace. */
+/* Les trois voies d'entree de l'en-tete, sur une grille : le formulaire
+   en pleine largeur, puis le telephone et WhatsApp a parts egales
+   dessous. Une action principale, deux voies directes — la hierarchie
+   se lit sans avoir a la deduire des libelles. Les marges hautes des
+   boutons sont neutralisees, c'est le gap qui les espace. */
 .entete-actions {
-  display: flex; flex-wrap: wrap; gap: .75rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: .6rem; max-width: 34rem;
   margin-top: 2rem;
 }
-.entete-actions > a { margin-top: 0; }
+.entete-actions > a { margin-top: 0; justify-content: center; text-align: center; }
+.entete-actions .bouton-projet { grid-column: 1 / -1; }
+
+/* Sous 34em, deux colonnes ne laissent plus tenir le numero sur une
+   ligne : tout s'empile. */
+@media (max-width: 34em) {
+  .entete-actions { grid-template-columns: 1fr; }
+}
 
 /* --- Chantiers ----------------------------------------------------------- */
 
@@ -527,7 +542,14 @@ section { padding: clamp(24px, 2.1vw, 34px) var(--pad); border-top: 1px solid va
    17/08/2026, colonne de texte elargie a 1.2fr dans le meme mouvement :
    les deux colonnes se rejoignent a 40px pres au lieu de 110. Modifier
    l'un des deux reglages sans l'autre fait revenir le vide — mesurer. */
-.bloc-large .ba { aspect-ratio: 16 / 9; }
+/* `width: 100%` n'est pas decoratif, il est obligatoire. La colonne
+   etant etiree (`align-items: stretch`), la hauteur du comparateur est
+   imposee par la rangee ; sans largeur explicite, `aspect-ratio` s'en
+   sert pour recalculer la largeur, et le bloc sort de sa colonne des que
+   le texte est plus haut que la photo. C'est ce qui s'est produit entre
+   768 et 1100px apres le passage en stretch — jusqu'a 296px de
+   debordement horizontal, invisible aux seules mesures 390 et 1440. */
+.bloc-large .ba { aspect-ratio: 16 / 9; width: 100%; min-width: 0; }
 
 @media (max-width: 46em) {
   .prestations { grid-template-columns: 1fr; }
@@ -1090,10 +1112,10 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
          Telephone : trois occurrences a remplacer dans la page (en-tete,
          noscript, barre fixe). Le href ne contient ni espace ni point. -->
     <div class="entete-actions">
-      <a href="tel:+33614495837" class="bouton-tel">06 14 49 58 37</a>
       <a href="#contact" class="bouton-projet">Décrire votre projet<i aria-hidden="true">→</i></a>
+      <a href="tel:+33614495837" class="bouton-tel">06 14 49 58 37</a>
       <a href="https://wa.me/33614495837" class="lien-whatsapp" rel="noopener">
-        WhatsApp — envoyer vos photos du chantier
+        WhatsApp — vos photos
       </a>
     </div>
   </div>
