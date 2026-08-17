@@ -1279,7 +1279,11 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
   <section id="deroulement" aria-labelledby="titre-deroulement">
     <div class="tete-section rv">
       <p class="mono"><span class="num">02</span>Méthode</p>
-      <h2 id="titre-deroulement">Comment ça se passe</h2>
+      <!-- Espace insecable entre « au » et « chantier » : sans elle, le
+           titre se coupe en « Du premier / echange au chantier » sur
+           mobile. Soudes, les deux mots ne peuvent plus se separer et la
+           coupure tombe forcement apres « echange ». -->
+      <h2 id="titre-deroulement">Du premier échange au&nbsp;chantier</h2>
     </div>
 
     <ol class="etapes">

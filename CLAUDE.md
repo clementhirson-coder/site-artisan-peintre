@@ -168,6 +168,18 @@ client.
 - Positionnement : « Rénovation et finitions intérieures », jamais
   « peintre ». Aucune énumération de prestations dans un titre ou une
   meta description.
+- **Registre des titres de section : écrit, jamais parlé.** Le
+  17/08/2026, « Comment ça se passe » a été remplacé par **« Du premier
+  échange au chantier »** — la tournure interrogative et le « ça »
+  relevaient du français oral et juraient avec « Ce qui est fait » ou
+  « Travaux livrés ». Le nouveau titre reprend mot pour mot le nom de
+  la première étape et celui de la dernière : il annonce le trajet que
+  les quatre étapes décrivent. Une **espace insécable** soude « au
+  chantier », sinon la coupure mobile tombe après « premier ».
+  `text-wrap: balance` a été essayé sur les `h2` et **retiré** : il
+  produisait « Du premier / échange au chantier », soit l'inverse de
+  l'effet recherché. La même correction de registre reste à faire sur
+  la section Avis, en commentaire : « Ce qu'ils en disent ».
 - Nom commercial « Borsci Rénovation » (accent obligatoire), nom légal
   Vitalii Borsci visible en en-tête et mentions légales.
 - Prestation phare : remise en état après dégât des eaux — intervention
