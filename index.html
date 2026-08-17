@@ -405,9 +405,12 @@ section { padding: clamp(24px, 2.1vw, 34px) var(--pad); border-top: 1px solid va
 
 .entete .accroche em { font-style: normal; color: var(--accent); }
 
-/* --- Bouton téléphone ---------------------------------------------------- */
+/* --- Boutons pleins : téléphone et « Décrire votre projet » -------------- */
 
-.bouton-tel {
+/* Meme rectangle pour les deux : ce sont les deux facons d'entrer en
+   contact, aucune ne prime sur l'autre. Le second mene au formulaire. */
+.bouton-tel,
+.bouton-projet {
   display: inline-flex;
   align-items: center;
   gap: .75em;
@@ -423,7 +426,19 @@ section { padding: clamp(24px, 2.1vw, 34px) var(--pad); border-top: 1px solid va
   transition: opacity .25s;
 }
 
-.bouton-tel:hover { opacity: .88; }
+.bouton-tel:hover,
+.bouton-projet:hover { opacity: .88; }
+.bouton-projet i { font-style: normal; transition: transform .25s; }
+.bouton-projet:hover i { transform: translateX(.25em); }
+
+/* Les trois voies d'entree de l'en-tete sur une meme rangee. Elles se
+   replient d'elles-memes quand la colonne se resserre ; les marges
+   hautes des boutons sont neutralisees, c'est le gap qui les espace. */
+.entete-actions {
+  display: flex; flex-wrap: wrap; gap: .75rem;
+  margin-top: 2rem;
+}
+.entete-actions > a { margin-top: 0; }
 
 /* --- Chantiers ----------------------------------------------------------- */
 
@@ -1068,13 +1083,19 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
       ou refaits parce qu'il était temps.
     </p>
 
-    <!-- Téléphone : trois occurrences à remplacer dans la page (en-tête, noscript,
-         barre fixe). Le href ne contient ni espace ni point : tel:+33612345678 -->
-    <a href="tel:+33614495837" class="bouton-tel">06 14 49 58 37</a>
-    <br>
-    <a href="https://wa.me/33614495837" class="lien-whatsapp" rel="noopener">
-      WhatsApp — envoyer vos photos du chantier
-    </a>
+    <!-- Les trois voies d'entree, sur une meme rangee : appeler, decrire
+         son projet, envoyer des photos. « Decrire votre projet » porte le
+         meme libelle que le titre de la section 03 et que l'entree du
+         menu — un visiteur qui clique doit retrouver le mot a l'arrivee.
+         Telephone : trois occurrences a remplacer dans la page (en-tete,
+         noscript, barre fixe). Le href ne contient ni espace ni point. -->
+    <div class="entete-actions">
+      <a href="tel:+33614495837" class="bouton-tel">06 14 49 58 37</a>
+      <a href="#contact" class="bouton-projet">Décrire votre projet<i aria-hidden="true">→</i></a>
+      <a href="https://wa.me/33614495837" class="lien-whatsapp" rel="noopener">
+        WhatsApp — envoyer vos photos du chantier
+      </a>
+    </div>
   </div>
 </header>
 
@@ -1136,7 +1157,7 @@ footer { padding: clamp(56px, 8vw, 110px) var(--pad); border-top: 1px solid var(
             devis détaillé sur demande.
           </p>
           <a class="lien-formulaire" href="#contact">
-            <strong>Décrire le sinistre<i aria-hidden="true">→</i></strong>
+            <strong>Décrire votre projet<i aria-hidden="true">→</i></strong>
             <span>Première estimation possible à partir de photos</span>
           </a>
         </div>

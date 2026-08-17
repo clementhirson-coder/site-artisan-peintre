@@ -97,6 +97,15 @@ client.
   un intitulé ou une légende, re-mesurer** : les légendes ont été
   raccourcies exprès (« du devis au chantier », pas « du devis à la fin
   du chantier ») pour tenir sur une ligne à 1024 px.
+- **Trois voies d'entrée dans l'en-tête, actées le 17/08/2026** :
+  appeler, « Décrire votre projet » (vers `#contact`), envoyer des
+  photos sur WhatsApp — sur une même rangée qui se replie d'elle-même.
+  Les deux premiers boutons portent **le même rectangle terre cuite** :
+  aucune des deux voies ne prime, c'est un choix, pas un oubli de
+  hiérarchie. Le libellé est identique au titre de la section 03 et à
+  l'entrée du menu : qui clique doit retrouver le mot à l'arrivée. Même
+  libellé sur l'appel à l'action du bloc dégât des eaux — « Décrire le
+  sinistre » y a été abandonné le 17/08/2026.
 - **Appel à l'action du bloc dégât des eaux, acté le 17/08/2026** :
   rectangle plein en terre cuite (`--accent`), texte en `--fond`,
   deux niveaux — l'action (`Décrire le sinistre →`) puis la raison de
