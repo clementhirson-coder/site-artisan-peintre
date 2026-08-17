@@ -1,7 +1,7 @@
 # Borsci Rénovation — site vitrine
 
 Site une page pour Vitalii Borsci, artisan indépendant en rénovation et
-finitions intérieures (Paris et Île-de-France).
+finitions intérieures (Paris, 91, 93, 94).
 
 **Statique, sans build, sans dépendance.** Tout le site tient dans
 `index.html` : HTML, CSS et JavaScript dans un seul fichier. Aucune
@@ -82,7 +82,6 @@ en terre cuite dans la page, entre crochets :
 
 - [ ] adresse déclarée et SIRET (mentions légales — obligatoires)
 - [ ] nom de l'assureur et référence du contrat décennale
-- [ ] délai d'envoi du devis
 - [ ] communes des deux chantiers de « Travaux livrés »
 
 **Intendance.**

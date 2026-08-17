@@ -55,16 +55,17 @@ client.
   Le bouton WhatsApp garde le vert de marque `#25d366`, avec du texte
   en `--encre` et non en blanc : du blanc sur ce vert ne donne que
   2:1, l'encre donne 7,6:1.
-- **Zone d'intervention** : la bande de faits annonce depuis le
-  15/08/2026 « Paris · 91 · 93 · 94 », tandis que le pied de page et
-  `areaServed` listent toujours les 8 départements d'Île-de-France
-  (75, 92, 93, 94, 77, 95, 91, 78). **Cette contradiction est en
-  attente d'arbitrage** : soit la zone se resserre et il faut corriger
-  le pied de page, la section dédiée et le JSON-LD, soit la bande ne
-  fait que mettre en avant le cœur d'activité et il faut le dire
-  autrement. Ne pas laisser les deux versions cohabiter en ligne.
-  À noter : le 92 est absent de la bande alors qu'il est plus proche
-  de Paris que le 91 — vérifier que ce n'est pas un oubli.
+- **Zone d'intervention, arbitrée le 17/08/2026** : **Paris (75),
+  Essonne (91), Seine-Saint-Denis (93), Val-de-Marne (94)** — et rien
+  d'autre. Le 92, le 77, le 95 et le 78 ont été retirés ; l'absence du
+  92 est délibérée, ce n'est pas un oubli. « Paris et petite couronne »
+  ne se dit plus nulle part : la formule inclut le 92 et exclut le 91,
+  elle est donc doublement fausse ici. Cinq endroits doivent rester
+  synchronisés — le `<title>` et la meta description, l'`og:title` et
+  l'`og:description`, `areaServed` dans le JSON-LD, la ligne d'identité
+  de l'en-tête (`.zone`), la bande de faits, et la liste du pied de page
+  (`#zone`, où les départements portent leur numéro : c'est là que le
+  visiteur relie « 91 » à « Essonne »). Ordre numérique partout.
 - **Positionnement élargi** : ne jamais présenter l'activité comme
   limitée à la remise en état après sinistre. Six domaines : remise en
   état après dégât des eaux, peinture et enduits, revêtement de sol
@@ -73,11 +74,22 @@ client.
   impeccable » fourni pour les sols a été refusé : promesse de résultat
   interdite par le brief.
 - La bande de faits ne contient que du vérifiable — jamais de chiffres
-  inventés. « Devis compris, sous 24 h » y a été ajouté le 15/08/2026 :
-  c'est un engagement commercial, il doit être tenable et cohérent avec
-  la section Méthode, où le délai d'envoi du devis est encore en
-  `[délai à fournir]`. (« 15 ans », « +400 chantiers », « 4,9/5 » des sites
+  inventés. (« 15 ans », « +400 chantiers », « 4,9/5 » des sites
   concurrents sont l'exemple à ne pas suivre).
+- **Délai du devis, arbitré le 17/08/2026 : 24 h.** C'est le seul
+  engagement chiffré de la page, et il est mis en évidence à quatre
+  endroits — bande de faits, titre de l'étape 03 de la Méthode, points
+  de réassurance du formulaire, bande de rappel de fin de page. La
+  classe `.delai` le passe en couleur d'accent sur fond clair ; **ne pas
+  l'employer dans `#contact`**, l'accent terre cuite ne passe pas le
+  contraste sur le fond encre — là, c'est le `<strong>` des `.argus` qui
+  porte l'emphase. Le délai court **après la visite ou la réception des
+  photos**, pas après le premier contact : c'est écrit ainsi dans
+  l'étape 03 et dans les `.argus`, ne pas le raccourcir en promesse
+  sèche. À distinguer du **rappel sous 24 h**, qui est un engagement
+  différent (le coup de téléphone) et qui figure aussi dans l'accusé de
+  réception. Aucun de ces deux délais ne concerne l'*intervention* après
+  dégât des eaux, qui doit rester sans délai chiffré (règle du brief).
 - **Palette validée le 15/08/2026** : les sept variables du bloc `:root`
   (papier chaud `#f8f6f1`, encre espresso `#292524`, accent terre cuite
   `#9c4221`…). Les propositions de design portent sur la typo, la mise
