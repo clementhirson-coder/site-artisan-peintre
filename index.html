@@ -29,7 +29,9 @@
   <!-- A RETIRER en meme temps que les visuels temporaires. -->
   <meta name="robots" content="noindex, nofollow">
 
-  <title>Borsci Rénovation — Rénovation et finitions intérieures — Paris, 91, 93, 94</title>
+  <!-- 54 caracteres : Google coupe autour de 60. La zone n'est pas dans
+       le titre, elle est portee par la meta description ci-dessous. -->
+  <title>Borsci Rénovation — Rénovation et finitions intérieures</title>
   <meta name="description" content="Artisan indépendant en rénovation et finitions intérieures à Paris, 91, 93 et 94. Remise en état après dégât des eaux. Devis sous 24 h.">
   <link rel="canonical" href="https://borsci-renovation.fr/">
 
@@ -37,7 +39,7 @@
        1200 x 630 recommande, URL absolue. -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Borsci Rénovation">
-  <meta property="og:title" content="Borsci Rénovation — Rénovation et finitions intérieures — Paris, 91, 93, 94">
+  <meta property="og:title" content="Borsci Rénovation — Rénovation et finitions intérieures">
   <meta property="og:description" content="Artisan indépendant en rénovation et finitions intérieures à Paris, 91, 93 et 94. Remise en état après dégât des eaux. Devis sous 24 h.">
   <meta property="og:url" content="https://borsci-renovation.fr/">
   <meta property="og:locale" content="fr_FR">
@@ -622,8 +624,12 @@ section { padding: clamp(24px, 2.1vw, 34px) var(--pad); border-top: 1px solid va
    par de vraies <img> une fois les photos fournies — le mécanisme
    (clip-path piloté par le curseur natif) reste identique. */
 .ba { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--filet); user-select: none; }
-.ba .couche { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.ba .couche { width: 100%; height: 100%; object-fit: cover; }
+/* `.couche` est un <picture> et non plus un <img> : c'est le seul moyen
+   de servir le WebP ici, et ces deux visuels pesaient a eux seuls 244 Ko
+   en JPEG contre 118 en WebP. Le recadrage passe donc sur l'<img>
+   interieure, pas sur la couche. */
+.ba .couche { position: absolute; inset: 0; display: block; }
+.ba .couche img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .ba .c-avant { clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0); background-color: #e9e1d3; }
 .ba .poignee { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 1px; background: var(--encre); }
 .ba .poignee i { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background: var(--encre); color: var(--fond); display: flex; align-items: center; justify-content: center; font-style: normal; }
@@ -734,6 +740,11 @@ label { display: block; margin-top: 1.25rem; }
 .choix:hover { border-color: var(--tenu); background: var(--fond-2); }
 .choix input { width: 1.125rem; height: 1.125rem; flex: none; accent-color: var(--accent); }
 .choix:has(input:checked) { border-color: var(--accent); background: var(--fond-2); }
+/* La case elle-meme est trop petite pour porter un contour lisible :
+   c'est la rangee entiere qui le prend, comme pour .tuile et .puce.
+   `position: relative` place le contour au-dessus de la rangee voisine,
+   que le `margin-top: -1px` de chevauchement recouvrirait sinon. */
+.choix:focus-within { position: relative; outline: 2px solid var(--accent); outline-offset: -2px; }
 
 input[type="text"], input[type="tel"], input[type="email"],
 input[type="number"], input[type="file"], textarea {
@@ -749,7 +760,18 @@ input[type="number"], input[type="file"], textarea {
   font-size: 1.0625em;
 }
 
-input:focus, textarea:focus { outline: none; border-bottom-color: var(--accent); }
+/* Restreinte aux champs de saisie. Ecrite `input:focus`, elle frappait
+   aussi les cases a cocher et les boutons radio : sa specificite (0,1,1)
+   battait la regle globale `:focus-visible` (0,1,0), et le contour
+   disparaissait sans que rien ne le remplace. Au clavier, on ne voyait
+   plus ou l'on se trouvait dans les six choix de l'etape 1. Ici la
+   suppression du contour est compensee par le filet qui passe en accent
+   — pour les rangees cochables, c'est `.choix:focus-within` ci-dessous. */
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+textarea:focus { outline: none; border-bottom-color: var(--accent); }
 textarea { resize: vertical; }
 
 .erreur { margin-top: .5rem; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #a4231b; }
@@ -902,6 +924,13 @@ textarea { resize: vertical; }
 }
 .directs a:hover { opacity: .88; }
 .direct-tel { background: var(--fond); color: var(--encre); }
+
+/* Sous 60em, la barre d'appel fixe du bas porte deja le numero et reste
+   a l'ecran en permanence : celui de la colonne faisait doublon dans le
+   meme champ de vision. WhatsApp reste, la barre fixe ne le propose pas. */
+@media (max-width: 60em) {
+  .directs .direct-tel { display: none; }
+}
 /* Vert de marque WhatsApp, texte en encre : du blanc sur ce vert ne
    donnerait que 2:1. */
 .direct-wa { background: #25d366; color: var(--encre); }
@@ -1216,12 +1245,18 @@ footer { padding: clamp(40px, 4.4vw, 64px) var(--pad); border-top: 1px solid var
         <!-- Comparateur : remplacer les deux .photo-vide par des <img>
              (même position) une fois les photos avant/après fournies. -->
         <div class="ba" data-ba>
-          <img class="couche c-apres" src="assets/chantiers/degat-eaux-apres.jpg"
-               width="1200" height="860" loading="lazy" decoding="async"
-               alt="Séjour remis en état et repeint après intervention">
-          <img class="couche c-avant" src="assets/chantiers/degat-eaux-avant.jpg"
-               width="1200" height="860" loading="lazy" decoding="async"
-               alt="Plafond marqué par un dégât des eaux, mesure du taux d'humidité">
+          <picture class="couche c-apres">
+            <source srcset="assets/chantiers/degat-eaux-apres.webp" type="image/webp">
+            <img src="assets/chantiers/degat-eaux-apres.jpg"
+                 width="1200" height="860" loading="lazy" decoding="async"
+                 alt="Séjour remis en état et repeint après intervention">
+          </picture>
+          <picture class="couche c-avant">
+            <source srcset="assets/chantiers/degat-eaux-avant.webp" type="image/webp">
+            <img src="assets/chantiers/degat-eaux-avant.jpg"
+                 width="1200" height="860" loading="lazy" decoding="async"
+                 alt="Plafond marqué par un dégât des eaux, mesure du taux d'humidité">
+          </picture>
           <input type="range" min="0" max="100" value="50" aria-label="Curseur de comparaison avant après">
           <div class="poignee" aria-hidden="true"><i>⇔</i></div>
           <span class="tag tag-avant" aria-hidden="true">Avant</span>

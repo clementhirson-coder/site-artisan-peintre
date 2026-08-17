@@ -303,6 +303,19 @@ d'appeler l'ancien code.
   site doit lire. Si le corps est illisible, se rabattre sur le statut
   plutôt que de faire échouer un envoi peut-être abouti.
 
+- **Indicateurs de focus, audit du 17/08/2026.** Les trois familles de
+  contrôles du formulaire portent leur contour sur le **parent**, pas
+  sur la case : `.tuile:focus-within`, `.puce:focus-within` et
+  désormais `.choix:focus-within`. La case de consentement, seule
+  `.choix` de la page, n'en avait aucun — et elle est obligatoire pour
+  envoyer. `input:focus { outline: none }` a été restreinte aux types
+  texte : écrite pour tous les `input`, sa spécificité (0,1,1) battait
+  `:focus-visible` (0,1,0) et supprimait le contour natif des cases.
+  **Toute sonde qui juge le focus doit regarder l'élément ET son
+  parent** : mesurer le seul élément focalisé fait passer les tuiles et
+  les puces pour non signalées, ce qui a produit un faux diagnostic
+  avant vérification.
+
 ## Vérifications attendues avant tout push
 
 Rendu contrôlé sous Chromium : pas de débordement horizontal, cibles
