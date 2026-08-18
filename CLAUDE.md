@@ -66,6 +66,27 @@ client.
   de l'en-tête (`.zone`), la bande de faits, et la liste du pied de page
   (`#zone`, où les départements portent leur numéro : c'est là que le
   visiteur relie « 91 » à « Essonne »). Ordre numérique partout.
+- **Bloc Conseils, refondu le 17/08/2026 — et c'est une offre
+  commerciale, pas seulement du texte.** Trois étages séparés par un
+  filet : l'accroche « Vous ne savez pas par où commencer ?
+  Appelez-moi. », trois situations dans lesquelles le visiteur se
+  reconnaît (devis, matériaux, chantier), puis l'offre nommée **« la
+  visite conseil »** avec son livrable — un compte rendu écrit — et ses
+  deux actions. Trois règles tiennent ce bloc :
+  1. **C'est le seul endroit où l'artisan dit « je ».** Partout ailleurs
+     la page est impersonnelle ; les seuls autres « je » sont ceux du
+     visiteur dans le formulaire. Ne pas étendre cette voix au reste de
+     la page sans décision explicite.
+  2. **Conseil, jamais coordination.** « Le suivi de vos artisans » a
+     été retiré : coordonner d'autres entreprises relève de la maîtrise
+     d'œuvre — mot interdit par le brief — et la décennale de Vitalii ne
+     couvre que ses propres ouvrages. La tuile « Conseil » du
+     formulaire a été alignée dans le même mouvement.
+  3. **Aucun montant.** Les tarifs chiffrés restent interdits : le bloc
+     dit « facturée à part, déduite du devis si vous me confiez les
+     travaux » sans jamais donner de prix. Cette déduction est un
+     engagement commercial — il doit être tenu à chaque fois.
+
 - **Positionnement élargi** : ne jamais présenter l'activité comme
   limitée à la remise en état après sinistre. Six domaines : remise en
   état après dégât des eaux, peinture et enduits, revêtement de sol

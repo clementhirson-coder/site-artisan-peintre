@@ -593,31 +593,51 @@ section { padding: clamp(24px, 2.1vw, 34px) var(--pad); border-top: 1px solid va
 .lien-formulaire span { font-size: .875em; }
 
 /* Bloc conseil : distinct des cinq prestations, sans photo.
-   Un panneau calme sur fond doux, redige du point de vue du client. */
+   Un panneau calme sur fond doux, redige du point de vue du client.
+   Trois etages separes par un filet : l'accroche, les trois situations
+   dans lesquelles le visiteur se reconnait, puis l'offre nommee et ses
+   deux actions. C'est ce qui a resorbe le vide : le bloc ne portait
+   qu'un titre et deux lignes pour toute la largeur de la page. */
 .bloc-conseil {
   grid-column: 1 / -1;
   background: var(--fond-2);
   padding: clamp(28px, 4vw, 52px);
 }
 
-.bloc-conseil h3 { margin-bottom: 1rem; }
+.bloc-conseil h3 { margin: .45rem 0 0; }
 .bloc-conseil p { color: var(--doux); }
+.conseil-intro { margin-top: .6rem; }
+
+.conseil-cas {
+  list-style: none;
+  display: grid; gap: clamp(20px, 2.4vw, 32px);
+  margin-top: clamp(22px, 2.8vw, 36px);
+  padding-top: clamp(20px, 2.4vw, 32px);
+  border-top: 1px solid var(--filet);
+}
+/* Jost est variable : 500 est un vrai poids, pas du gras synthetique. */
+.conseil-cas strong { display: block; font-weight: 500; font-size: 1.0625em; }
+.conseil-cas span { display: block; margin-top: .35rem; color: var(--doux); font-size: .9375em; }
+
+.conseil-offre {
+  margin-top: clamp(22px, 2.8vw, 36px);
+  padding-top: clamp(20px, 2.4vw, 32px);
+  border-top: 1px solid var(--filet);
+}
+.conseil-offre p:not(.mono) { margin-top: .6rem; }
+
+.conseil-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.5rem; }
+/* Les boutons portent une marge haute pour l'en-tete : ici c'est le gap
+   qui espace, sinon elle s'y ajouterait. */
+.conseil-actions > a { margin-top: 0; }
 
 @media (min-width: 60em) {
-  .bloc-conseil {
-    display: grid; grid-template-columns: 1fr 1fr;
-    /* Colonnes seulement : un `gap` complet ecartait aussi le sur-titre
-       du h3, qui appartiennent a deux rangees de la meme colonne. */
-    gap: 0 clamp(32px, 4vw, 64px);
-    /* Alignement par le haut : centre, le paragraphe commencait 3 px
-       au-dessus du sur-titre et 34 px au-dessus du titre — cale sur ni
-       l'un ni l'autre. Il part maintenant de la meme ligne que le
-       titre, avec le meme retrait. */
-    align-items: start;
+  .conseil-cas { grid-template-columns: repeat(3, 1fr); }
+  .conseil-offre {
+    display: grid; grid-template-columns: 1.5fr 1fr;
+    column-gap: clamp(32px, 4vw, 56px); align-items: center;
   }
-  .bloc-conseil .mono { grid-column: 1; grid-row: 1; }
-  .bloc-conseil h3 { grid-column: 1; grid-row: 2; margin: .45rem 0 0; }
-  .bloc-conseil p:not(.mono) { grid-column: 2; grid-row: 2; margin-top: .45rem; font-size: 1.0625em; }
+  .conseil-actions { margin-top: 0; flex-direction: column; }
 }
 
 /* Comparateur avant/après. Les couches .photo-vide seront remplacées
@@ -926,10 +946,12 @@ textarea { resize: vertical; }
 .direct-tel { background: var(--fond); color: var(--encre); }
 
 /* Sous 60em, la barre d'appel fixe du bas porte deja le numero et reste
-   a l'ecran en permanence : celui de la colonne faisait doublon dans le
-   meme champ de vision. WhatsApp reste, la barre fixe ne le propose pas. */
+   a l'ecran en permanence : tout second bouton telephone fait doublon
+   dans le meme champ de vision. Vaut pour la colonne du formulaire et
+   pour le bloc conseil. WhatsApp reste, la barre fixe ne le propose pas. */
 @media (max-width: 60em) {
-  .directs .direct-tel { display: none; }
+  .directs .direct-tel,
+  .conseil-actions .bouton-tel { display: none; }
 }
 /* Vert de marque WhatsApp, texte en encre : du blanc sur ce vert ne
    donnerait que 2:1. */
@@ -1323,13 +1345,52 @@ footer { padding: clamp(40px, 4.4vw, 64px) var(--pad); border-top: 1px solid var
 
       <!-- CONSEIL — hors prestations (correction 5) : accompagnement,
            pas un chantier. Redige du point de vue du client. -->
+      <!-- REGLES DE REDACTION POUR CE BLOC :
+           - c'est le seul endroit ou l'artisan parle a la premiere
+             personne ; ne pas etendre le « je » au reste de la page
+             sans decision explicite
+           - conseil, jamais coordination : « suivi de vos artisans » a
+             ete retire le 17/08/2026. Coordonner d'autres entreprises
+             releve de la maitrise d'oeuvre, mot interdit par le brief,
+             et sa decennale ne couvre que ses propres ouvrages
+           - aucun montant : les tarifs chiffres sont interdits, le prix
+             de la visite conseil se donne au telephone -->
       <aside class="bloc-conseil rv" id="conseil" aria-labelledby="t-conseil">
         <p class="mono"><span class="num">06</span>Conseils</p>
-        <h3 id="t-conseil">Vous ne savez pas par où commencer ?</h3>
-        <p>
-          Accompagnement sur le choix des matériaux, la lecture des devis
-          et le suivi de vos artisans.
-        </p>
+        <h3 id="t-conseil">Vous ne savez pas par où commencer ? Appelez-moi.</h3>
+        <p class="conseil-intro">Un appel suffit souvent à y voir clair.</p>
+
+        <ul class="conseil-cas">
+          <li>
+            <strong>Perdu entre plusieurs devis</strong>
+            <span>Je les compare avec vous, poste par poste, et je vous dis ce qui manque.</span>
+          </li>
+          <li>
+            <strong>Une hésitation sur les matériaux</strong>
+            <span>Peinture, sol, cloison : ce qui tient dans le temps, et ce qui ne se justifie pas chez vous.</span>
+          </li>
+          <li>
+            <strong>Un doute sur votre chantier</strong>
+            <span>L'ordre des travaux, les délais réalistes, les points à surveiller.</span>
+          </li>
+        </ul>
+
+        <div class="conseil-offre">
+          <div>
+            <p class="mono">La visite conseil</p>
+            <p>
+              Je viens chez vous, on fait le tour de ce que vous voulez faire,
+              je réponds à vos questions. Vous repartez avec un compte rendu
+              écrit : ce qu'il y a à faire, dans quel ordre, et à quoi faire
+              attention. Facturée à part, déduite du devis si vous me confiez
+              les travaux.
+            </p>
+          </div>
+          <div class="conseil-actions">
+            <a class="bouton-projet" href="#contact">Demander une visite conseil<i aria-hidden="true">→</i></a>
+            <a class="bouton-tel" href="tel:+33614495837">06 14 49 58 37</a>
+          </div>
+        </div>
       </aside>
 
     </div>
@@ -1461,7 +1522,7 @@ footer { padding: clamp(40px, 4.4vw, 64px) var(--pad); border-top: 1px solid var
             </label>
             <label class="tuile">
               <input type="checkbox" name="prestation" data-cle="conseil" value="Conseil et accompagnement de projet">
-              <span><strong>Conseil</strong><em>matériaux, lecture de devis, suivi</em></span>
+              <span><strong>Conseil</strong><em>visite conseil, matériaux, lecture de devis</em></span>
             </label>
           </div>
           <p class="erreur" data-erreur-pour="prestation" role="alert"></p>
